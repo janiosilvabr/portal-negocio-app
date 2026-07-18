@@ -393,6 +393,19 @@ body {
   cursor: default;
 }
 
+.checkbox-linha {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin: 12px 0;
+}
+
+.checkbox-linha input {
+  width: auto;
+}
+
 /* Checklist de vistoria */
 
 .checklist {

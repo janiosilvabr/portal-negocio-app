@@ -5,6 +5,8 @@ export const CAMPOS_INICIAIS_VEICULO = {
   ano_fabricacao: "",
   ano_modelo: "",
   placa: "",
+  renavam: "",
+  chassi: "",
   km: "",
   cor: "",
   combustivel: "",
@@ -41,6 +43,16 @@ export function VeiculoCampos({ campos, onChange }) {
         <div>
           <label htmlFor="placa">Placa</label>
           <input id="placa" name="placa" value={campos.placa} onChange={handleChange} />
+        </div>
+
+        <div>
+          <label htmlFor="renavam">Renavam</label>
+          <input id="renavam" name="renavam" value={campos.renavam} onChange={handleChange} />
+        </div>
+
+        <div>
+          <label htmlFor="chassi">Chassi</label>
+          <input id="chassi" name="chassi" value={campos.chassi} onChange={handleChange} />
         </div>
 
         <div>

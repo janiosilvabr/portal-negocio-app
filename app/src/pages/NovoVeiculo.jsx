@@ -38,6 +38,8 @@ export default function NovoVeiculo() {
         ano_fabricacao: campos.ano_fabricacao ? Number(campos.ano_fabricacao) : null,
         ano_modelo: campos.ano_modelo ? Number(campos.ano_modelo) : null,
         placa: campos.placa || null,
+        renavam: campos.renavam || null,
+        chassi: campos.chassi || null,
         km: campos.km ? Number(campos.km) : null,
         cor: campos.cor || null,
         combustivel: campos.combustivel || null,
