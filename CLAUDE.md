@@ -1,0 +1,95 @@
+# CLAUDE.md — O Carro Ideal (CRM Concessionária/Garagista + Vitrine de Veículos)
+
+> Este arquivo é lido automaticamente pelo Claude Code no início de toda sessão neste projeto.
+> Mantenha-o curto. Detalhes de schema e de funcionalidades ficam em CONTEXTO.md e FEATURES.md.
+
+## O que é este projeto
+
+SaaS multi-tenant (cada garagista/concessionária é um cliente isolado) para cadastro de
+veículos, CRM de leads, pipeline de negócios e emissão automática de contratos.
+Reconstrução, com stack própria, de um protótipo validado no Base44.
+
+## Diferencial do produto (prioridade de negócio, não só técnica)
+
+O dono do produto define isto como o diferencial central do PORTALNEGOCIO: **geração automática
+de documentos (contrato de compra e venda, recibo, termo de garantia etc.) via Claude API,
+usando os dados já cadastrados do veículo e do comprador — ou da consignação feita pela própria
+garagem** — sem o usuário precisar redigitar nada. O módulo "Documentos" não é um recurso
+secundário; é o motivo do produto existir. Ao planejar cada módulo, lembrar que Veículos,
+Clientes e Negócios existem, entre outras razões, para alimentar esse módulo com dados prontos.
+
+## Identidade visual
+
+Manter o mesmo design/tema do Base44 atual, com melhorias pontuais onde fizer sentido — não
+redesenhar do zero. Ver paleta e estilo observados em FEATURES.md.
+
+## ⚠️ Regra crítica — produção não se toca
+
+O site **portalnegocio.com.br** roda hoje no **Base44** e está em produção real (402 visitantes
+únicos nos últimos 7 dias, dado do Cloudflare). **Nunca alterar, desligar ou apontar o DNS dele
+enquanto este projeto não estiver pronto e testado.**
+
+Este projeto novo é construído isolado, no domínio **ocarroideal.com** (ambiente de construção
+e teste), hospedado na Hostinger. **Plano confirmado:** quando estiver pronto e validado, o
+DNS de portalnegocio.com.br (hoje no Base44) migra para este sistema novo, que passa a ser o
+produto definitivo. ocarroideal.com não é uma marca separada — é só o canteiro de obras.
+
+## Stack desta reconstrução
+
+| Peça | Ferramenta | Observação |
+|---|---|---|
+| Hospedagem | Hostinger (plano Compartilhado atual) | domínio ocarroideal.com |
+| Banco de dados | Supabase | projeto novo e vazio (id `tvzyrhepfqtnuvkavrtl`) — substitui o projeto anterior "O Carro Ideal" que foi zerado |
+| DNS | Cloudflare | já configurado para portalnegocio.com.br; configurar também para ocarroideal.com |
+| E-mail | Brevo | conta contato@portalnegocio.com.br já configurada |
+| Pagamento | Mercado Pago | (não Stripe — já integrado no Base44, manter) |
+| Geração de documentos | Claude API | contratos/recibos automáticos |
+| Automação | N8N | **fase 2 — não implementar agora** |
+
+## Arquitetura recomendada (caminho simples para iniciante)
+
+**Frontend estático (React + Vite) + Supabase como backend completo** (Auth, banco, storage).
+A hospedagem Compartilhada da Hostinger serve arquivos estáticos sem problema — não precisa
+rodar servidor Node. Supabase resolve login, dados e upload de fotos direto do navegador.
+
+*Avançado/opcional, não fazer agora:* um framework com servidor (Next.js, etc.) exigiria
+upgrade para plano VPS na Hostinger. Só considerar isso se o site estático se mostrar
+insuficiente mais adiante.
+
+## Regra de ouro — aprendida com o erro do loop de login
+
+O projeto anterior ficou preso num loop de login por pular Explorar/Planejar. Para não repetir:
+
+1. **Nunca pular Explorar → Planejar → Codificar → Commitar.**
+2. **Autenticação é construída e testada sozinha, isolada, antes de qualquer outra tela.**
+   Testar login, logout e recuperação de senha numa janela anônima antes de seguir em frente.
+3. **Um módulo por sessão do Claude Code.** Não pedir "constrói o sistema todo".
+4. **Commit só depois de testar manualmente** que a fatia funciona.
+
+## Escopo do v1
+
+Só CRM Concessionária/Garagista + Vitrine de veículos. **Sem módulo de imóveis. Sem N8N ainda.**
+(Decisão tomada após perceber que o projeto original misturava 3 SaaS em 1.)
+
+## Documentos de referência
+
+- **CONTEXTO.md** — schema completo do banco de dados (tabelas, campos, SQL de criação)
+- **FEATURES.md** — inventário de funcionalidades, extraído do Base44 em produção
+
+## Ordem de construção recomendada
+
+1. Autenticação (login/cadastro) — testar isolado antes de seguir
+2. Cadastro de Veículos + fotos
+3. Vitrine pública (lista + filtros)
+4. Clientes
+5. Negócios (pipeline de vendas)
+6. Documentos automáticos (contratos)
+7. CRM (atividades/follow-up)
+8. Vendedores + Financeiro (menor prioridade, pode ficar para o fim do MVP)
+9. Calc. PMC — função ainda não explorada (ver pendências)
+
+## Pendências técnicas (não travam o início do v1)
+
+- Quando o módulo Calc. PMC entrar em construção: precisa de um mecanismo de cobrança avulsa
+  (R$ 4,99 por consulta de "Avaliação por IA") via Mercado Pago, separado da tabela
+  `assinaturas` (que é só mensalidade). Ver detalhe em FEATURES.md.
