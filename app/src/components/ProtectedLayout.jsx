@@ -14,6 +14,7 @@ export function ProtectedLayout() {
         <nav className="app-nav">
           <Link to="/">Painel</Link>
           <Link to="/veiculos">Veículos</Link>
+          <Link to="/clientes">Clientes</Link>
         </nav>
         <button type="button" onClick={logout}>
           Sair

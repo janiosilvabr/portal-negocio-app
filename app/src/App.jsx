@@ -8,6 +8,8 @@ import Painel from "./pages/Painel";
 import Veiculos from "./pages/Veiculos";
 import NovoVeiculo from "./pages/NovoVeiculo";
 import Vitrine from "./pages/Vitrine";
+import Clientes from "./pages/Clientes";
+import NovoCliente from "./pages/NovoCliente";
 
 export default function App() {
   return (
@@ -23,6 +25,8 @@ export default function App() {
           <Route path="/" element={<Painel />} />
           <Route path="/veiculos" element={<Veiculos />} />
           <Route path="/veiculos/novo" element={<NovoVeiculo />} />
+          <Route path="/clientes" element={<Clientes />} />
+          <Route path="/clientes/novo" element={<NovoCliente />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/" replace />} />

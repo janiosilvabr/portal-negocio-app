@@ -177,6 +177,22 @@ body {
   font-size: 0.9rem;
 }
 
+.busca-input {
+  width: 100%;
+  max-width: 360px;
+  padding: 10px 12px;
+  border: 1px solid #dcdfe4;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  margin-bottom: 16px;
+  display: block;
+}
+
+.busca-input:focus {
+  outline: 2px solid var(--orange);
+  border-color: var(--orange);
+}
+
 /* Tabela */
 
 .tabela-wrap {
