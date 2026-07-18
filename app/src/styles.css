@@ -393,6 +393,70 @@ body {
   cursor: default;
 }
 
+/* Checklist de vistoria */
+
+.checklist {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid #eef0f2;
+}
+
+.checklist-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.checklist-header h2 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: var(--navy);
+}
+
+.checklist-add {
+  padding: 6px 12px;
+  border: 1px solid var(--orange);
+  border-radius: 8px;
+  background: var(--white);
+  color: var(--orange);
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.checklist-linha {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 8px;
+  margin-bottom: 8px;
+  align-items: center;
+}
+
+.checklist-linha input {
+  padding: 8px 10px;
+  border: 1px solid #dcdfe4;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-family: inherit;
+}
+
+.checklist-linha input:focus {
+  outline: 2px solid var(--orange);
+  border-color: var(--orange);
+}
+
+.checklist-remove {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 8px;
+  background: #f5e0dc;
+  color: #c0392b;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
 /* Vitrine pública */
 
 .vitrine-header {

@@ -7,6 +7,7 @@ import RedefinirSenha from "./pages/RedefinirSenha";
 import Painel from "./pages/Painel";
 import Veiculos from "./pages/Veiculos";
 import NovoVeiculo from "./pages/NovoVeiculo";
+import EditarVeiculo from "./pages/EditarVeiculo";
 import Vitrine from "./pages/Vitrine";
 import Clientes from "./pages/Clientes";
 import NovoCliente from "./pages/NovoCliente";
@@ -27,6 +28,7 @@ export default function App() {
           <Route path="/" element={<Painel />} />
           <Route path="/veiculos" element={<Veiculos />} />
           <Route path="/veiculos/novo" element={<NovoVeiculo />} />
+          <Route path="/veiculos/:id/editar" element={<EditarVeiculo />} />
           <Route path="/clientes" element={<Clientes />} />
           <Route path="/clientes/novo" element={<NovoCliente />} />
           <Route path="/negocios" element={<Negocios />} />

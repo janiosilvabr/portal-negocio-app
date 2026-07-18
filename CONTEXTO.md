@@ -53,15 +53,37 @@ Perfil ligado ao `auth.users` do Supabase (autenticação já vem pronta no Supa
 - id (= auth.users.id), empresa_id (fk), nome, papel (enum: admin/vendedor), telefone
 
 ### veiculos
-- empresa_id (fk), marca, modelo, versao, ano_fabricacao, ano_modelo, placa, km, cor,
-  combustivel, cambio, preco, status (enum: disponivel/reservado/vendido/consignado),
+- empresa_id (fk), marca, modelo, versao, ano_fabricacao, ano_modelo, placa, **renavam, chassi**,
+  km, cor, combustivel, cambio, preco, status (enum: disponivel/reservado/vendido/consignado),
   descricao, updated_at
+
+> **Nota jurídica:** `renavam` e `chassi` são obrigatórios para o módulo de Documentos gerar um
+> contrato válido — o sistema deve bloquear a geração do contrato se esses campos (ou placa,
+> ou CPF das partes) estiverem vazios.
 
 ### fotos_veiculos
 - veiculo_id (fk), url, ordem
 
+### checklist_vistoria (novo — "prontuário" do veículo)
+Registro do estado/desgaste do veículo no momento da entrada, usado para preencher a
+Cláusula de Ciência do Estado do Bem no contrato de venda — o que o comprador declara ciente
+deixa de ser vício oculto perante o CDC.
+- veiculo_id (fk), item (text — ex.: "amortecedores", "pneus", "para-choque traseiro"),
+  observacao (text — ex.: "40% de vida útil", "risco visível"), created_at
+
 ### clientes
-- empresa_id (fk), nome, telefone, email, cpf, endereco
+- empresa_id (fk), nome, telefone, email, cpf, rg, estado_civil, regime_bens (text,
+  nullable — relevante quando o cliente é consignante/vendedor: comunhão parcial/universal,
+  separação total etc.), **uniao_estavel_comprovada (boolean, default false — true somente se
+  houver contrato de união estável ou declaração com assinatura reconhecida em cartório)**,
+  conjuge_nome (text, nullable), conjuge_cpf (text, nullable), endereco
+
+> **Regra de negócio (definida pelo usuário, 18/07):** exigir assinatura do cônjuge/
+> companheiro(a) no `TEMPLATE_CONTRATO_CONSIGNACAO.md` quando **qualquer uma** das condições
+> for verdadeira: (1) `estado_civil = 'casado'` **e** `regime_bens` in
+> ('comunhao_universal', 'comunhao_parcial'); **ou** (2) `estado_civil = 'uniao_estavel'`
+> **e** `uniao_estavel_comprovada = true`. Em qualquer outro caso (solteiro, separação total,
+> união estável não comprovada), a assinatura não é exigida.
 
 ### leads
 Contato interessado, ainda não é negócio fechado.
@@ -76,16 +98,36 @@ Venda ou consignação em andamento/fechada.
   data_fechamento
 
 ### consignacoes
-- veiculo_id (fk), proprietario_cliente_id (fk clientes), percentual_comissao,
-  data_inicio, data_fim, status
+- veiculo_id (fk), proprietario_cliente_id (fk clientes), **modelo_remuneracao (enum:
+  comissao_fixa/agio)**, percentual_comissao (usado só se modelo_remuneracao = comissao_fixa),
+  **preco_liquido_consignante (numeric, usado só se modelo_remuneracao = agio — valor exato
+  que o proprietário quer receber; a diferença para o preço de venda final é a remuneração
+  da garagem)**, data_inicio, data_fim, **prazo_vigencia_dias (int, default 60),
+  prorrogacao_automatica (boolean, default true)**, status, laudo_cautelar_realizado
+  (boolean — vistoria cautelar na entrada, às custas do consignante), laudo_cautelar_apontamentos
+  (text, nullable — ex.: sinistro ou passagem por leilão constatados, usados para ajustar
+  preço ou recusar o veículo)
 
 ### custos_veiculo
 Controle simples de custo por veículo (revisão, funilaria, etc. — não é o financeiro completo da empresa).
 - veiculo_id (fk), descricao, valor, data
 
 ### documentos_gerados
-Contratos/recibos gerados automaticamente (via Claude API).
-- negocio_id (fk), tipo (enum: contrato_compra_venda/recibo/outro), url_arquivo, gerado_em
+Contratos/recibos gerados automaticamente (via Claude API, através de uma Edge Function do
+Supabase — a chave da Claude API nunca fica exposta no navegador). **A IA preenche um
+template jurídico fixo (validado pelo usuário/advogado) e escolhe cláusulas condicionais
+dentro de um conjunto pré-aprovado — nunca redige cláusula livremente.**
+- negocio_id (fk), tipo (enum: contrato_compra_venda/**contrato_consignacao**/recibo/outro), conteudo (text — o texto
+  do documento gerado, guardado no banco; v1 não usa Storage/arquivo, exporta como PDF via
+  impressão do navegador), **template_versao (text — qual versão do template-base foi usada,
+  para auditoria caso o template mude no futuro)**, status (enum: rascunho/finalizado),
+  **gerado_por_usuario_id (fk usuarios — registra quem disparou a geração, para
+  responsabilização caso um dado incorreto tenha sido inserido por descuido)**, gerado_em
+
+> **Decisão registrada (18/07):** o pipeline de `negocios` mantém os 3 status simples
+> (em_andamento/fechado/cancelado) definidos originalmente — não foi expandido para os 6
+> estágios do Base44 documentados em FEATURES.md. O botão "Gerar Documento" fica disponível
+> manualmente em qualquer negócio "em_andamento", sem depender de um estágio específico.
 
 ### planos
 Planos de assinatura do seu SaaS (o que o garagista paga a você).
@@ -132,7 +174,8 @@ create table veiculos (
   empresa_id uuid references empresas(id) not null,
   marca text, modelo text, versao text,
   ano_fabricacao int, ano_modelo int,
-  placa text, km int, cor text, combustivel text, cambio text,
+  placa text, renavam text, chassi text,
+  km int, cor text, combustivel text, cambio text,
   preco numeric(12,2),
   status text check (status in ('disponivel','reservado','vendido','consignado')) default 'disponivel',
   descricao text,
@@ -150,7 +193,10 @@ create table fotos_veiculos (
 create table clientes (
   id uuid primary key default gen_random_uuid(),
   empresa_id uuid references empresas(id) not null,
-  nome text not null, telefone text, email text, cpf text, endereco text,
+  nome text not null, telefone text, email text, cpf text, rg text, estado_civil text,
+  regime_bens text, uniao_estavel_comprovada boolean default false,
+  conjuge_nome text, conjuge_cpf text,
+  endereco text,
   created_at timestamptz default now()
 );
 
@@ -179,13 +225,27 @@ create table negocios (
   created_at timestamptz default now()
 );
 
+create table checklist_vistoria (
+  id uuid primary key default gen_random_uuid(),
+  veiculo_id uuid references veiculos(id) not null,
+  item text not null,
+  observacao text,
+  created_at timestamptz default now()
+);
+
 create table consignacoes (
   id uuid primary key default gen_random_uuid(),
   veiculo_id uuid references veiculos(id) not null,
   proprietario_cliente_id uuid references clientes(id) not null,
+  modelo_remuneracao text check (modelo_remuneracao in ('comissao_fixa','agio')) default 'comissao_fixa',
   percentual_comissao numeric(5,2),
+  preco_liquido_consignante numeric(12,2),
   data_inicio date, data_fim date,
-  status text default 'ativa'
+  prazo_vigencia_dias int default 60,
+  prorrogacao_automatica boolean default true,
+  status text default 'ativa',
+  laudo_cautelar_realizado boolean default false,
+  laudo_cautelar_apontamentos text
 );
 
 create table custos_veiculo (
@@ -197,8 +257,11 @@ create table custos_veiculo (
 create table documentos_gerados (
   id uuid primary key default gen_random_uuid(),
   negocio_id uuid references negocios(id) not null,
-  tipo text check (tipo in ('contrato_compra_venda','recibo','outro')),
-  url_arquivo text,
+  tipo text check (tipo in ('contrato_compra_venda','contrato_consignacao','recibo','outro')),
+  conteudo text,
+  template_versao text,
+  status text check (status in ('rascunho','finalizado')) default 'rascunho',
+  gerado_por_usuario_id uuid references usuarios(id),
   gerado_em timestamptz default now()
 );
 

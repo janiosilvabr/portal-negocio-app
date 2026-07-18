@@ -30,10 +30,7 @@ export default function Vitrine() {
 
   useEffect(() => {
     supabase
-      .from("veiculos")
-      .select("*, empresas(nome)")
-      .eq("status", "disponivel")
-      .order("created_at", { ascending: false })
+      .rpc("listar_vitrine_veiculos")
       .then(({ data, error }) => {
         if (error) setErro(error.message);
         else setVeiculos(data);
@@ -156,7 +153,7 @@ export default function Vitrine() {
                   <li>{v.combustivel ?? "-"}</li>
                   <li>{v.cambio ?? "-"}</li>
                 </ul>
-                {v.empresas?.nome && <p className="vitrine-card-garagem">{v.empresas.nome}</p>}
+                {v.empresa_nome && <p className="vitrine-card-garagem">{v.empresa_nome}</p>}
               </div>
             </div>
           ))}

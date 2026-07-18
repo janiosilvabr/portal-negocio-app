@@ -18,6 +18,20 @@ garagem** — sem o usuário precisar redigitar nada. O módulo "Documentos" nã
 secundário; é o motivo do produto existir. Ao planejar cada módulo, lembrar que Veículos,
 Clientes e Negócios existem, entre outras razões, para alimentar esse módulo com dados prontos.
 
+**Regra de ouro do módulo Documentos:** a Claude API **nunca redige cláusula jurídica livre**.
+Ela preenche um template-base fixo (escrito e validado pelo usuário, que é advogado) e escolhe
+entre blocos de cláusula condicional pré-aprovados (ex.: consignação vs. venda direta,
+financiamento em aberto vs. veículo livre de ônus). Isso garante consistência jurídica entre
+todos os contratos gerados — a IA acelera a redação, não decide o conteúdo legal.
+Todo documento gerado nasce com status "rascunho", editável antes de ser considerado final.
+
+**Dois contratos, dois momentos do fluxo (não confundir):**
+1. **Entrada** — veículo consignado chega na loja: `TEMPLATE_CONTRATO_CONSIGNACAO.md`
+   (proteções: laudo cautelar, regresso automático, blindagem conjugal do consignante).
+2. **Saída** — venda ao cliente final: `TEMPLATE_CONTRATO_COMPRA_VENDA.md`
+   (proteções: ciência do estado do bem/desgaste, oficina credenciada, perda de garantia por
+   modificação).
+
 ## Identidade visual
 
 Manter o mesmo design/tema do Base44 atual, com melhorias pontuais onde fizer sentido — não
@@ -52,6 +66,10 @@ produto definitivo. ocarroideal.com não é uma marca separada — é só o cant
 A hospedagem Compartilhada da Hostinger serve arquivos estáticos sem problema — não precisa
 rodar servidor Node. Supabase resolve login, dados e upload de fotos direto do navegador.
 
+**Exceção: chamadas à Claude API (módulo Documentos) passam por uma Supabase Edge Function**,
+nunca direto do navegador — isso mantém a `ANTHROPIC_API_KEY` fora do código público. Ver
+detalhe em CONTEXTO.md, seção `documentos_gerados`.
+
 *Avançado/opcional, não fazer agora:* um framework com servidor (Next.js, etc.) exigiria
 upgrade para plano VPS na Hostinger. Só considerar isso se o site estático se mostrar
 insuficiente mais adiante.
@@ -75,6 +93,8 @@ Só CRM Concessionária/Garagista + Vitrine de veículos. **Sem módulo de imóv
 
 - **CONTEXTO.md** — schema completo do banco de dados (tabelas, campos, SQL de criação)
 - **FEATURES.md** — inventário de funcionalidades, extraído do Base44 em produção
+- **TEMPLATE_CONTRATO_CONSIGNACAO.md** — template do contrato de entrada (loja recebe veículo)
+- **TEMPLATE_CONTRATO_COMPRA_VENDA.md** — template do contrato de saída (loja vende ao cliente)
 
 ## Ordem de construção recomendada
 

@@ -63,6 +63,7 @@ export default function Veiculos() {
                 <th>Câmbio</th>
                 <th>Preço</th>
                 <th>Status</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -84,6 +85,9 @@ export default function Veiculos() {
                     <span className={`badge badge-${v.status}`}>
                       {STATUS_LABEL[v.status] ?? v.status}
                     </span>
+                  </td>
+                  <td>
+                    <Link to={`/veiculos/${v.id}/editar`}>Editar</Link>
                   </td>
                 </tr>
               ))}
