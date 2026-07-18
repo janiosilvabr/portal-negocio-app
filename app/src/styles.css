@@ -253,6 +253,85 @@ body {
   color: #1a2744;
 }
 
+.badge-venda {
+  background: #e3f6ea;
+  color: #1e824c;
+}
+
+.badge-consignacao {
+  background: #ddebff;
+  color: #1a2744;
+}
+
+/* Kanban de negócios */
+
+.kanban {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(240px, 1fr));
+  gap: 16px;
+  align-items: start;
+}
+
+.kanban-coluna {
+  background: var(--white);
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(26, 39, 68, 0.1);
+  padding: 16px;
+}
+
+.kanban-coluna-titulo {
+  font-weight: 600;
+  color: var(--navy);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.kanban-contador {
+  background: var(--gray-bg);
+  color: var(--text-muted);
+  border-radius: 999px;
+  padding: 2px 8px;
+  font-size: 0.75rem;
+}
+
+.kanban-card {
+  background: var(--gray-bg);
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 12px;
+}
+
+.kanban-card-cliente {
+  margin: 0;
+  font-weight: 600;
+  color: var(--navy);
+}
+
+.kanban-card-veiculo {
+  margin: 2px 0 6px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.kanban-card-valor {
+  margin: 0 0 8px;
+  font-weight: 600;
+  color: var(--orange);
+}
+
+.kanban-select {
+  display: block;
+  width: 100%;
+  margin-top: 8px;
+  padding: 6px 8px;
+  border: 1px solid #dcdfe4;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-family: inherit;
+}
+
 /* Formulário */
 
 .form-card {
