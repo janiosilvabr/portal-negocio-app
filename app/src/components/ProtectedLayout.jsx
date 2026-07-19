@@ -17,6 +17,7 @@ export function ProtectedLayout() {
           <Link to="/clientes">Clientes</Link>
           <Link to="/negocios">Negócios</Link>
           <Link to="/documentos">Documentos</Link>
+          <Link to="/empresa">Empresa</Link>
         </nav>
         <button type="button" onClick={logout}>
           Sair
