@@ -735,3 +735,187 @@ body {
   font-size: 0.8rem;
   color: var(--text-muted);
 }
+
+/* Custos do veículo */
+
+.custo-linha {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr 1fr auto;
+  gap: 8px;
+  margin-bottom: 8px;
+  align-items: center;
+}
+
+.custo-linha input,
+.custo-linha select {
+  padding: 8px 10px;
+  border: 1px solid #dcdfe4;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-family: inherit;
+}
+
+.custo-linha input:focus,
+.custo-linha select:focus {
+  outline: 2px solid var(--orange);
+  border-color: var(--orange);
+}
+
+/* Termômetro de margem */
+
+.termometro {
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
+}
+
+.termometro-valor {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.termometro-label {
+  margin: 4px 0 0;
+  font-size: 0.85rem;
+}
+
+.termometro-boa {
+  background: #e3f6ea;
+  color: #1e824c;
+}
+
+.termometro-atencao {
+  background: #fff3cd;
+  color: #8a6300;
+}
+
+.termometro-ruim {
+  background: #f5e0dc;
+  color: #c0392b;
+}
+
+.termometro-sem-dados {
+  background: var(--gray-bg);
+  color: var(--text-muted);
+}
+
+.termometro-detalhe {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* Vendedores */
+
+.vendedores-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.vendedor-card {
+  background: var(--white);
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(26, 39, 68, 0.1);
+  padding: 16px;
+}
+
+.vendedor-nome {
+  margin: 0 0 8px;
+  font-weight: 600;
+  color: var(--navy);
+}
+
+.vendedor-comissao-label {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin: 12px 0 4px;
+}
+
+.vendedor-comissao-label input {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #dcdfe4;
+  border-radius: 8px;
+  margin-top: 4px;
+}
+
+.vendedor-card button {
+  margin-top: 12px;
+  width: 100%;
+  padding: 8px;
+  border: none;
+  border-radius: 8px;
+  background: var(--orange);
+  color: var(--white);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Financeiro */
+
+.badge-pago {
+  background: #e3f6ea;
+  color: #1e824c;
+}
+
+.badge-pendente {
+  background: #fff3cd;
+  color: #8a6300;
+}
+
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.kpi-card {
+  background: var(--white);
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(26, 39, 68, 0.1);
+  padding: 16px;
+}
+
+.kpi-label {
+  margin: 0 0 8px;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.kpi-valor {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--navy);
+}
+
+.kpi-positivo {
+  color: #1e824c;
+}
+
+.kpi-negativo {
+  color: #c0392b;
+}
+
+/* Leads: reatribuir vendedor */
+
+.lead-vendedor-label {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 8px;
+}
+
+.lead-vendedor-label select {
+  margin-top: 4px;
+}

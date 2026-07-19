@@ -51,6 +51,47 @@ export default function Negocios() {
     setNegocios((atual) =>
       atual.map((n) => (n.id === negocio.id ? { ...n, ...atualizacao } : n))
     );
+
+    if (novoStatus === "fechado") {
+      const consolidar = window.confirm(
+        "Negócio fechado! A receita e a comissão do vendedor já foram lançadas automaticamente.\n\n" +
+          "Quer também consolidar os custos lançados neste veículo (compra, mecânica, estética...) como uma despesa no Financeiro?"
+      );
+      if (consolidar) {
+        await consolidarCustosComoDespesa(negocio);
+      }
+    }
+  }
+
+  async function consolidarCustosComoDespesa(negocio) {
+    const { data: custos, error: erroCustos } = await supabase
+      .from("custos_veiculo")
+      .select("valor")
+      .eq("veiculo_id", negocio.veiculo_id);
+
+    if (erroCustos) {
+      setErro(erroCustos.message);
+      return;
+    }
+
+    const soma = (custos ?? []).reduce((s, c) => s + Number(c.valor ?? 0), 0);
+    if (soma <= 0) {
+      setErro("Nenhum custo lançado para este veículo — nada a consolidar.");
+      return;
+    }
+
+    const { error } = await supabase.from("transacoes_financeiras").insert({
+      empresa_id: negocio.empresa_id,
+      tipo: "despesa",
+      categoria: "custo_veiculo",
+      descricao: "Custos consolidados do veículo",
+      valor: soma,
+      negocio_id: negocio.id,
+      data: new Date().toISOString().slice(0, 10),
+      status: "pago",
+    });
+
+    if (error) setErro(error.message);
   }
 
   return (

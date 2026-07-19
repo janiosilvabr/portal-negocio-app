@@ -19,6 +19,12 @@ import DocumentosGerados from "./pages/DocumentosGerados";
 import EditarEmpresa from "./pages/EditarEmpresa";
 import Leads from "./pages/Leads";
 import NovoLead from "./pages/NovoLead";
+import Vendedores from "./pages/Vendedores";
+import NovoVendedor from "./pages/NovoVendedor";
+import { RotaAdmin } from "./components/RotaAdmin";
+import Financeiro from "./pages/Financeiro";
+import NovaTransacao from "./pages/NovaTransacao";
+import ExtratoVendedor from "./pages/ExtratoVendedor";
 
 export default function App() {
   return (
@@ -45,6 +51,39 @@ export default function App() {
           <Route path="/empresa" element={<EditarEmpresa />} />
           <Route path="/leads" element={<Leads />} />
           <Route path="/leads/novo" element={<NovoLead />} />
+          <Route
+            path="/vendedores"
+            element={
+              <RotaAdmin>
+                <Vendedores />
+              </RotaAdmin>
+            }
+          />
+          <Route
+            path="/vendedores/convidar"
+            element={
+              <RotaAdmin>
+                <NovoVendedor />
+              </RotaAdmin>
+            }
+          />
+          <Route
+            path="/financeiro"
+            element={
+              <RotaAdmin>
+                <Financeiro />
+              </RotaAdmin>
+            }
+          />
+          <Route
+            path="/financeiro/nova"
+            element={
+              <RotaAdmin>
+                <NovaTransacao />
+              </RotaAdmin>
+            }
+          />
+          <Route path="/extrato" element={<ExtratoVendedor />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/" replace />} />

@@ -2,10 +2,12 @@ import { Navigate, Outlet, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 export function ProtectedLayout() {
-  const { session, loading, logout } = useAuth();
+  const { session, perfil, loading, logout } = useAuth();
 
   if (loading) return null;
   if (!session) return <Navigate to="/login" replace />;
+
+  const ehAdmin = perfil?.papel === "admin";
 
   return (
     <div className="app-shell">
@@ -18,6 +20,9 @@ export function ProtectedLayout() {
           <Link to="/leads">Leads</Link>
           <Link to="/negocios">Negócios</Link>
           <Link to="/documentos">Documentos</Link>
+          {ehAdmin && <Link to="/vendedores">Vendedores</Link>}
+          {ehAdmin && <Link to="/financeiro">Financeiro</Link>}
+          <Link to="/extrato">Extrato</Link>
           <Link to="/empresa">Empresa</Link>
         </nav>
         <button type="button" onClick={logout}>

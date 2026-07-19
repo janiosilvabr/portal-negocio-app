@@ -50,7 +50,8 @@ Cada assinante do SaaS (o garagista/concessionária).
 
 ### usuarios
 Perfil ligado ao `auth.users` do Supabase (autenticação já vem pronta no Supabase).
-- id (= auth.users.id), empresa_id (fk), nome, papel (enum: admin/vendedor), telefone
+- id (= auth.users.id), empresa_id (fk), nome, papel (enum: admin/vendedor), telefone,
+  **comissao_percentual (numeric, nullable — só relevante quando papel = vendedor)**
 
 ### veiculos
 - empresa_id (fk), marca, modelo, versao, ano_fabricacao, ano_modelo, placa, **renavam, chassi**,
@@ -91,6 +92,14 @@ Contato interessado, ainda não é negócio fechado.
   origem (enum: site/whatsapp/indicacao/outro), status (enum: novo/em_contato/negociando/perdido/convertido),
   vendedor_id (fk usuarios), observacoes
 
+> **Regra de "Passagem de Bastão" (decisão de 19/07):** sempre que `vendedor_id` de um lead
+> mudar, anexar automaticamente em `observacoes` uma linha "Lead assumido por [vendedor] em
+> [data]" (não sobrescrever o histórico anterior, só acrescentar). **Bloqueio:** enquanto
+> `status = 'negociando'`, apenas o `vendedor_id` atual do lead ou um usuário com
+> `papel = 'admin'` pode alterá-lo — implementar como policy de **RLS de UPDATE** (regra de
+> segurança do Postgres específica para escrita, separada da regra de leitura), não apenas
+> como validação de tela, para não poder ser burlada.
+
 ### negocios
 Venda ou consignação em andamento/fechada.
 - empresa_id (fk), veiculo_id (fk), cliente_id (fk), vendedor_id (fk usuarios),
@@ -109,8 +118,30 @@ Venda ou consignação em andamento/fechada.
   preço ou recusar o veículo)
 
 ### custos_veiculo
-Controle simples de custo por veículo (revisão, funilaria, etc. — não é o financeiro completo da empresa).
-- veiculo_id (fk), descricao, valor, data
+Controle simples de custo por veículo (revisão, funilaria, etc. — não é o financeiro completo
+da empresa). **Convenção (decisão de 19/07):** o custo de aquisição do veículo (quanto a
+garagem pagou por ele) é registrado como o primeiro lançamento aqui, com
+`categoria = 'aquisicao'` — não criamos campo separado em `veiculos` pra isso, reaproveitamos
+esta tabela. Usado pelo "Termômetro de Margem" (ver `negocios`/UI de veículo): margem estimada
+= `veiculos.preco` (venda) − soma de `custos_veiculo` (incluindo aquisição) − comissão
+estimada do vendedor, exibida antes mesmo da venda acontecer.
+- veiculo_id (fk), descricao, **categoria (text — ex.: "aquisicao", "mecanica", "estetica",
+  "outro")**, valor, data
+
+### transacoes_financeiras (novo — módulo Financeiro)
+Receitas e despesas da empresa. Alimentada de duas formas: manualmente (botão "Nova
+Transação", igual ao Base44) e **automaticamente**, quando um negócio muda para "fechado":
+gera 1 registro de receita (valor da venda) e, se houver vendedor com `comissao_percentual`
+definido, 1 registro de despesa de comissão vinculado a ele. Isso evita o garagista calcular
+comissão na mão todo mês.
+- empresa_id (fk), tipo (enum: receita/despesa), categoria (text — ex.: "venda", "comissao",
+  "custo_veiculo", "outro"), descricao, valor, negocio_id (fk, nullable — liga a transação ao
+  negócio que a gerou, quando automática), vendedor_id (fk usuarios, nullable — só em
+  despesas de comissão), data, status (enum: pago/pendente), created_at
+
+> **Lucro líquido por negócio** (não é campo armazenado, é calculado): valor do negócio menos
+> a soma de `custos_veiculo` daquele veículo menos a comissão do vendedor. Ver roadmap no
+> CLAUDE.md sobre comparar isso com a estimativa da Calc. PMC.
 
 ### documentos_gerados
 Contratos/recibos gerados automaticamente (via Claude API, através de uma Edge Function do
@@ -166,6 +197,7 @@ create table usuarios (
   nome text not null,
   papel text check (papel in ('admin','vendedor')) default 'vendedor',
   telefone text,
+  comissao_percentual numeric(5,2),
   created_at timestamptz default now()
 );
 
@@ -251,7 +283,21 @@ create table consignacoes (
 create table custos_veiculo (
   id uuid primary key default gen_random_uuid(),
   veiculo_id uuid references veiculos(id) not null,
-  descricao text, valor numeric(12,2), data date default now()
+  descricao text, categoria text default 'outro', valor numeric(12,2), data date default now()
+);
+
+create table transacoes_financeiras (
+  id uuid primary key default gen_random_uuid(),
+  empresa_id uuid references empresas(id) not null,
+  tipo text check (tipo in ('receita','despesa')) not null,
+  categoria text,
+  descricao text,
+  valor numeric(12,2) not null,
+  negocio_id uuid references negocios(id),
+  vendedor_id uuid references usuarios(id),
+  data date default now(),
+  status text check (status in ('pago','pendente')) default 'pendente',
+  created_at timestamptz default now()
 );
 
 create table documentos_gerados (

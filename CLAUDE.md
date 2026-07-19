@@ -18,6 +18,11 @@ garagem** — sem o usuário precisar redigitar nada. O módulo "Documentos" nã
 secundário; é o motivo do produto existir. Ao planejar cada módulo, lembrar que Veículos,
 Clientes e Negócios existem, entre outras razões, para alimentar esse módulo com dados prontos.
 
+**Segundo carro-chefe (decisão de 19/07):** Vendedores + Financeiro, juntos, atacam duas dores
+reais do garagista — desconfiança de comissão entre dono/equipe, e "lucro ilusório" (achar que
+ganhou mais do que ganhou por esquecer custos ocultos). Ver detalhamento no roadmap e nas
+seções `leads`/`custos_veiculo`/`transacoes_financeiras` do CONTEXTO.md.
+
 **Regra de ouro do módulo Documentos:** a Claude API **nunca redige cláusula jurídica livre**.
 Ela preenche um template-base fixo (escrito e validado pelo usuário, que é advogado) e escolhe
 entre blocos de cláusula condicional pré-aprovados (ex.: consignação vs. venda direta,
@@ -110,6 +115,26 @@ Só CRM Concessionária/Garagista + Vitrine de veículos. **Sem módulo de imóv
 
 ## Roadmap futuro (fase 2+, não construir agora)
 
+- **Agenda automática de test-drives (decisão de 19/07, desmembrada da Ideia "Extrato do
+  Vendedor"):** exige tabela nova (`agendamentos`: veiculo_id, cliente_id, vendedor_id, tipo,
+  data_hora, status) — não construir junto com o Extrato do Vendedor, é módulo próprio.
+- **Alerta de margem baseado em Tabela FIPE (decisão de 19/07):** o "Termômetro de Margem"
+  (ver CONTEXTO.md, `custos_veiculo`) usa só valor pago (custo de aquisição) na v1; alerta
+  comparando contra a Tabela FIPE precisa de integração externa nova, fica para quando a
+  Calc. PMC também for revisitada.
+- **Ranking do mês por vendedor (opcional, baixo custo):** visão do admin comparando negócios
+  fechados, comissão total e taxa de conversão entre vendedores — mesma query do Extrato do
+  Vendedor, só agregada para todos. Não é essencial, mas quase gratuito de adicionar quando o
+  Extrato já existir.
+- **PMC estimado vs. margem real (decisão de 19/07):** ligar o resultado salvo da Calc. PMC
+  (margem estimada na compra) ao lucro líquido real apurado no Financeiro após a venda do
+  mesmo veículo — permite comparar "estimei X, ganhei Y". Requer que o resultado da Calc. PMC
+  seja salvo vinculado ao veículo, não só exibido na hora.
+- **Avaliação por IA da Calc. PMC baseada em dados da própria rede (fase avançada, só faz
+  sentido com volume real de anúncios):** em vez de a IA "chutar" valor de mercado com base só
+  em conhecimento geral (risco de imprecisão numa feature paga), fundamentar a avaliação em
+  anúncios reais similares já publicados no Portal por outras garagens. Diferencial que só o
+  Portal tem, por agregar dados de várias garagens.
 - **Upload de Fotos + Marca d'água dupla (decisão de 18/07):** quando o módulo de Fotos/Storage
   entrar (hoje pausado), aplicar automaticamente, no upload, marca d'água com o logo da
   garagem + selo discreto "Anunciado no Portal Negócio" (com QR code/link pro anúncio, se

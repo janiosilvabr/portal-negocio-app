@@ -19,6 +19,7 @@ const ORIGEM_LABEL = {
 
 export default function Leads() {
   const [leads, setLeads] = useState([]);
+  const [usuarios, setUsuarios] = useState([]);
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState("");
 
@@ -28,26 +29,66 @@ export default function Leads() {
 
   function carregar() {
     setCarregando(true);
-    supabase
-      .from("leads")
-      .select("*, clientes(nome), veiculos(marca, modelo)")
-      .order("created_at", { ascending: false })
-      .then(({ data, error }) => {
-        if (error) setErro(error.message);
-        else setLeads(data);
-        setCarregando(false);
-      });
+    Promise.all([
+      supabase
+        .from("leads")
+        .select("*, clientes(nome), veiculos(marca, modelo), vendedor:usuarios(nome)")
+        .order("created_at", { ascending: false }),
+      supabase.rpc("listar_equipe_empresa"),
+    ]).then(([{ data: dataLeads, error: erroLeads }, { data: dataUsuarios }]) => {
+      if (erroLeads) setErro(erroLeads.message);
+      else setLeads(dataLeads);
+      setUsuarios((dataUsuarios ?? []).filter((u) => u.ativo));
+      setCarregando(false);
+    });
   }
 
   async function handleStatusChange(lead, novoStatus) {
-    const { error } = await supabase.from("leads").update({ status: novoStatus }).eq("id", lead.id);
+    const { data, error } = await supabase
+      .from("leads")
+      .update({ status: novoStatus })
+      .eq("id", lead.id)
+      .select("id")
+      .maybeSingle();
 
     if (error) {
       setErro(error.message);
       return;
     }
 
+    if (!data) {
+      setErro(
+        "Não foi possível alterar: enquanto o lead está \"negociando\", só o vendedor atual ou um admin pode alterá-lo."
+      );
+      return;
+    }
+
+    setErro("");
     setLeads((atual) => atual.map((l) => (l.id === lead.id ? { ...l, status: novoStatus } : l)));
+  }
+
+  async function handleVendedorChange(lead, novoVendedorId) {
+    const { data, error } = await supabase
+      .from("leads")
+      .update({ vendedor_id: novoVendedorId || null })
+      .eq("id", lead.id)
+      .select("*, clientes(nome), veiculos(marca, modelo), vendedor:usuarios(nome)")
+      .maybeSingle();
+
+    if (error) {
+      setErro(error.message);
+      return;
+    }
+
+    if (!data) {
+      setErro(
+        "Não foi possível reatribuir: enquanto o lead está \"negociando\", só o vendedor atual ou um admin pode alterá-lo."
+      );
+      return;
+    }
+
+    setErro("");
+    setLeads((atual) => atual.map((l) => (l.id === lead.id ? data : l)));
   }
 
   return (
@@ -62,7 +103,7 @@ export default function Leads() {
       {carregando && <p>Carregando...</p>}
       {erro && <p className="auth-erro">{erro}</p>}
 
-      {!carregando && !erro && (
+      {!carregando && (
         <div className="kanban kanban-leads">
           {COLUNAS.map((coluna) => {
             const itens = leads.filter((l) => l.status === coluna.status);
@@ -84,6 +125,22 @@ export default function Leads() {
                     )}
                     <span className="badge">{ORIGEM_LABEL[l.origem] ?? l.origem}</span>
                     {l.observacoes && <p className="lead-observacoes">{l.observacoes}</p>}
+
+                    <label className="lead-vendedor-label">
+                      Vendedor
+                      <select
+                        className="kanban-select"
+                        value={l.vendedor_id ?? ""}
+                        onChange={(e) => handleVendedorChange(l, e.target.value)}
+                      >
+                        <option value="">Sem vendedor</option>
+                        {usuarios.map((u) => (
+                          <option key={u.id} value={u.id}>
+                            {u.nome}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
 
                     <select
                       className="kanban-select"

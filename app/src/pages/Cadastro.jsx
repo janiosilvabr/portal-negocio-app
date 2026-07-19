@@ -1,9 +1,12 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "../lib/supabaseClient";
 
 export default function Cadastro() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const conviteToken = searchParams.get("convite");
+
   const [nome, setNome] = useState("");
   const [nomeEmpresa, setNomeEmpresa] = useState("");
   const [email, setEmail] = useState("");
@@ -33,7 +36,9 @@ export default function Cadastro() {
       email,
       password: senha,
       options: {
-        data: { nome, nome_empresa: nomeEmpresa },
+        data: conviteToken
+          ? { nome, convite_token: conviteToken }
+          : { nome, nome_empresa: nomeEmpresa },
       },
     });
 
@@ -57,16 +62,26 @@ export default function Cadastro() {
       <form className="auth-card" onSubmit={handleSubmit}>
         <h1>Criar conta</h1>
 
+        {conviteToken && (
+          <p className="auth-nota">
+            Você foi convidado para entrar numa equipe já existente no Portal Negócio.
+          </p>
+        )}
+
         <label htmlFor="nome">Seu nome</label>
         <input id="nome" value={nome} onChange={(e) => setNome(e.target.value)} required />
 
-        <label htmlFor="nomeEmpresa">Nome da garagem/concessionária</label>
-        <input
-          id="nomeEmpresa"
-          value={nomeEmpresa}
-          onChange={(e) => setNomeEmpresa(e.target.value)}
-          required
-        />
+        {!conviteToken && (
+          <>
+            <label htmlFor="nomeEmpresa">Nome da garagem/concessionária</label>
+            <input
+              id="nomeEmpresa"
+              value={nomeEmpresa}
+              onChange={(e) => setNomeEmpresa(e.target.value)}
+              required
+            />
+          </>
+        )}
 
         <label htmlFor="email">E-mail</label>
         <input

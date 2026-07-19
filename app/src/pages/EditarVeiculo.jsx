@@ -10,6 +10,8 @@ import {
   buildConsignacaoPayload,
 } from "../components/ConsignacaoCampos";
 import { FotosVeiculo, salvarFotosNovas } from "../components/FotosVeiculo";
+import { CustosVeiculo } from "../components/CustosVeiculo";
+import { TermometroMargem } from "../components/TermometroMargem";
 
 export default function EditarVeiculo() {
   const { id } = useParams();
@@ -20,6 +22,8 @@ export default function EditarVeiculo() {
   const [removidos, setRemovidos] = useState([]);
   const [fotos, setFotos] = useState([]);
   const [fotosRemovidas, setFotosRemovidas] = useState([]);
+  const [custos, setCustos] = useState([]);
+  const [custosRemovidos, setCustosRemovidos] = useState([]);
   const [consignacao, setConsignacao] = useState(CAMPOS_INICIAIS_CONSIGNACAO);
   const [consignacaoId, setConsignacaoId] = useState(null);
   const [clientes, setClientes] = useState([]);
@@ -36,12 +40,14 @@ export default function EditarVeiculo() {
         { data: consignacaoExistente },
         { data: listaClientes },
         { data: fotosExistentes },
+        { data: custosExistentes },
       ] = await Promise.all([
         supabase.from("veiculos").select("*").eq("id", id).maybeSingle(),
         supabase.from("checklist_vistoria").select("*").eq("veiculo_id", id).order("created_at"),
         supabase.from("consignacoes").select("*").eq("veiculo_id", id).maybeSingle(),
         supabase.from("clientes").select("id, nome").order("nome"),
         supabase.from("fotos_veiculos").select("*").eq("veiculo_id", id).order("ordem"),
+        supabase.from("custos_veiculo").select("*").eq("veiculo_id", id).order("data"),
       ]);
 
       if (erroVeiculo) {
@@ -76,6 +82,7 @@ export default function EditarVeiculo() {
       setChecklist(itensChecklist ?? []);
       setClientes(listaClientes ?? []);
       setFotos(fotosExistentes ?? []);
+      setCustos(custosExistentes ?? []);
 
       if (consignacaoExistente) {
         setConsignacaoId(consignacaoExistente.id);
@@ -196,6 +203,36 @@ export default function EditarVeiculo() {
       return;
     }
 
+    for (const custoId of custosRemovidos) {
+      const { error } = await supabase.from("custos_veiculo").delete().eq("id", custoId);
+      if (error) {
+        setSalvando(false);
+        setErro(error.message);
+        return;
+      }
+    }
+
+    for (const custo of custos) {
+      if (!custo.valor) continue;
+
+      const dados = {
+        descricao: custo.descricao || null,
+        categoria: custo.categoria || "outro",
+        valor: Number(custo.valor),
+        data: custo.data || new Date().toISOString().slice(0, 10),
+      };
+
+      const { error } = custo.id
+        ? await supabase.from("custos_veiculo").update(dados).eq("id", custo.id)
+        : await supabase.from("custos_veiculo").insert({ ...dados, veiculo_id: id });
+
+      if (error) {
+        setSalvando(false);
+        setErro(error.message);
+        return;
+      }
+    }
+
     setSalvando(false);
     navigate("/veiculos");
   }
@@ -243,12 +280,22 @@ export default function EditarVeiculo() {
           }}
         />
 
+        <CustosVeiculo
+          itens={custos}
+          onChange={setCustos}
+          onRemoverItem={(custo) => {
+            if (custo.id) setCustosRemovidos((r) => [...r, custo.id]);
+          }}
+        />
+
         {erro && <p className="auth-erro">{erro}</p>}
 
         <button type="submit" disabled={salvando}>
           {salvando ? "Salvando..." : "Salvar alterações"}
         </button>
       </form>
+
+      <TermometroMargem preco={campos.preco} custos={custos} comissaoPercentual={perfil?.comissao_percentual} />
 
       {campos.status === "consignado" && consignacaoId && (
         <p className="auth-nota" style={{ marginTop: 16 }}>
