@@ -1,17 +1,32 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabaseClient";
 import { useAuth } from "../context/AuthContext";
 import { VeiculoCampos, CAMPOS_INICIAIS_VEICULO } from "../components/VeiculoCampos";
 import { ChecklistVistoria } from "../components/ChecklistVistoria";
+import {
+  ConsignacaoCampos,
+  CAMPOS_INICIAIS_CONSIGNACAO,
+  buildConsignacaoPayload,
+} from "../components/ConsignacaoCampos";
 
 export default function NovoVeiculo() {
   const navigate = useNavigate();
   const { perfil } = useAuth();
   const [campos, setCampos] = useState(CAMPOS_INICIAIS_VEICULO);
   const [checklist, setChecklist] = useState([]);
+  const [consignacao, setConsignacao] = useState(CAMPOS_INICIAIS_CONSIGNACAO);
+  const [clientes, setClientes] = useState([]);
   const [erro, setErro] = useState("");
   const [salvando, setSalvando] = useState(false);
+
+  useEffect(() => {
+    supabase
+      .from("clientes")
+      .select("id, nome")
+      .order("nome")
+      .then(({ data }) => setClientes(data ?? []));
+  }, []);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -23,6 +38,10 @@ export default function NovoVeiculo() {
     }
     if (!campos.marca || !campos.modelo) {
       setErro("Marca e modelo são obrigatórios.");
+      return;
+    }
+    if (campos.status === "consignado" && !consignacao.proprietario_cliente_id) {
+      setErro("Selecione o proprietário (consignante) para um veículo consignado.");
       return;
     }
 
@@ -74,6 +93,18 @@ export default function NovoVeiculo() {
       }
     }
 
+    if (campos.status === "consignado") {
+      const { error: erroConsignacao } = await supabase
+        .from("consignacoes")
+        .insert(buildConsignacaoPayload(consignacao, veiculo.id));
+
+      if (erroConsignacao) {
+        setSalvando(false);
+        setErro(`Veículo salvo, mas a consignação falhou: ${erroConsignacao.message}`);
+        return;
+      }
+    }
+
     setSalvando(false);
     navigate("/veiculos");
   }
@@ -86,6 +117,10 @@ export default function NovoVeiculo() {
         <VeiculoCampos campos={campos} onChange={setCampos} />
 
         <ChecklistVistoria itens={checklist} onChange={setChecklist} />
+
+        {campos.status === "consignado" && (
+          <ConsignacaoCampos campos={consignacao} onChange={setConsignacao} clientes={clientes} />
+        )}
 
         {erro && <p className="auth-erro">{erro}</p>}
 

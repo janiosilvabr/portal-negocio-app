@@ -108,6 +108,19 @@ Só CRM Concessionária/Garagista + Vitrine de veículos. **Sem módulo de imóv
 8. Vendedores + Financeiro (menor prioridade, pode ficar para o fim do MVP)
 9. Calc. PMC — função ainda não explorada (ver pendências)
 
+## Roadmap futuro (fase 2+, não construir agora)
+
+- **Upload de Fotos + Marca d'água dupla (decisão de 18/07):** quando o módulo de Fotos/Storage
+  entrar (hoje pausado), aplicar automaticamente, no upload, marca d'água com o logo da
+  garagem + selo discreto "Anunciado no Portal Negócio" (com QR code/link pro anúncio, se
+  viável). Objetivo: cada foto compartilhada pela garagem em outros canais (WhatsApp,
+  Instagram, grupos) carrega o Portal junto — efeito de rede orgânico. O selo do Portal deve
+  ser removível apenas em planos pagos superiores (alavanca de upsell).
+- Outros tipos de documento (Recibo, Termo de Garantia, Confissão de Dívida)
+- Envio automático de documento por e-mail via Brevo
+- Cobrança avulsa (pay-per-use) para a futura Calc. PMC
+- N8N para automações condicionais mais complexas
+
 ## Pendências técnicas (não travam o início do v1)
 
 - Quando o módulo Calc. PMC entrar em construção: precisa de um mecanismo de cobrança avulsa

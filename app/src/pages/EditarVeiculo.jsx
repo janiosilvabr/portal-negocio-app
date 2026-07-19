@@ -1,8 +1,13 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { supabase } from "../lib/supabaseClient";
 import { VeiculoCampos, CAMPOS_INICIAIS_VEICULO } from "../components/VeiculoCampos";
 import { ChecklistVistoria } from "../components/ChecklistVistoria";
+import {
+  ConsignacaoCampos,
+  CAMPOS_INICIAIS_CONSIGNACAO,
+  buildConsignacaoPayload,
+} from "../components/ConsignacaoCampos";
 
 export default function EditarVeiculo() {
   const { id } = useParams();
@@ -10,6 +15,9 @@ export default function EditarVeiculo() {
   const [campos, setCampos] = useState(CAMPOS_INICIAIS_VEICULO);
   const [checklist, setChecklist] = useState([]);
   const [removidos, setRemovidos] = useState([]);
+  const [consignacao, setConsignacao] = useState(CAMPOS_INICIAIS_CONSIGNACAO);
+  const [consignacaoId, setConsignacaoId] = useState(null);
+  const [clientes, setClientes] = useState([]);
   const [carregando, setCarregando] = useState(true);
   const [naoEncontrado, setNaoEncontrado] = useState(false);
   const [erro, setErro] = useState("");
@@ -17,9 +25,16 @@ export default function EditarVeiculo() {
 
   useEffect(() => {
     async function carregar() {
-      const [{ data: veiculo, error: erroVeiculo }, { data: itensChecklist }] = await Promise.all([
+      const [
+        { data: veiculo, error: erroVeiculo },
+        { data: itensChecklist },
+        { data: consignacaoExistente },
+        { data: listaClientes },
+      ] = await Promise.all([
         supabase.from("veiculos").select("*").eq("id", id).maybeSingle(),
         supabase.from("checklist_vistoria").select("*").eq("veiculo_id", id).order("created_at"),
+        supabase.from("consignacoes").select("*").eq("veiculo_id", id).maybeSingle(),
+        supabase.from("clientes").select("id, nome").order("nome"),
       ]);
 
       if (erroVeiculo) {
@@ -52,6 +67,23 @@ export default function EditarVeiculo() {
         descricao: veiculo.descricao ?? "",
       });
       setChecklist(itensChecklist ?? []);
+      setClientes(listaClientes ?? []);
+
+      if (consignacaoExistente) {
+        setConsignacaoId(consignacaoExistente.id);
+        setConsignacao({
+          proprietario_cliente_id: consignacaoExistente.proprietario_cliente_id ?? "",
+          modelo_remuneracao: consignacaoExistente.modelo_remuneracao ?? "comissao_fixa",
+          percentual_comissao: consignacaoExistente.percentual_comissao ?? "",
+          preco_liquido_consignante: consignacaoExistente.preco_liquido_consignante ?? "",
+          data_inicio: consignacaoExistente.data_inicio ?? "",
+          prazo_vigencia_dias: consignacaoExistente.prazo_vigencia_dias ?? "60",
+          prorrogacao_automatica: consignacaoExistente.prorrogacao_automatica ?? true,
+          laudo_cautelar_realizado: consignacaoExistente.laudo_cautelar_realizado ?? false,
+          laudo_cautelar_apontamentos: consignacaoExistente.laudo_cautelar_apontamentos ?? "",
+        });
+      }
+
       setCarregando(false);
     }
 
@@ -64,6 +96,10 @@ export default function EditarVeiculo() {
 
     if (!campos.marca || !campos.modelo) {
       setErro("Marca e modelo são obrigatórios.");
+      return;
+    }
+    if (campos.status === "consignado" && !consignacao.proprietario_cliente_id) {
+      setErro("Selecione o proprietário (consignante) para um veículo consignado.");
       return;
     }
 
@@ -122,6 +158,20 @@ export default function EditarVeiculo() {
       }
     }
 
+    if (campos.status === "consignado") {
+      const payload = buildConsignacaoPayload(consignacao, id);
+
+      const { error: erroConsignacao } = consignacaoId
+        ? await supabase.from("consignacoes").update(payload).eq("id", consignacaoId)
+        : await supabase.from("consignacoes").insert(payload);
+
+      if (erroConsignacao) {
+        setSalvando(false);
+        setErro(erroConsignacao.message);
+        return;
+      }
+    }
+
     setSalvando(false);
     navigate("/veiculos");
   }
@@ -157,12 +207,24 @@ export default function EditarVeiculo() {
           }}
         />
 
+        {campos.status === "consignado" && (
+          <ConsignacaoCampos campos={consignacao} onChange={setConsignacao} clientes={clientes} />
+        )}
+
         {erro && <p className="auth-erro">{erro}</p>}
 
         <button type="submit" disabled={salvando}>
           {salvando ? "Salvando..." : "Salvar alterações"}
         </button>
       </form>
+
+      {campos.status === "consignado" && consignacaoId && (
+        <p className="auth-nota" style={{ marginTop: 16 }}>
+          <Link to={`/documentos/gerar?consignacao_id=${consignacaoId}`}>
+            Gerar contrato de consignação
+          </Link>
+        </p>
+      )}
     </div>
   );
 }

@@ -595,3 +595,95 @@ body {
   border-top: 1px solid #eef0f2;
   padding-top: 8px;
 }
+
+/* Consignação (dentro do formulário de veículo) */
+
+.consignacao {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid #eef0f2;
+}
+
+.consignacao h2 {
+  margin: 0 0 12px;
+  font-size: 1.1rem;
+  color: var(--navy);
+}
+
+/* Documentos */
+
+.kanban-card-link {
+  display: block;
+  margin-top: 8px;
+  font-size: 0.8rem;
+  color: var(--navy);
+  text-decoration: underline;
+}
+
+.badge-rascunho {
+  background: #fff3cd;
+  color: #8a6300;
+}
+
+.badge-finalizado {
+  background: #e3f6ea;
+  color: #1e824c;
+}
+
+.lista-pendencias {
+  background: var(--white);
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(26, 39, 68, 0.1);
+  padding: 24px 24px 24px 44px;
+  max-width: 560px;
+}
+
+.lista-pendencias li {
+  margin-bottom: 8px;
+}
+
+.documento-acoes {
+  display: flex;
+  gap: 8px;
+}
+
+.documento-acoes button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  background: var(--orange);
+  color: var(--white);
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.documento-conteudo {
+  background: var(--white);
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(26, 39, 68, 0.1);
+  padding: 32px;
+  max-width: 800px;
+  white-space: pre-wrap;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--text);
+}
+
+@media print {
+  .app-header,
+  .no-print {
+    display: none !important;
+  }
+
+  .app-content {
+    padding: 0;
+  }
+
+  .documento-conteudo {
+    box-shadow: none;
+    padding: 0;
+    max-width: none;
+  }
+}

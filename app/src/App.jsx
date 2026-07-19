@@ -13,6 +13,9 @@ import Clientes from "./pages/Clientes";
 import NovoCliente from "./pages/NovoCliente";
 import Negocios from "./pages/Negocios";
 import NovoNegocio from "./pages/NovoNegocio";
+import GerarDocumento from "./pages/GerarDocumento";
+import VerDocumento from "./pages/VerDocumento";
+import DocumentosGerados from "./pages/DocumentosGerados";
 
 export default function App() {
   return (
@@ -33,6 +36,9 @@ export default function App() {
           <Route path="/clientes/novo" element={<NovoCliente />} />
           <Route path="/negocios" element={<Negocios />} />
           <Route path="/negocios/novo" element={<NovoNegocio />} />
+          <Route path="/documentos" element={<DocumentosGerados />} />
+          <Route path="/documentos/gerar" element={<GerarDocumento />} />
+          <Route path="/documentos/:id" element={<VerDocumento />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/" replace />} />

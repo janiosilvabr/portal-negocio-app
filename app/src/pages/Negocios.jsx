@@ -99,6 +99,12 @@ export default function Negocios() {
                         </option>
                       ))}
                     </select>
+
+                    {n.status === "em_andamento" && (
+                      <Link className="kanban-card-link" to={`/documentos/gerar?negocio_id=${n.id}`}>
+                        Gerar Documento
+                      </Link>
+                    )}
                   </div>
                 ))}
               </div>
