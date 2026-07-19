@@ -138,7 +138,9 @@ export default function Vitrine() {
         <div className="vitrine-grid">
           {filtrados.map((v) => (
             <div className="vitrine-card" key={v.id}>
-              <div className="vitrine-card-foto">Sem foto</div>
+              <div className="vitrine-card-foto">
+                {v.foto_url ? <img src={v.foto_url} alt="" /> : "Sem foto"}
+              </div>
               <div className="vitrine-card-body">
                 <h3>
                   {v.marca} {v.modelo}

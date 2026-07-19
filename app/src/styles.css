@@ -547,6 +547,13 @@ body {
   align-items: center;
   justify-content: center;
   font-size: 0.85rem;
+  overflow: hidden;
+}
+
+.vitrine-card-foto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .vitrine-card-body {
@@ -686,4 +693,33 @@ body {
     padding: 0;
     max-width: none;
   }
+}
+
+/* Fotos do veículo */
+
+.fotos-label-upload {
+  cursor: pointer;
+}
+
+.fotos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 12px;
+}
+
+.foto-item {
+  position: relative;
+}
+
+.foto-item img {
+  width: 100%;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 8px;
+  display: block;
+}
+
+.foto-item .checklist-remove {
+  width: 100%;
+  margin-top: 6px;
 }

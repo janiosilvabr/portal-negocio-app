@@ -9,12 +9,14 @@ import {
   CAMPOS_INICIAIS_CONSIGNACAO,
   buildConsignacaoPayload,
 } from "../components/ConsignacaoCampos";
+import { FotosVeiculo, salvarFotosNovas } from "../components/FotosVeiculo";
 
 export default function NovoVeiculo() {
   const navigate = useNavigate();
   const { perfil } = useAuth();
   const [campos, setCampos] = useState(CAMPOS_INICIAIS_VEICULO);
   const [checklist, setChecklist] = useState([]);
+  const [fotos, setFotos] = useState([]);
   const [consignacao, setConsignacao] = useState(CAMPOS_INICIAIS_CONSIGNACAO);
   const [clientes, setClientes] = useState([]);
   const [erro, setErro] = useState("");
@@ -105,6 +107,13 @@ export default function NovoVeiculo() {
       }
     }
 
+    const erroFotos = await salvarFotosNovas(supabase, fotos, veiculo.id, perfil.empresa_id);
+    if (erroFotos) {
+      setSalvando(false);
+      setErro(`Veículo salvo, mas o upload de fotos falhou: ${erroFotos.message}`);
+      return;
+    }
+
     setSalvando(false);
     navigate("/veiculos");
   }
@@ -117,6 +126,8 @@ export default function NovoVeiculo() {
         <VeiculoCampos campos={campos} onChange={setCampos} />
 
         <ChecklistVistoria itens={checklist} onChange={setChecklist} />
+
+        <FotosVeiculo fotos={fotos} onChange={setFotos} />
 
         {campos.status === "consignado" && (
           <ConsignacaoCampos campos={consignacao} onChange={setConsignacao} clientes={clientes} />

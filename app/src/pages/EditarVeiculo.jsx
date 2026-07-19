@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { supabase } from "../lib/supabaseClient";
+import { useAuth } from "../context/AuthContext";
 import { VeiculoCampos, CAMPOS_INICIAIS_VEICULO } from "../components/VeiculoCampos";
 import { ChecklistVistoria } from "../components/ChecklistVistoria";
 import {
@@ -8,13 +9,17 @@ import {
   CAMPOS_INICIAIS_CONSIGNACAO,
   buildConsignacaoPayload,
 } from "../components/ConsignacaoCampos";
+import { FotosVeiculo, salvarFotosNovas } from "../components/FotosVeiculo";
 
 export default function EditarVeiculo() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { perfil } = useAuth();
   const [campos, setCampos] = useState(CAMPOS_INICIAIS_VEICULO);
   const [checklist, setChecklist] = useState([]);
   const [removidos, setRemovidos] = useState([]);
+  const [fotos, setFotos] = useState([]);
+  const [fotosRemovidas, setFotosRemovidas] = useState([]);
   const [consignacao, setConsignacao] = useState(CAMPOS_INICIAIS_CONSIGNACAO);
   const [consignacaoId, setConsignacaoId] = useState(null);
   const [clientes, setClientes] = useState([]);
@@ -30,11 +35,13 @@ export default function EditarVeiculo() {
         { data: itensChecklist },
         { data: consignacaoExistente },
         { data: listaClientes },
+        { data: fotosExistentes },
       ] = await Promise.all([
         supabase.from("veiculos").select("*").eq("id", id).maybeSingle(),
         supabase.from("checklist_vistoria").select("*").eq("veiculo_id", id).order("created_at"),
         supabase.from("consignacoes").select("*").eq("veiculo_id", id).maybeSingle(),
         supabase.from("clientes").select("id, nome").order("nome"),
+        supabase.from("fotos_veiculos").select("*").eq("veiculo_id", id).order("ordem"),
       ]);
 
       if (erroVeiculo) {
@@ -68,6 +75,7 @@ export default function EditarVeiculo() {
       });
       setChecklist(itensChecklist ?? []);
       setClientes(listaClientes ?? []);
+      setFotos(fotosExistentes ?? []);
 
       if (consignacaoExistente) {
         setConsignacaoId(consignacaoExistente.id);
@@ -172,6 +180,22 @@ export default function EditarVeiculo() {
       }
     }
 
+    for (const fotoId of fotosRemovidas) {
+      const { error } = await supabase.from("fotos_veiculos").delete().eq("id", fotoId);
+      if (error) {
+        setSalvando(false);
+        setErro(error.message);
+        return;
+      }
+    }
+
+    const erroFotos = await salvarFotosNovas(supabase, fotos, id, perfil.empresa_id);
+    if (erroFotos) {
+      setSalvando(false);
+      setErro(erroFotos.message);
+      return;
+    }
+
     setSalvando(false);
     navigate("/veiculos");
   }
@@ -210,6 +234,14 @@ export default function EditarVeiculo() {
         {campos.status === "consignado" && (
           <ConsignacaoCampos campos={consignacao} onChange={setConsignacao} clientes={clientes} />
         )}
+
+        <FotosVeiculo
+          fotos={fotos}
+          onChange={setFotos}
+          onRemoverExistente={(foto) => {
+            if (foto.id) setFotosRemovidas((r) => [...r, foto.id]);
+          }}
+        />
 
         {erro && <p className="auth-erro">{erro}</p>}
 
