@@ -20,6 +20,7 @@ export function ProtectedLayout() {
           <Link to="/leads">Leads</Link>
           <Link to="/negocios">Negócios</Link>
           <Link to="/documentos">Documentos</Link>
+          <Link to="/calc-pmc">Calc. PMC</Link>
           {ehAdmin && <Link to="/vendedores">Vendedores</Link>}
           {ehAdmin && <Link to="/financeiro">Financeiro</Link>}
           <Link to="/extrato">Extrato</Link>

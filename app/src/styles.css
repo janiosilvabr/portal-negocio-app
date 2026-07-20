@@ -1196,3 +1196,83 @@ body {
 .lead-vendedor-label select {
   margin-top: 4px;
 }
+
+/* Calc. PMC */
+
+.form-card h2 {
+  font-size: 1rem;
+  color: var(--navy);
+  margin: 16px 0 4px;
+}
+
+.form-card h2:first-child {
+  margin-top: 0;
+}
+
+.campo-nota {
+  margin: 4px 0 0;
+  font-size: 0.75rem;
+}
+
+.pmc-total-cpt {
+  margin: 4px 0 0;
+  font-weight: 600;
+  color: var(--navy);
+  text-align: right;
+}
+
+.pmc-resultado {
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  margin: 8px 0;
+}
+
+.pmc-resultado-positivo {
+  background: #e3f6ea;
+}
+
+.pmc-resultado-negativo {
+  background: #f5e0dc;
+}
+
+.pmc-resultado-label {
+  margin: 0 0 4px;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.pmc-resultado-valor {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--navy);
+}
+
+.pmc-alerta {
+  margin: 8px 0 0;
+  color: #c0392b;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.pmc-viavel {
+  color: #1e824c;
+  font-weight: 600;
+}
+
+.pmc-inviavel {
+  color: #c0392b;
+  font-weight: 600;
+}
+
+.pmc-resultado-conteudo h2 {
+  margin-top: 0;
+  color: var(--navy);
+}
+
+.pmc-vincular-form {
+  margin-top: 16px;
+  max-width: 480px;
+}

@@ -7,6 +7,7 @@ const MODULOS = [
   { to: "/leads", titulo: "Leads", descricao: "Kanban de atendimento (CRM)." },
   { to: "/negocios", titulo: "Negócios", descricao: "Pipeline de vendas e consignações." },
   { to: "/documentos", titulo: "Documentos", descricao: "Contratos gerados automaticamente." },
+  { to: "/calc-pmc", titulo: "Calc. PMC", descricao: "Preço Máximo de Compra de um veículo." },
   { to: "/vendedores", titulo: "Vendedores", descricao: "Equipe, convites e comissão.", admin: true },
   { to: "/financeiro", titulo: "Financeiro", descricao: "Receitas, despesas e lucro líquido.", admin: true },
   { to: "/extrato", titulo: "Extrato", descricao: "Suas comissões e taxa de conversão." },

@@ -28,6 +28,9 @@ import Financeiro from "./pages/Financeiro";
 import NovaTransacao from "./pages/NovaTransacao";
 import ExtratoVendedor from "./pages/ExtratoVendedor";
 import IndiceConversao from "./pages/IndiceConversao";
+import CalcPMC from "./pages/CalcPMC";
+import NovaAvaliacaoPMC from "./pages/NovaAvaliacaoPMC";
+import VerAvaliacaoPMC from "./pages/VerAvaliacaoPMC";
 
 export default function App() {
   return (
@@ -97,6 +100,9 @@ export default function App() {
               </RotaAdmin>
             }
           />
+          <Route path="/calc-pmc" element={<CalcPMC />} />
+          <Route path="/calc-pmc/nova" element={<NovaAvaliacaoPMC />} />
+          <Route path="/calc-pmc/:id" element={<VerAvaliacaoPMC />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/" replace />} />

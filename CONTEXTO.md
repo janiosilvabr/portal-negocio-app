@@ -120,6 +120,21 @@ Venda ou consignação em andamento/fechada.
   (text, nullable — ex.: sinistro ou passagem por leilão constatados, usados para ajustar
   preço ou recusar o veículo)
 
+### avaliacoes_pmc (novo — Calc. PMC)
+Simulação de "Preço Máximo de Compra" — PMC = PVP − CPT − Lucro Desejado (ver conceito
+detalhado em FEATURES.md). **Pode existir sem veículo cadastrado** (o garagista simula antes
+de decidir comprar); se a compra acontecer, liga-se ao veículo depois de cadastrado.
+- empresa_id (fk), usuario_id (fk usuarios — quem calculou), veiculo_id (fk, nullable —
+  preenchido só se/quando vinculado a um veículo já cadastrado), descricao_veiculo (text —
+  marca/modelo/ano informado livre, útil antes do cadastro formal), tipo_veiculo (enum:
+  moto/carro/utilitario_suv), pvp (numeric), lucro_desejado (numeric), custo_mecanica
+  (numeric), custo_estetica (numeric), reserva_garantia (numeric), outros_custos (numeric),
+  preco_pedido_vendedor (numeric, nullable), pmc_calculado (numeric — resultado), created_at
+
+> Usado pelo roadmap "PMC estimado vs. margem real": quando o veículo vinculado é vendido, o
+> Financeiro compara `pmc_calculado`/`lucro_desejado` desta simulação com o lucro líquido real
+> apurado (Termômetro de Margem).
+
 ### custos_veiculo
 Controle simples de custo por veículo (revisão, funilaria, etc. — não é o financeiro completo
 da empresa). **Convenção (decisão de 19/07):** o custo de aquisição do veículo (quanto a
@@ -285,6 +300,24 @@ create table consignacoes (
   status text default 'ativa',
   laudo_cautelar_realizado boolean default false,
   laudo_cautelar_apontamentos text
+);
+
+create table avaliacoes_pmc (
+  id uuid primary key default gen_random_uuid(),
+  empresa_id uuid references empresas(id) not null,
+  usuario_id uuid references usuarios(id),
+  veiculo_id uuid references veiculos(id),
+  descricao_veiculo text,
+  tipo_veiculo text check (tipo_veiculo in ('moto','carro','utilitario_suv')),
+  pvp numeric(12,2),
+  lucro_desejado numeric(12,2),
+  custo_mecanica numeric(12,2) default 0,
+  custo_estetica numeric(12,2) default 0,
+  reserva_garantia numeric(12,2) default 0,
+  outros_custos numeric(12,2) default 0,
+  preco_pedido_vendedor numeric(12,2),
+  pmc_calculado numeric(12,2),
+  created_at timestamptz default now()
 );
 
 create table custos_veiculo (
