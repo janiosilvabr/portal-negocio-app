@@ -156,6 +156,9 @@ export default function Vitrine() {
                   <li>{v.cambio ?? "-"}</li>
                 </ul>
                 {v.empresa_nome && <p className="vitrine-card-garagem">{v.empresa_nome}</p>}
+                <Link to={`/vitrine/${v.id}`} className="botao-link vitrine-card-detalhes">
+                  Ver Detalhes
+                </Link>
               </div>
             </div>
           ))}

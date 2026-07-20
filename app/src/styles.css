@@ -603,6 +603,143 @@ body {
   padding-top: 8px;
 }
 
+.vitrine-card-detalhes {
+  display: block;
+  text-align: center;
+  margin-top: 12px;
+}
+
+/* Detalhe do veículo */
+
+.detalhe-voltar {
+  display: inline-block;
+  margin-bottom: 16px;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.detalhe-veiculo {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+  gap: 32px;
+}
+
+@media (max-width: 800px) {
+  .detalhe-veiculo {
+    grid-template-columns: 1fr;
+  }
+}
+
+.detalhe-galeria {
+  background: var(--white);
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(26, 39, 68, 0.1);
+  overflow: hidden;
+}
+
+.detalhe-foto-principal {
+  height: 360px;
+  background: var(--gray-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.detalhe-foto-principal img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.detalhe-sem-foto {
+  color: var(--text-muted);
+}
+
+.detalhe-miniaturas {
+  display: flex;
+  gap: 8px;
+  padding: 12px;
+  overflow-x: auto;
+}
+
+.detalhe-miniatura {
+  width: 64px;
+  height: 64px;
+  flex-shrink: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 2px solid transparent;
+  padding: 0;
+  cursor: pointer;
+  background: var(--gray-bg);
+}
+
+.detalhe-miniatura.ativa {
+  border-color: var(--orange);
+}
+
+.detalhe-miniatura img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.detalhe-info {
+  background: var(--white);
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(26, 39, 68, 0.1);
+  padding: 24px;
+}
+
+.detalhe-info h1 {
+  margin: 0 0 4px;
+  color: var(--navy);
+}
+
+.detalhe-preco {
+  color: var(--orange);
+  font-weight: 700;
+  font-size: 1.5rem;
+  margin: 12px 0;
+}
+
+.detalhe-specs {
+  list-style: none;
+  padding: 0;
+  margin: 16px 0 24px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.detalhe-specs li {
+  background: var(--gray-bg);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 0.9rem;
+}
+
+.detalhe-specs li span {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+
+.detalhe-cta {
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  font-size: 1rem;
+}
+
+.detalhe-interesse-form {
+  margin-top: 16px;
+  padding: 0;
+  box-shadow: none;
+}
+
 /* Consignação (dentro do formulário de veículo) */
 
 .consignacao {
