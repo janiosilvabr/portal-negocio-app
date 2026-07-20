@@ -892,6 +892,41 @@ body {
   text-transform: uppercase;
 }
 
+/* Painel */
+
+.painel-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.painel-card {
+  background: var(--white);
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(26, 39, 68, 0.1);
+  padding: 16px;
+  text-decoration: none;
+  transition: box-shadow 0.15s, transform 0.15s;
+}
+
+.painel-card:hover {
+  box-shadow: 0 8px 24px rgba(26, 39, 68, 0.18);
+  transform: translateY(-2px);
+}
+
+.painel-card h2 {
+  margin: 0 0 8px;
+  font-size: 1rem;
+  color: var(--navy);
+}
+
+.painel-card p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
 .kpi-valor {
   margin: 0;
   font-size: 1.4rem;
