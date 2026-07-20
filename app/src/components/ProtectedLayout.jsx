@@ -14,7 +14,7 @@ export function ProtectedLayout() {
       <header className="app-header">
         <span className="app-logo">Portal Negócio</span>
         <nav className="app-nav">
-          <Link to="/">Painel</Link>
+          <Link to="/painel">Painel</Link>
           <Link to="/veiculos">Veículos</Link>
           <Link to="/clientes">Clientes</Link>
           <Link to="/leads">Leads</Link>

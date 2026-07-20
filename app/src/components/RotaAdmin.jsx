@@ -5,7 +5,7 @@ export function RotaAdmin({ children }) {
   const { perfil } = useAuth();
 
   if (!perfil) return null;
-  if (perfil.papel !== "admin") return <Navigate to="/" replace />;
+  if (perfil.papel !== "admin") return <Navigate to="/painel" replace />;
 
   return children;
 }

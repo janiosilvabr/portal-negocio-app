@@ -50,7 +50,7 @@ export default function Cadastro() {
     }
 
     if (data.session) {
-      navigate("/");
+      navigate("/painel");
       return;
     }
 

@@ -10,6 +10,7 @@ import NovoVeiculo from "./pages/NovoVeiculo";
 import EditarVeiculo from "./pages/EditarVeiculo";
 import Vitrine from "./pages/Vitrine";
 import DetalheVeiculo from "./pages/DetalheVeiculo";
+import Inicio from "./pages/Inicio";
 import Clientes from "./pages/Clientes";
 import NovoCliente from "./pages/NovoCliente";
 import Negocios from "./pages/Negocios";
@@ -31,6 +32,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/" element={<Inicio />} />
         <Route path="/login" element={<Login />} />
         <Route path="/cadastro" element={<Cadastro />} />
         <Route path="/recuperar-senha" element={<RecuperarSenha />} />
@@ -39,7 +41,7 @@ export default function App() {
         <Route path="/vitrine/:id" element={<DetalheVeiculo />} />
 
         <Route element={<ProtectedLayout />}>
-          <Route path="/" element={<Painel />} />
+          <Route path="/painel" element={<Painel />} />
           <Route path="/veiculos" element={<Veiculos />} />
           <Route path="/veiculos/novo" element={<NovoVeiculo />} />
           <Route path="/veiculos/:id/editar" element={<EditarVeiculo />} />
