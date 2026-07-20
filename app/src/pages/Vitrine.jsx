@@ -7,10 +7,21 @@ const FILTROS_INICIAIS = {
   modelo: "",
   combustivel: "",
   cambio: "",
+  tipoCarroceria: "",
   anoMin: "",
   kmMax: "",
   precoMin: "",
   precoMax: "",
+};
+
+const TIPO_CARROCERIA_LABEL = {
+  sedan: "Sedã",
+  suv: "SUV",
+  hatch: "Hatch",
+  pickup: "Picape",
+  utilitario: "Utilitário",
+  moto: "Moto",
+  outro: "Outro",
 };
 
 function formatPreco(preco) {
@@ -41,6 +52,10 @@ export default function Vitrine() {
   const marcas = useMemo(() => uniqueSorted(veiculos.map((v) => v.marca)), [veiculos]);
   const combustiveis = useMemo(() => uniqueSorted(veiculos.map((v) => v.combustivel)), [veiculos]);
   const cambios = useMemo(() => uniqueSorted(veiculos.map((v) => v.cambio)), [veiculos]);
+  const tiposCarroceria = useMemo(
+    () => uniqueSorted(veiculos.map((v) => v.tipo_carroceria)),
+    [veiculos]
+  );
 
   function handleFiltro(e) {
     const { name, value } = e.target;
@@ -52,6 +67,7 @@ export default function Vitrine() {
     if (filtros.modelo && !v.modelo?.toLowerCase().includes(filtros.modelo.toLowerCase())) return false;
     if (filtros.combustivel && v.combustivel !== filtros.combustivel) return false;
     if (filtros.cambio && v.cambio !== filtros.cambio) return false;
+    if (filtros.tipoCarroceria && v.tipo_carroceria !== filtros.tipoCarroceria) return false;
     if (filtros.anoMin && (v.ano_fabricacao == null || v.ano_fabricacao < Number(filtros.anoMin))) return false;
     if (filtros.kmMax && (v.km == null || v.km > Number(filtros.kmMax))) return false;
     if (filtros.precoMin && (v.preco == null || v.preco < Number(filtros.precoMin))) return false;
@@ -97,6 +113,15 @@ export default function Vitrine() {
             {cambios.map((c) => (
               <option key={c} value={c}>
                 {c}
+              </option>
+            ))}
+          </select>
+
+          <select name="tipoCarroceria" value={filtros.tipoCarroceria} onChange={handleFiltro}>
+            <option value="">Tipo</option>
+            {tiposCarroceria.map((t) => (
+              <option key={t} value={t}>
+                {TIPO_CARROCERIA_LABEL[t] ?? t}
               </option>
             ))}
           </select>

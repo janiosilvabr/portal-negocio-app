@@ -55,8 +55,9 @@ Perfil ligado ao `auth.users` do Supabase (autenticação já vem pronta no Supa
 
 ### veiculos
 - empresa_id (fk), marca, modelo, versao, ano_fabricacao, ano_modelo, placa, **renavam, chassi**,
-  km, cor, combustivel, cambio, preco, status (enum: disponivel/reservado/vendido/consignado),
-  descricao, updated_at
+  **tipo_carroceria (enum: sedan/suv/hatch/pickup/utilitario/moto/outro — usado pelo Match
+  Ideal e reforça os filtros da Vitrine)**, km, cor, combustivel, cambio, preco,
+  status (enum: disponivel/reservado/vendido/consignado), descricao, updated_at
 
 > **Nota jurídica:** `renavam` e `chassi` são obrigatórios para o módulo de Documentos gerar um
 > contrato válido — o sistema deve bloquear a geração do contrato se esses campos (ou placa,
@@ -90,7 +91,9 @@ deixa de ser vício oculto perante o CDC.
 Contato interessado, ainda não é negócio fechado.
 - empresa_id (fk), cliente_id (fk, nullable), veiculo_id (fk, nullable),
   origem (enum: site/whatsapp/indicacao/outro), status (enum: novo/em_contato/negociando/perdido/convertido),
-  vendedor_id (fk usuarios), observacoes
+  vendedor_id (fk usuarios), observacoes, **orcamento_maximo (numeric, nullable),
+  tipo_carroceria_desejado (text, nullable), cambio_desejado (text, nullable) — os 3 usados
+  pelo "Match Ideal" (ver roadmap) para sugerir veículos do estoque aderentes ao perfil**
 
 > **Regra de "Passagem de Bastão" (decisão de 19/07):** sempre que `vendedor_id` de um lead
 > mudar, anexar automaticamente em `observacoes` uma linha "Lead assumido por [vendedor] em
@@ -207,6 +210,7 @@ create table veiculos (
   marca text, modelo text, versao text,
   ano_fabricacao int, ano_modelo int,
   placa text, renavam text, chassi text,
+  tipo_carroceria text check (tipo_carroceria in ('sedan','suv','hatch','pickup','utilitario','moto','outro')),
   km int, cor text, combustivel text, cambio text,
   preco numeric(12,2),
   status text check (status in ('disponivel','reservado','vendido','consignado')) default 'disponivel',
@@ -241,6 +245,9 @@ create table leads (
   status text check (status in ('novo','em_contato','negociando','perdido','convertido')) default 'novo',
   vendedor_id uuid references usuarios(id),
   observacoes text,
+  orcamento_maximo numeric(12,2),
+  tipo_carroceria_desejado text,
+  cambio_desejado text,
   created_at timestamptz default now()
 );
 

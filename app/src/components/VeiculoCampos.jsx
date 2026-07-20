@@ -11,6 +11,7 @@ export const CAMPOS_INICIAIS_VEICULO = {
   cor: "",
   combustivel: "",
   cambio: "",
+  tipo_carroceria: "",
   preco: "",
   status: "disponivel",
   descricao: "",
@@ -109,6 +110,25 @@ export function VeiculoCampos({ campos, onChange }) {
             <option value="Automático">Automático</option>
             <option value="CVT">CVT</option>
             <option value="Automatizado">Automatizado</option>
+          </select>
+        </div>
+
+        <div>
+          <label htmlFor="tipo_carroceria">Tipo de carroceria</label>
+          <select
+            id="tipo_carroceria"
+            name="tipo_carroceria"
+            value={campos.tipo_carroceria}
+            onChange={handleChange}
+          >
+            <option value="">Selecione</option>
+            <option value="sedan">Sedã</option>
+            <option value="suv">SUV</option>
+            <option value="hatch">Hatch</option>
+            <option value="pickup">Picape</option>
+            <option value="utilitario">Utilitário</option>
+            <option value="moto">Moto</option>
+            <option value="outro">Outro</option>
           </select>
         </div>
 

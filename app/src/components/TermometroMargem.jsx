@@ -9,6 +9,12 @@ export function TermometroMargem({ preco, custos, comissaoPercentual }) {
   const margem = precoNum - somaCustos - comissaoEstimada;
   const margemPercentual = precoNum > 0 ? (margem / precoNum) * 100 : null;
 
+  // Margem mínima de segurança: mesmo patamar de 15% já usado como corte
+  // para o nível "atenção" abaixo — abaixo disso não sobra espaço pra
+  // negociar desconto sem a venda deixar de valer a pena.
+  const margemMinima = precoNum * 0.15;
+  const limiteDesconto = precoNum > 0 ? margem - margemMinima : null;
+
   let nivel = "sem-dados";
   let label = "Sem dados suficientes";
   if (precoNum > 0) {
@@ -44,6 +50,14 @@ export function TermometroMargem({ preco, custos, comissaoPercentual }) {
           {formatMoeda(comissaoEstimada)}
         </li>
       </ul>
+
+      {limiteDesconto != null && (
+        <p className={`termometro-limite-desconto ${limiteDesconto > 0 ? "" : "termometro-limite-negativo"}`}>
+          {limiteDesconto > 0
+            ? `Até ${formatMoeda(limiteDesconto)} de desconto sem perder a margem mínima de 15%.`
+            : "Sem espaço para desconto sem cair abaixo da margem mínima de 15%."}
+        </p>
+      )}
 
       <p className="auth-nota">
         Cálculo com base no seu percentual de comissão. Não considera Tabela FIPE nem alertas de

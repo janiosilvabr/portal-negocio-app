@@ -17,9 +17,41 @@ const ORIGEM_LABEL = {
   outro: "Outro",
 };
 
+const TIPO_CARROCERIA_LABEL = {
+  sedan: "Sedã",
+  suv: "SUV",
+  hatch: "Hatch",
+  pickup: "Picape",
+  utilitario: "Utilitário",
+  moto: "Moto",
+  outro: "Outro",
+};
+
+function formatMoeda(valor) {
+  return Number(valor ?? 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+}
+
+// Filtro direto no banco (sem Claude API): preço dentro do orçamento, mesmo
+// tipo de carroceria e mesmo câmbio quando o lead informou essas preferências.
+function veiculosIdeaisPara(lead, estoque) {
+  const temPreferencia = lead.orcamento_maximo || lead.tipo_carroceria_desejado || lead.cambio_desejado;
+  if (!temPreferencia) return [];
+
+  return estoque
+    .filter((v) => {
+      if (lead.orcamento_maximo != null && (v.preco == null || Number(v.preco) > Number(lead.orcamento_maximo)))
+        return false;
+      if (lead.tipo_carroceria_desejado && v.tipo_carroceria !== lead.tipo_carroceria_desejado) return false;
+      if (lead.cambio_desejado && v.cambio !== lead.cambio_desejado) return false;
+      return true;
+    })
+    .slice(0, 3);
+}
+
 export default function Leads() {
   const [leads, setLeads] = useState([]);
   const [usuarios, setUsuarios] = useState([]);
+  const [estoque, setEstoque] = useState([]);
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState("");
 
@@ -32,13 +64,21 @@ export default function Leads() {
     Promise.all([
       supabase
         .from("leads")
-        .select("*, clientes(nome), veiculos(marca, modelo), vendedor:usuarios(nome)")
+        .select(
+          "*, clientes(nome), veiculos(marca, modelo), vendedor:usuarios(nome)"
+        )
         .order("created_at", { ascending: false }),
       supabase.rpc("listar_equipe_empresa"),
-    ]).then(([{ data: dataLeads, error: erroLeads }, { data: dataUsuarios }]) => {
+      supabase
+        .from("veiculos")
+        .select("id, marca, modelo, preco, tipo_carroceria, cambio")
+        .in("status", ["disponivel", "consignado"])
+        .order("created_at", { ascending: false }),
+    ]).then(([{ data: dataLeads, error: erroLeads }, { data: dataUsuarios }, { data: dataEstoque }]) => {
       if (erroLeads) setErro(erroLeads.message);
       else setLeads(dataLeads);
       setUsuarios((dataUsuarios ?? []).filter((u) => u.ativo));
+      setEstoque(dataEstoque ?? []);
       setCarregando(false);
     });
   }
@@ -115,7 +155,9 @@ export default function Leads() {
 
                 {itens.length === 0 && <p className="auth-nota">Nenhum lead aqui.</p>}
 
-                {itens.map((l) => (
+                {itens.map((l) => {
+                  const ideais = veiculosIdeaisPara(l, estoque);
+                  return (
                   <div className="kanban-card" key={l.id}>
                     <p className="kanban-card-cliente">{l.clientes?.nome ?? "Contato não identificado"}</p>
                     {l.veiculos && (
@@ -125,6 +167,23 @@ export default function Leads() {
                     )}
                     <span className="badge">{ORIGEM_LABEL[l.origem] ?? l.origem}</span>
                     {l.observacoes && <p className="lead-observacoes">{l.observacoes}</p>}
+
+                    {ideais.length > 0 && (
+                      <div className="veiculos-ideais">
+                        <p className="veiculos-ideais-titulo">Veículos Ideais para este Cliente</p>
+                        <ul>
+                          {ideais.map((v) => (
+                            <li key={v.id}>
+                              <span>
+                                {v.marca} {v.modelo}
+                                {v.tipo_carroceria && ` · ${TIPO_CARROCERIA_LABEL[v.tipo_carroceria] ?? v.tipo_carroceria}`}
+                              </span>
+                              <strong>{formatMoeda(v.preco)}</strong>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
 
                     <label className="lead-vendedor-label">
                       Vendedor
@@ -154,7 +213,8 @@ export default function Leads() {
                       ))}
                     </select>
                   </div>
-                ))}
+                  );
+                })}
               </div>
             );
           })}

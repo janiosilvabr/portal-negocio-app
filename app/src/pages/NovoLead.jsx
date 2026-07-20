@@ -11,6 +11,9 @@ export default function NovoLead() {
   const [clienteId, setClienteId] = useState("");
   const [veiculoId, setVeiculoId] = useState("");
   const [origem, setOrigem] = useState("site");
+  const [orcamentoMaximo, setOrcamentoMaximo] = useState("");
+  const [tipoCarroceriaDesejado, setTipoCarroceriaDesejado] = useState("");
+  const [cambioDesejado, setCambioDesejado] = useState("");
   const [observacoes, setObservacoes] = useState("");
   const [erro, setErro] = useState("");
   const [salvando, setSalvando] = useState(false);
@@ -47,6 +50,9 @@ export default function NovoLead() {
       origem,
       status: "novo",
       vendedor_id: perfil.id,
+      orcamento_maximo: orcamentoMaximo ? Number(orcamentoMaximo) : null,
+      tipo_carroceria_desejado: tipoCarroceriaDesejado || null,
+      cambio_desejado: cambioDesejado || null,
       observacoes: observacoes || null,
     });
 
@@ -97,6 +103,51 @@ export default function NovoLead() {
               <option value="whatsapp">WhatsApp</option>
               <option value="indicacao">Indicação</option>
               <option value="outro">Outro</option>
+            </select>
+          </div>
+
+          <div>
+            <label htmlFor="orcamentoMaximo">Orçamento máximo (R$)</label>
+            <input
+              id="orcamentoMaximo"
+              type="number"
+              min="0"
+              step="0.01"
+              value={orcamentoMaximo}
+              onChange={(e) => setOrcamentoMaximo(e.target.value)}
+            />
+          </div>
+
+          <div>
+            <label htmlFor="tipoCarroceriaDesejado">Tipo de carroceria desejado</label>
+            <select
+              id="tipoCarroceriaDesejado"
+              value={tipoCarroceriaDesejado}
+              onChange={(e) => setTipoCarroceriaDesejado(e.target.value)}
+            >
+              <option value="">Qualquer</option>
+              <option value="sedan">Sedã</option>
+              <option value="suv">SUV</option>
+              <option value="hatch">Hatch</option>
+              <option value="pickup">Picape</option>
+              <option value="utilitario">Utilitário</option>
+              <option value="moto">Moto</option>
+              <option value="outro">Outro</option>
+            </select>
+          </div>
+
+          <div>
+            <label htmlFor="cambioDesejado">Câmbio desejado</label>
+            <select
+              id="cambioDesejado"
+              value={cambioDesejado}
+              onChange={(e) => setCambioDesejado(e.target.value)}
+            >
+              <option value="">Qualquer</option>
+              <option value="Manual">Manual</option>
+              <option value="Automático">Automático</option>
+              <option value="CVT">CVT</option>
+              <option value="Automatizado">Automatizado</option>
             </select>
           </div>
         </div>

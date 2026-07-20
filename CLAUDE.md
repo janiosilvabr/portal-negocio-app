@@ -88,6 +88,14 @@ O projeto anterior ficou preso num loop de login por pular Explorar/Planejar. Pa
    Testar login, logout e recuperação de senha numa janela anônima antes de seguir em frente.
 3. **Um módulo por sessão do Claude Code.** Não pedir "constrói o sistema todo".
 4. **Commit só depois de testar manualmente** que a fatia funciona.
+5. **"Commitado e publicado" não é o mesmo que "está no ar" no ocarroideal.com.** Depois de
+   qualquer commit, rodar `npm run build`, compactar a pasta `dist` e reenviar pra Hostinger
+   (Gerenciador de Arquivos → extrair) — sem isso, o site publicado fica desatualizado mesmo
+   com o código correto no GitHub. Testar sempre em aba anônima depois do reenvio.
+6. **Testes automatizados usam a conta real do usuário (janiosilvabr@gmail.com), nunca criam
+   contas/empresas novas via cadastro para testar** (decisão de 20/07, após acúmulo de
+   empresas e usuários órfãos de sessões de teste anteriores). A senha usada nos testes é
+   provisória — trocada por uma definitiva antes de haver dados reais de clientes no sistema.
 
 ## Escopo do v1
 
@@ -122,10 +130,6 @@ Só CRM Concessionária/Garagista + Vitrine de veículos. **Sem módulo de imóv
   (ver CONTEXTO.md, `custos_veiculo`) usa só valor pago (custo de aquisição) na v1; alerta
   comparando contra a Tabela FIPE precisa de integração externa nova, fica para quando a
   Calc. PMC também for revisitada.
-- **Ranking do mês por vendedor (opcional, baixo custo):** visão do admin comparando negócios
-  fechados, comissão total e taxa de conversão entre vendedores — mesma query do Extrato do
-  Vendedor, só agregada para todos. Não é essencial, mas quase gratuito de adicionar quando o
-  Extrato já existir.
 - **PMC estimado vs. margem real (decisão de 19/07):** ligar o resultado salvo da Calc. PMC
   (margem estimada na compra) ao lucro líquido real apurado no Financeiro após a venda do
   mesmo veículo — permite comparar "estimei X, ganhei Y". Requer que o resultado da Calc. PMC
@@ -142,7 +146,14 @@ Só CRM Concessionária/Garagista + Vitrine de veículos. **Sem módulo de imóv
   Instagram, grupos) carrega o Portal junto — efeito de rede orgânico. O selo do Portal deve
   ser removível apenas em planos pagos superiores (alavanca de upsell).
 - Outros tipos de documento (Recibo, Termo de Garantia, Confissão de Dívida)
-- Envio automático de documento por e-mail via Brevo
+- **Envio de documento por e-mail via Brevo, como recurso Premium (decisão de 20/07):** v1
+  desta feature = enviar o contrato/documento já gerado por e-mail ao cliente, não uma
+  ferramenta de e-mail marketing completa. Gatear pelo campo `planos.recursos` (jsonb, já
+  existe no schema) — não criar tabela nova. Risco a monitorar: todas as garagens usando a
+  mesma conta Brevo compartilham reputação de envio; se o volume crescer e houver problema de
+  entrega/spam, considerar sub-contas ou domínio de envio próprio por garagem (fase mais
+  avançada, só se necessário). Construir de preferência já com garagens reais pagantes, não
+  antes.
 - Cobrança avulsa (pay-per-use) para a futura Calc. PMC
 - N8N para automações condicionais mais complexas
 

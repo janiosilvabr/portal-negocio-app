@@ -926,6 +926,43 @@ body {
   color: var(--text-muted);
 }
 
+.veiculos-ideais {
+  margin: 10px 0;
+  padding: 8px 10px;
+  background: #fff7ec;
+  border: 1px solid #f5d9a8;
+  border-radius: 8px;
+}
+
+.veiculos-ideais-titulo {
+  margin: 0 0 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--orange);
+  text-transform: uppercase;
+}
+
+.veiculos-ideais ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.veiculos-ideais li {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 0.8rem;
+}
+
+.veiculos-ideais li strong {
+  color: var(--navy);
+  white-space: nowrap;
+}
+
 /* Custos do veículo */
 
 .custo-linha {
@@ -999,6 +1036,21 @@ body {
   display: flex;
   flex-direction: column;
   gap: 4px;
+}
+
+.termometro-limite-desconto {
+  margin: 12px 0 0;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: #e3f6ea;
+  color: #1e824c;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.termometro-limite-negativo {
+  background: #f5e0dc;
+  color: #c0392b;
 }
 
 /* Vendedores */

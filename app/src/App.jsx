@@ -27,6 +27,7 @@ import { RotaAdmin } from "./components/RotaAdmin";
 import Financeiro from "./pages/Financeiro";
 import NovaTransacao from "./pages/NovaTransacao";
 import ExtratoVendedor from "./pages/ExtratoVendedor";
+import IndiceConversao from "./pages/IndiceConversao";
 
 export default function App() {
   return (
@@ -88,6 +89,14 @@ export default function App() {
             }
           />
           <Route path="/extrato" element={<ExtratoVendedor />} />
+          <Route
+            path="/indice-conversao"
+            element={
+              <RotaAdmin>
+                <IndiceConversao />
+              </RotaAdmin>
+            }
+          />
         </Route>
 
         <Route path="*" element={<Navigate to="/" replace />} />

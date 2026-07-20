@@ -23,6 +23,7 @@ export function ProtectedLayout() {
           {ehAdmin && <Link to="/vendedores">Vendedores</Link>}
           {ehAdmin && <Link to="/financeiro">Financeiro</Link>}
           <Link to="/extrato">Extrato</Link>
+          {ehAdmin && <Link to="/indice-conversao">Índice de Conversão</Link>}
           <Link to="/empresa">Empresa</Link>
         </nav>
         <button type="button" onClick={logout}>

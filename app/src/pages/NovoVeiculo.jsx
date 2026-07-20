@@ -65,6 +65,7 @@ export default function NovoVeiculo() {
         cor: campos.cor || null,
         combustivel: campos.combustivel || null,
         cambio: campos.cambio || null,
+        tipo_carroceria: campos.tipo_carroceria || null,
         preco: campos.preco ? Number(campos.preco) : null,
         status: campos.status,
         descricao: campos.descricao || null,

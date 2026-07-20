@@ -10,6 +10,12 @@ const MODULOS = [
   { to: "/vendedores", titulo: "Vendedores", descricao: "Equipe, convites e comissão.", admin: true },
   { to: "/financeiro", titulo: "Financeiro", descricao: "Receitas, despesas e lucro líquido.", admin: true },
   { to: "/extrato", titulo: "Extrato", descricao: "Suas comissões e taxa de conversão." },
+  {
+    to: "/indice-conversao",
+    titulo: "Índice de Conversão",
+    descricao: "Ranking do mês por vendedor.",
+    admin: true,
+  },
 ];
 
 export default function Painel() {
