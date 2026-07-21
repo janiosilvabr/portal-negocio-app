@@ -12,6 +12,7 @@ export default function Cadastro() {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [confirmarSenha, setConfirmarSenha] = useState("");
+  const [lgpdAceite, setLgpdAceite] = useState(false);
   const [erro, setErro] = useState("");
   const [mensagem, setMensagem] = useState("");
   const [carregando, setCarregando] = useState(false);
@@ -29,6 +30,10 @@ export default function Cadastro() {
       setErro("A senha deve ter pelo menos 6 caracteres.");
       return;
     }
+    if (!lgpdAceite) {
+      setErro("É preciso aceitar a Política de Privacidade e os Termos de Uso para continuar.");
+      return;
+    }
 
     setCarregando(true);
 
@@ -37,8 +42,8 @@ export default function Cadastro() {
       password: senha,
       options: {
         data: conviteToken
-          ? { nome, convite_token: conviteToken }
-          : { nome, nome_empresa: nomeEmpresa },
+          ? { nome, convite_token: conviteToken, lgpd_aceite: true }
+          : { nome, nome_empresa: nomeEmpresa, lgpd_aceite: true },
       },
     });
 
@@ -109,6 +114,26 @@ export default function Cadastro() {
           onChange={(e) => setConfirmarSenha(e.target.value)}
           required
         />
+
+        <label className="auth-checkbox-label">
+          <input
+            type="checkbox"
+            checked={lgpdAceite}
+            onChange={(e) => setLgpdAceite(e.target.checked)}
+            required
+          />
+          <span>
+            Li e aceito a{" "}
+            <Link to="/politica-privacidade" target="_blank" rel="noopener noreferrer">
+              Política de Privacidade
+            </Link>{" "}
+            e os{" "}
+            <Link to="/termos-uso" target="_blank" rel="noopener noreferrer">
+              Termos de Uso
+            </Link>{" "}
+            do Portal Negócio.
+          </span>
+        </label>
 
         {erro && <p className="auth-erro">{erro}</p>}
         {mensagem && <p className="auth-sucesso">{mensagem}</p>}

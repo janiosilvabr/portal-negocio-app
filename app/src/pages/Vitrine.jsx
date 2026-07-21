@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { supabase } from "../lib/supabaseClient";
 
 const FILTROS_INICIAIS = {
@@ -34,6 +34,8 @@ function uniqueSorted(valores) {
 }
 
 export default function Vitrine() {
+  const [searchParams] = useSearchParams();
+  const empresaFiltrada = searchParams.get("empresa");
   const [veiculos, setVeiculos] = useState([]);
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState("");
@@ -63,6 +65,7 @@ export default function Vitrine() {
   }
 
   const filtrados = veiculos.filter((v) => {
+    if (empresaFiltrada && v.empresa_id !== empresaFiltrada) return false;
     if (filtros.marca && v.marca !== filtros.marca) return false;
     if (filtros.modelo && !v.modelo?.toLowerCase().includes(filtros.modelo.toLowerCase())) return false;
     if (filtros.combustivel && v.combustivel !== filtros.combustivel) return false;
@@ -75,17 +78,13 @@ export default function Vitrine() {
     return true;
   });
 
-  return (
-    <div className="vitrine">
-      <header className="vitrine-header">
-        <span className="app-logo">Portal Negócio</span>
-        <Link to="/login" className="vitrine-login-link">
-          Entrar
-        </Link>
-      </header>
+  const nomeGaragemFiltrada = empresaFiltrada
+    ? veiculos.find((v) => v.empresa_id === empresaFiltrada)?.empresa_nome
+    : null;
 
-      <div className="vitrine-content">
-        <h1>Veículos disponíveis</h1>
+  return (
+    <div className="vitrine-content">
+      <h1>{nomeGaragemFiltrada ? `Veículos de ${nomeGaragemFiltrada}` : "Veículos disponíveis"}</h1>
 
         <div className="vitrine-filtros">
           <select name="marca" value={filtros.marca} onChange={handleFiltro}>
@@ -188,7 +187,6 @@ export default function Vitrine() {
             </div>
           ))}
         </div>
-      </div>
     </div>
   );
 }

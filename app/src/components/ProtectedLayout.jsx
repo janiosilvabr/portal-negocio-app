@@ -12,7 +12,9 @@ export function ProtectedLayout() {
   return (
     <div className="app-shell">
       <header className="app-header">
-        <span className="app-logo">Portal Negócio</span>
+        <Link to="/" className="app-logo">
+          Portal Negócio
+        </Link>
         <nav className="app-nav">
           <Link to="/painel">Painel</Link>
           <Link to="/veiculos">Veículos</Link>

@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "../lib/supabaseClient";
-import { useAuth } from "../context/AuthContext";
 
 function formatPreco(preco) {
   if (preco == null) return "Consulte";
@@ -9,7 +8,6 @@ function formatPreco(preco) {
 }
 
 export default function Inicio() {
-  const { session, loading } = useAuth();
   const [veiculos, setVeiculos] = useState([]);
   const [carregando, setCarregando] = useState(true);
 
@@ -23,16 +21,7 @@ export default function Inicio() {
   }, []);
 
   return (
-    <div className="vitrine">
-      <header className="vitrine-header">
-        <span className="app-logo">Portal Negócio</span>
-        {!loading && (
-          <Link to={session ? "/painel" : "/login"} className="vitrine-login-link">
-            {session ? "Meu Painel" : "Entrar"}
-          </Link>
-        )}
-      </header>
-
+    <>
       <section className="inicio-hero">
         <div className="inicio-hero-inner">
           <h1>
@@ -88,6 +77,6 @@ export default function Inicio() {
           ))}
         </div>
       </div>
-    </div>
+    </>
   );
 }

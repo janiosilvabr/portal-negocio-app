@@ -92,6 +92,11 @@ O projeto anterior ficou preso num loop de login por pular Explorar/Planejar. Pa
    qualquer commit, rodar `npm run build`, compactar a pasta `dist` e reenviar pra Hostinger
    (Gerenciador de Arquivos → extrair) — sem isso, o site publicado fica desatualizado mesmo
    com o código correto no GitHub. Testar sempre em aba anônima depois do reenvio.
+   **Sempre que qualquer alteração de frontend for finalizada e commitada, encerre a resposta
+   lembrando ativamente o usuário: "Rode `npm run build`, gere o zip da pasta `dist` e reenvie
+   pro Gerenciador de Arquivos da Hostinger antes de considerar isso publicado."** Não deixe
+   esse passo implícito nem assuma que o usuário vai lembrar sozinho — pergunte/lembre em toda
+   sessão que gerar mudança visível no site, mesmo que pequena.
 6. **Testes automatizados usam a conta real do usuário (janiosilvabr@gmail.com), nunca criam
    contas/empresas novas via cadastro para testar** (decisão de 20/07, após acúmulo de
    empresas e usuários órfãos de sessões de teste anteriores). A senha usada nos testes é
@@ -130,6 +135,20 @@ Só CRM Concessionária/Garagista + Vitrine de veículos. **Sem módulo de imóv
   (ver CONTEXTO.md, `custos_veiculo`) usa só valor pago (custo de aquisição) na v1; alerta
   comparando contra a Tabela FIPE precisa de integração externa nova, fica para quando a
   Calc. PMC também for revisitada.
+- **"Match Ideal" + polish de nomenclatura (decisão de 20/07, inspirado no conceito do programa
+  "Car Matchmaker" — usar nomes próprios do produto, nunca o nome da série/apresentador, por
+  serem marca/pessoa real):**
+  - **Match Ideal (novo, modesto):** adicionar a `leads` os campos `orcamento_maximo`,
+    `tipo_carroceria_desejado`, `cambio_desejado`; adicionar a `veiculos` o campo
+    `tipo_carroceria` (sedan/suv/hatch/pickup/utilitario/moto/outro — também reforça os
+    filtros da Vitrine). Exibir na tela do lead um card com os 3 veículos do estoque mais
+    aderentes ao perfil — é filtro/consulta direta no banco, **não precisa de Claude API**.
+  - **Ranking do mês por vendedor** (já no roadmap): renomear na UI como algo como "Índice de
+    Conversão" — zero custo adicional, mesma query já prevista.
+  - **Limite de desconto** no Termômetro de Margem (já construído): adicionar um número
+    derivado ("até R$ Z de desconto sem perder a margem mínima") — pequeno acréscimo ao que já
+    existe, não é tela nova.
+  Sessão curta, cabe antes da Calc. PMC.
 - **PMC estimado vs. margem real (decisão de 19/07):** ligar o resultado salvo da Calc. PMC
   (margem estimada na compra) ao lucro líquido real apurado no Financeiro após a venda do
   mesmo veículo — permite comparar "estimei X, ganhei Y". Requer que o resultado da Calc. PMC

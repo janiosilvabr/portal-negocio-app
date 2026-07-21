@@ -96,9 +96,17 @@ export default function Vendedores() {
                       min="0"
                       max="100"
                       step="0.01"
+                      placeholder="Não definida"
+                      className={u.comissao_percentual == null ? "vendedor-comissao-vazia" : ""}
                       defaultValue={u.comissao_percentual ?? ""}
                       onBlur={(e) => handleComissaoChange(u, e.target.value)}
                     />
+                    {u.comissao_percentual == null && (
+                      <span className="vendedor-comissao-alerta">
+                        ⚠️ Sem comissão definida — vendas fechadas por {u.nome} não vão gerar despesa
+                        automática.
+                      </span>
+                    )}
                   </label>
                 )}
 

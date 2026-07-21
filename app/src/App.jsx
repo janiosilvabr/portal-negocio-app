@@ -1,5 +1,6 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { ProtectedLayout } from "./components/ProtectedLayout";
+import { PublicLayout } from "./components/PublicLayout";
 import Login from "./pages/Login";
 import Cadastro from "./pages/Cadastro";
 import RecuperarSenha from "./pages/RecuperarSenha";
@@ -31,18 +32,31 @@ import IndiceConversao from "./pages/IndiceConversao";
 import CalcPMC from "./pages/CalcPMC";
 import NovaAvaliacaoPMC from "./pages/NovaAvaliacaoPMC";
 import VerAvaliacaoPMC from "./pages/VerAvaliacaoPMC";
+import Garagens from "./pages/Garagens";
+import Sobre from "./pages/Sobre";
+import Contato from "./pages/Contato";
+import PoliticaPrivacidade from "./pages/PoliticaPrivacidade";
+import TermosUso from "./pages/TermosUso";
 
 export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Inicio />} />
         <Route path="/login" element={<Login />} />
         <Route path="/cadastro" element={<Cadastro />} />
         <Route path="/recuperar-senha" element={<RecuperarSenha />} />
         <Route path="/redefinir-senha" element={<RedefinirSenha />} />
-        <Route path="/vitrine" element={<Vitrine />} />
-        <Route path="/vitrine/:id" element={<DetalheVeiculo />} />
+
+        <Route element={<PublicLayout />}>
+          <Route path="/" element={<Inicio />} />
+          <Route path="/vitrine" element={<Vitrine />} />
+          <Route path="/vitrine/:id" element={<DetalheVeiculo />} />
+          <Route path="/garagens" element={<Garagens />} />
+          <Route path="/sobre" element={<Sobre />} />
+          <Route path="/contato" element={<Contato />} />
+          <Route path="/politica-privacidade" element={<PoliticaPrivacidade />} />
+          <Route path="/termos-uso" element={<TermosUso />} />
+        </Route>
 
         <Route element={<ProtectedLayout />}>
           <Route path="/painel" element={<Painel />} />

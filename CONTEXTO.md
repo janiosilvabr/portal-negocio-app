@@ -46,12 +46,17 @@ multi-tenant (cada garagista é uma "empresa" isolada dentro do mesmo banco).
 
 ### empresas
 Cada assinante do SaaS (o garagista/concessionária).
-- nome, cnpj, telefone, email, endereco, logo_url
+- nome, cnpj, telefone, email, endereco, **cidade (text — usado no card da página pública
+  "Garagens"; não deriva de endereco, é campo próprio)**, logo_url,
+  **visivel_publicamente (boolean, default true — controla se a garagem aparece na página
+  pública "Garagens")**
 
 ### usuarios
 Perfil ligado ao `auth.users` do Supabase (autenticação já vem pronta no Supabase).
 - id (= auth.users.id), empresa_id (fk), nome, papel (enum: admin/vendedor), telefone,
-  **comissao_percentual (numeric, nullable — só relevante quando papel = vendedor)**
+  comissao_percentual (numeric, nullable — só relevante quando papel = vendedor),
+  **lgpd_aceite_em (timestamptz, nullable — registra quando aceitou os Termos de Uso e a
+  Política de Privacidade no cadastro; obrigatório preencher antes de liberar a conta)**
 
 ### veiculos
 - empresa_id (fk), marca, modelo, versao, ano_fabricacao, ano_modelo, placa, **renavam, chassi**,
@@ -167,11 +172,17 @@ Supabase — a chave da Claude API nunca fica exposta no navegador). **A IA pree
 template jurídico fixo (validado pelo usuário/advogado) e escolhe cláusulas condicionais
 dentro de um conjunto pré-aprovado — nunca redige cláusula livremente.**
 - negocio_id (fk), tipo (enum: contrato_compra_venda/**contrato_consignacao**/recibo/outro), conteudo (text — o texto
-  do documento gerado, guardado no banco; v1 não usa Storage/arquivo, exporta como PDF via
-  impressão do navegador), **template_versao (text — qual versão do template-base foi usada,
-  para auditoria caso o template mude no futuro)**, status (enum: rascunho/finalizado),
-  **gerado_por_usuario_id (fk usuarios — registra quem disparou a geração, para
-  responsabilização caso um dado incorreto tenha sido inserido por descuido)**, gerado_em
+  original gerado pela IA, **nunca sobrescrito**), **conteudo_editado (text, nullable — versão
+  com edições manuais do garagista, se houver), alterado_manualmente (boolean, default false —
+  true se conteudo_editado existir)**, template_versao (text — qual versão do template-base foi usada,
+  para auditoria caso o template mude no futuro), status (enum: rascunho/finalizado),
+  gerado_por_usuario_id (fk usuarios — registra quem disparou a geração, para
+  responsabilização caso um dado incorreto tenha sido inserido por descuido), gerado_em
+
+> **Regra (decisão de 21/07, ver skill design-system-auditor):** o texto original da IA em
+> `conteudo` nunca é sobrescrito por uma edição manual — a edição vai para `conteudo_editado`,
+> preservando o histórico de auditoria. Uma edição manual de texto **nunca** deve disparar nova
+> chamada à Claude API.
 
 > **Decisão registrada (18/07):** o pipeline de `negocios` mantém os 3 status simples
 > (em_andamento/fechado/cancelado) definidos originalmente — não foi expandido para os 6
@@ -205,7 +216,9 @@ create table empresas (
   telefone text,
   email text,
   endereco text,
+  cidade text,
   logo_url text,
+  visivel_publicamente boolean default true,
   created_at timestamptz default now()
 );
 
@@ -216,6 +229,7 @@ create table usuarios (
   papel text check (papel in ('admin','vendedor')) default 'vendedor',
   telefone text,
   comissao_percentual numeric(5,2),
+  lgpd_aceite_em timestamptz,
   created_at timestamptz default now()
 );
 
@@ -345,6 +359,8 @@ create table documentos_gerados (
   negocio_id uuid references negocios(id) not null,
   tipo text check (tipo in ('contrato_compra_venda','contrato_consignacao','recibo','outro')),
   conteudo text,
+  conteudo_editado text,
+  alterado_manualmente boolean default false,
   template_versao text,
   status text check (status in ('rascunho','finalizado')) default 'rascunho',
   gerado_por_usuario_id uuid references usuarios(id),

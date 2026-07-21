@@ -74,43 +74,25 @@ export default function DetalheVeiculo() {
 
   if (carregando) {
     return (
-      <div className="vitrine">
-        <div className="vitrine-content">
-          <p>Carregando...</p>
-        </div>
+      <div className="vitrine-content">
+        <p>Carregando...</p>
       </div>
     );
   }
 
   if (naoEncontrado) {
     return (
-      <div className="vitrine">
-        <header className="vitrine-header">
-          <span className="app-logo">Portal Negócio</span>
-          <Link to="/login" className="vitrine-login-link">
-            Entrar
-          </Link>
-        </header>
-        <div className="vitrine-content">
-          <p className="auth-erro">Veículo não encontrado ou não está mais disponível.</p>
-          <Link to="/vitrine" className="botao-link">
-            Voltar para a vitrine
-          </Link>
-        </div>
+      <div className="vitrine-content">
+        <p className="auth-erro">Veículo não encontrado ou não está mais disponível.</p>
+        <Link to="/vitrine" className="botao-link">
+          Voltar para a vitrine
+        </Link>
       </div>
     );
   }
 
   return (
-    <div className="vitrine">
-      <header className="vitrine-header">
-        <span className="app-logo">Portal Negócio</span>
-        <Link to="/login" className="vitrine-login-link">
-          Entrar
-        </Link>
-      </header>
-
-      <div className="vitrine-content">
+    <div className="vitrine-content">
         <Link to="/vitrine" className="detalhe-voltar">
           ← Voltar para a vitrine
         </Link>
@@ -212,6 +194,5 @@ export default function DetalheVeiculo() {
           </div>
         </div>
       </div>
-    </div>
   );
 }

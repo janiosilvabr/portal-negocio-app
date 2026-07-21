@@ -35,28 +35,34 @@ export function TermometroMargem({ preco, custos, comissaoPercentual }) {
       <h2>Termômetro de margem</h2>
 
       <div className={`termometro termometro-${nivel}`}>
-        <p className="termometro-valor">{formatMoeda(margem)}</p>
+        <p className="termometro-valor">{precoNum > 0 ? formatMoeda(margem) : "—"}</p>
         <p className="termometro-label">
           {label}
           {margemPercentual != null && ` (${margemPercentual.toFixed(1)}% do preço)`}
         </p>
       </div>
 
-      <ul className="termometro-detalhe">
-        <li>Preço de venda: {formatMoeda(precoNum)}</li>
-        <li>Custos lançados: {formatMoeda(somaCustos)}</li>
-        <li>
-          Comissão estimada{comissaoPercentual ? ` (${comissaoPercentual}%)` : " (sem comissão definida)"}:{" "}
-          {formatMoeda(comissaoEstimada)}
-        </li>
-      </ul>
+      {precoNum > 0 ? (
+        <>
+          <ul className="termometro-detalhe">
+            <li>Preço de venda: {formatMoeda(precoNum)}</li>
+            <li>Custos lançados: {somaCustos > 0 ? formatMoeda(somaCustos) : "Nenhum custo lançado"}</li>
+            <li>
+              Comissão estimada{comissaoPercentual ? ` (${comissaoPercentual}%)` : ""}:{" "}
+              {comissaoPercentual ? formatMoeda(comissaoEstimada) : "Sem comissão definida"}
+            </li>
+          </ul>
 
-      {limiteDesconto != null && (
-        <p className={`termometro-limite-desconto ${limiteDesconto > 0 ? "" : "termometro-limite-negativo"}`}>
-          {limiteDesconto > 0
-            ? `Até ${formatMoeda(limiteDesconto)} de desconto sem perder a margem mínima de 15%.`
-            : "Sem espaço para desconto sem cair abaixo da margem mínima de 15%."}
-        </p>
+          {limiteDesconto != null && (
+            <p className={`termometro-limite-desconto ${limiteDesconto > 0 ? "" : "termometro-limite-negativo"}`}>
+              {limiteDesconto > 0
+                ? `Até ${formatMoeda(limiteDesconto)} de desconto sem perder a margem mínima de 15%.`
+                : "Sem espaço para desconto sem cair abaixo da margem mínima de 15%."}
+            </p>
+          )}
+        </>
+      ) : (
+        <p className="auth-nota">Informe o preço de venda do veículo para calcular a margem.</p>
       )}
 
       <p className="auth-nota">
