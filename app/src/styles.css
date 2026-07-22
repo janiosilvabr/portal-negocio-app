@@ -179,6 +179,12 @@ body {
   margin: 0 auto;
 }
 
+@media (max-width: 800px) {
+  .app-content {
+    padding: 16px;
+  }
+}
+
 .page h1 {
   color: var(--navy);
   margin-top: 0;
@@ -786,11 +792,12 @@ body {
 }
 
 .detalhe-foto-principal {
-  height: 360px;
+  aspect-ratio: 4 / 3;
   background: var(--gray-bg);
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
 }
 
 .detalhe-foto-principal img {
@@ -1011,8 +1018,10 @@ body {
 
 /* Leads */
 
-.kanban-leads {
-  grid-template-columns: repeat(5, minmax(180px, 1fr));
+@media (min-width: 801px) {
+  .kanban-leads {
+    grid-template-columns: repeat(5, minmax(180px, 1fr));
+  }
 }
 
 .lead-observacoes {
