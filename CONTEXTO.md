@@ -22,19 +22,23 @@ veículos, CRM de leads/clientes e emissão automática de contrato de compra e 
 
 ## 2. Estado atual da infraestrutura
 
+**Migração concluída em 21/07 — portalnegocio.com.br roda este sistema (React + Supabase) em
+produção.** A partir de agora, o projeto é discutido só em torno de **portalnegocio.com.br**
+(não mais ocarroideal.com como domínio de referência).
+
 | Peça | Decisão | Status |
 |---|---|---|
-| Banco de dados | Supabase | Projeto criado (`O Carro Ideal`), **schema vazio**, não ligado ao site em produção |
-| Hospedagem | Hostinger | Plano atual: Compartilhada (não roda N8N — ok, N8N é fase 2) |
-| Domínio | portalnegocio.com.br | Registro.br, DNS na Cloudflare |
-| Protótipo atual em produção | Base44 | app.base44.com — usa banco interno próprio, não o Supabase acima |
-| Pagamento | **Mercado Pago** (não Stripe) | Já integrado no Base44 (`MERCADO_PAGO_ACCESS_TOKEN`) — manter, é melhor para Pix/boleto no Brasil |
-| E-mail/CRM marketing | Brevo | Já integrado (`BREVO_API_KEY`) |
-| Geração de documentos / IA | Claude API | Já integrado (`ANTHROPIC_API_KEY`) |
-| Automação | Make (existente) → migrar para N8N depois | Adiado para fase 2 |
+| Banco de dados | Supabase | Projeto (id `tvzyrhepfqtnuvkavrtl`), schema completo (27 migrações), **é o banco de produção** |
+| Hospedagem | Hostinger | Plano Compartilhado — build estático (`npm run build` → `dist/`) servido em `public_html` |
+| Domínio | **portalnegocio.com.br** | Registro.br, DNS na Cloudflare, servindo este sistema |
+| Protótipo anterior | Base44 | Descontinuado em 21/07 — não é mais o que está no ar |
+| Pagamento | **Mercado Pago** (não Stripe) | Ainda não integrado neste sistema novo (era do Base44) — pendência, ver roadmap no CLAUDE.md |
+| E-mail/CRM marketing | Brevo | Ainda não integrado neste sistema novo — pendência |
+| Geração de documentos / IA | Claude API | Integrado via Supabase Edge Function (módulo Documentos) |
+| Automação | N8N | Fase 2 — não implementado |
 
-**Decisão de migração:** construir o schema novo do zero no Supabase (não aproveitar/podar o
-schema exportado do Base44, que veio misturado com o módulo de imóveis).
+**Decisão de migração original:** o schema foi construído do zero no Supabase (não reaproveitou
+o schema exportado do Base44, que vinha misturado com o módulo de imóveis).
 
 ---
 
