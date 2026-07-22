@@ -42,24 +42,30 @@ Todo documento gerado nasce com status "rascunho", editável antes de ser consid
 Manter o mesmo design/tema do Base44 atual, com melhorias pontuais onde fizer sentido — não
 redesenhar do zero. Ver paleta e estilo observados em FEATURES.md.
 
-## ⚠️ Regra crítica — produção não se toca
+## ✅ Migração concluída (21/07) — portalnegocio.com.br é produção agora
 
-O site **portalnegocio.com.br** roda hoje no **Base44** e está em produção real (402 visitantes
-únicos nos últimos 7 dias, dado do Cloudflare). **Nunca alterar, desligar ou apontar o DNS dele
-enquanto este projeto não estiver pronto e testado.**
+O domínio **portalnegocio.com.br** rodava no Base44; a migração para este sistema (React +
+Supabase) foi feita em 21/07 e confirmada no ar (build servido corretamente, rotas internas
+funcionando, dados da K Motors aparecendo). **Esta reconstrução agora é o produto real em
+produção** — trate qualquer alteração de banco/RLS com o mesmo cuidado que se trataria uma
+alteração em produção de verdade, porque é.
 
-Este projeto novo é construído isolado, no domínio **ocarroideal.com** (ambiente de construção
-e teste), hospedado na Hostinger. **Plano confirmado:** quando estiver pronto e validado, o
-DNS de portalnegocio.com.br (hoje no Base44) migra para este sistema novo, que passa a ser o
-produto definitivo. ocarroideal.com não é uma marca separada — é só o canteiro de obras.
+**ocarroideal.com** continua no ar como ambiente de teste secundário (mesmo Supabase, mesmo
+build) — útil pra validar algo antes de reenviar pra portalnegocio.com.br, mas não é mais o
+único lugar "seguro" pra mexer; os dois domínios servem o mesmo backend.
+
+*Nota histórica:* antes da migração, este arquivo tinha uma regra "produção não se toca"
+protegendo o Base44 enquanto o sistema novo era construído isolado em ocarroideal.com. Essa
+fase terminou — não recriar o Base44 nem apontar o DNS de volta pra ele sem decisão explícita
+do usuário.
 
 ## Stack desta reconstrução
 
 | Peça | Ferramenta | Observação |
 |---|---|---|
-| Hospedagem | Hostinger (plano Compartilhado atual) | domínio ocarroideal.com |
-| Banco de dados | Supabase | projeto novo e vazio (id `tvzyrhepfqtnuvkavrtl`) — substitui o projeto anterior "O Carro Ideal" que foi zerado |
-| DNS | Cloudflare | já configurado para portalnegocio.com.br; configurar também para ocarroideal.com |
+| Hospedagem | Hostinger (plano Compartilhado atual) | portalnegocio.com.br (produção) e ocarroideal.com (teste), mesmo build nos dois |
+| Banco de dados | Supabase | projeto novo (id `tvzyrhepfqtnuvkavrtl`) — agora é o banco de produção |
+| DNS | Cloudflare | portalnegocio.com.br e ocarroideal.com |
 | E-mail | Brevo | conta contato@portalnegocio.com.br já configurada |
 | Pagamento | Mercado Pago | (não Stripe — já integrado no Base44, manter) |
 | Geração de documentos | Claude API | contratos/recibos automáticos |
@@ -88,15 +94,19 @@ O projeto anterior ficou preso num loop de login por pular Explorar/Planejar. Pa
    Testar login, logout e recuperação de senha numa janela anônima antes de seguir em frente.
 3. **Um módulo por sessão do Claude Code.** Não pedir "constrói o sistema todo".
 4. **Commit só depois de testar manualmente** que a fatia funciona.
-5. **"Commitado e publicado" não é o mesmo que "está no ar" no ocarroideal.com.** Depois de
-   qualquer commit, rodar `npm run build`, compactar a pasta `dist` e reenviar pra Hostinger
-   (Gerenciador de Arquivos → extrair) — sem isso, o site publicado fica desatualizado mesmo
-   com o código correto no GitHub. Testar sempre em aba anônima depois do reenvio.
+5. **"Commitado e publicado" não é o mesmo que "está no ar".** Depois de qualquer commit, rodar
+   `npm run build`, compactar a pasta `dist` e reenviar pra Hostinger (Gerenciador de Arquivos
+   → extrair) — sem isso, o site publicado fica desatualizado mesmo com o código correto no
+   GitHub. **Desde a migração de 21/07, reenviar em portalnegocio.com.br (produção) é o que
+   importa de verdade; ocarroideal.com é só o ambiente de teste.** Testar sempre em aba anônima
+   depois do reenvio — e, se possível, confirmar pelo método sem cache (fetch direto checando o
+   hash do JS/CSS no HTML) antes de dar como concluído, porque cache de CDN/navegador já mascarou
+   deploy desatualizado mais de uma vez neste projeto.
    **Sempre que qualquer alteração de frontend for finalizada e commitada, encerre a resposta
    lembrando ativamente o usuário: "Rode `npm run build`, gere o zip da pasta `dist` e reenvie
-   pro Gerenciador de Arquivos da Hostinger antes de considerar isso publicado."** Não deixe
-   esse passo implícito nem assuma que o usuário vai lembrar sozinho — pergunte/lembre em toda
-   sessão que gerar mudança visível no site, mesmo que pequena.
+   pro Gerenciador de Arquivos da Hostinger (portalnegocio.com.br) antes de considerar isso
+   publicado."** Não deixe esse passo implícito nem assuma que o usuário vai lembrar sozinho —
+   pergunte/lembre em toda sessão que gerar mudança visível no site, mesmo que pequena.
 6. **Testes automatizados usam a conta real do usuário (janiosilvabr@gmail.com), nunca criam
    contas/empresas novas via cadastro para testar** (decisão de 20/07, após acúmulo de
    empresas e usuários órfãos de sessões de teste anteriores). A senha usada nos testes é
