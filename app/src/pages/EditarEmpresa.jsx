@@ -11,6 +11,9 @@ const CAMPOS_INICIAIS = {
   cidade: "",
   logo_url: "",
   visivel_publicamente: true,
+  responsavel_legal_nome: "",
+  responsavel_legal_cargo: "",
+  responsavel_legal_cpf: "",
 };
 
 export default function EditarEmpresa() {
@@ -42,6 +45,9 @@ export default function EditarEmpresa() {
             cidade: data.cidade ?? "",
             logo_url: data.logo_url ?? "",
             visivel_publicamente: data.visivel_publicamente ?? true,
+            responsavel_legal_nome: data.responsavel_legal_nome ?? "",
+            responsavel_legal_cargo: data.responsavel_legal_cargo ?? "",
+            responsavel_legal_cpf: data.responsavel_legal_cpf ?? "",
           });
         }
         setCarregando(false);
@@ -77,6 +83,9 @@ export default function EditarEmpresa() {
         cidade: campos.cidade || null,
         logo_url: campos.logo_url || null,
         visivel_publicamente: campos.visivel_publicamente,
+        responsavel_legal_nome: campos.responsavel_legal_nome || null,
+        responsavel_legal_cargo: campos.responsavel_legal_cargo || null,
+        responsavel_legal_cpf: campos.responsavel_legal_cpf || null,
       })
       .eq("id", perfil.empresa_id);
 
@@ -102,8 +111,9 @@ export default function EditarEmpresa() {
     <div className="page">
       <h1>Dados da empresa</h1>
       <p className="auth-nota">
-        CNPJ e endereço são usados na qualificação da VENDEDORA nos contratos de venda direta
-        (sem consignação).
+        CNPJ, endereço e responsável legal são usados na qualificação da VENDEDORA nos contratos
+        de venda direta (sem consignação) — como pessoa jurídica não assina sozinha, o contrato
+        precisa do nome, cargo e CPF de quem assina pela empresa.
       </p>
 
       <form className="form-card" onSubmit={handleSubmit}>
@@ -134,6 +144,42 @@ export default function EditarEmpresa() {
 
         <label htmlFor="cidade">Cidade</label>
         <input id="cidade" name="cidade" value={campos.cidade} onChange={handleChange} />
+
+        <h2>Responsável legal</h2>
+        <p className="auth-nota">Quem assina os contratos de venda direta pela empresa.</p>
+
+        <div className="form-grid">
+          <div>
+            <label htmlFor="responsavel_legal_nome">Nome do responsável legal</label>
+            <input
+              id="responsavel_legal_nome"
+              name="responsavel_legal_nome"
+              value={campos.responsavel_legal_nome}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div>
+            <label htmlFor="responsavel_legal_cargo">Cargo</label>
+            <input
+              id="responsavel_legal_cargo"
+              name="responsavel_legal_cargo"
+              placeholder="Ex.: Sócio-administrador"
+              value={campos.responsavel_legal_cargo}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div>
+            <label htmlFor="responsavel_legal_cpf">CPF do responsável</label>
+            <input
+              id="responsavel_legal_cpf"
+              name="responsavel_legal_cpf"
+              value={campos.responsavel_legal_cpf}
+              onChange={handleChange}
+            />
+          </div>
+        </div>
 
         <label htmlFor="logo_url">URL do logo (opcional)</label>
         <input id="logo_url" name="logo_url" value={campos.logo_url} onChange={handleChange} />

@@ -15,6 +15,7 @@ function formatPreco(preco) {
 
 export default function Negocios() {
   const [negocios, setNegocios] = useState([]);
+  const [usuarios, setUsuarios] = useState([]);
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState("");
 
@@ -24,15 +25,35 @@ export default function Negocios() {
 
   function carregar() {
     setCarregando(true);
-    supabase
+    Promise.all([
+      supabase
+        .from("negocios")
+        .select("*, veiculos(marca, modelo), clientes(nome), vendedor:usuarios(nome)")
+        .order("created_at", { ascending: false }),
+      supabase.rpc("listar_equipe_empresa"),
+    ]).then(([{ data, error }, { data: dataUsuarios }]) => {
+      if (error) setErro(error.message);
+      else setNegocios(data);
+      setUsuarios((dataUsuarios ?? []).filter((u) => u.ativo));
+      setCarregando(false);
+    });
+  }
+
+  async function handleVendedorChange(negocio, novoVendedorId) {
+    const { data, error } = await supabase
       .from("negocios")
-      .select("*, veiculos(marca, modelo), clientes(nome)")
-      .order("created_at", { ascending: false })
-      .then(({ data, error }) => {
-        if (error) setErro(error.message);
-        else setNegocios(data);
-        setCarregando(false);
-      });
+      .update({ vendedor_id: novoVendedorId || null })
+      .eq("id", negocio.id)
+      .select("*, veiculos(marca, modelo), clientes(nome), vendedor:usuarios(nome)")
+      .maybeSingle();
+
+    if (error) {
+      setErro(error.message);
+      return;
+    }
+
+    setErro("");
+    setNegocios((atual) => atual.map((n) => (n.id === negocio.id ? data : n)));
   }
 
   async function handleStatusChange(negocio, novoStatus) {
@@ -128,6 +149,29 @@ export default function Negocios() {
                     <span className={`badge badge-${n.tipo}`}>
                       {n.tipo === "consignacao" ? "Consignação" : "Venda"}
                     </span>
+
+                    <label className="negocio-vendedor-label">
+                      Vendedor responsável
+                      <select
+                        className={`kanban-select ${!n.vendedor_id ? "negocio-vendedor-vazio" : ""}`}
+                        value={n.vendedor_id ?? ""}
+                        onChange={(e) => handleVendedorChange(n, e.target.value)}
+                      >
+                        <option value="" disabled>
+                          Selecione o vendedor
+                        </option>
+                        {usuarios.map((u) => (
+                          <option key={u.id} value={u.id}>
+                            {u.nome}
+                          </option>
+                        ))}
+                      </select>
+                      {!n.vendedor_id && (
+                        <span className="negocio-vendedor-alerta">
+                          ⚠️ Negócio sem vendedor responsável.
+                        </span>
+                      )}
+                    </label>
 
                     <select
                       className="kanban-select"

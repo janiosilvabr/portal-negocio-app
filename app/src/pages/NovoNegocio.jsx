@@ -8,8 +8,10 @@ export default function NovoNegocio() {
   const { perfil } = useAuth();
   const [veiculos, setVeiculos] = useState([]);
   const [clientes, setClientes] = useState([]);
+  const [usuarios, setUsuarios] = useState([]);
   const [veiculoId, setVeiculoId] = useState("");
   const [clienteId, setClienteId] = useState("");
+  const [vendedorId, setVendedorId] = useState("");
   const [tipo, setTipo] = useState("venda");
   const [valor, setValor] = useState("");
   const [erro, setErro] = useState("");
@@ -28,7 +30,17 @@ export default function NovoNegocio() {
       .select("id, nome, cpf")
       .order("nome")
       .then(({ data }) => setClientes(data ?? []));
+
+    supabase.rpc("listar_equipe_empresa").then(({ data }) => {
+      const ativos = (data ?? []).filter((u) => u.ativo);
+      setUsuarios(ativos);
+    });
   }, []);
+
+  useEffect(() => {
+    if (!perfil?.id || vendedorId) return;
+    if (usuarios.some((u) => u.id === perfil.id)) setVendedorId(perfil.id);
+  }, [usuarios, perfil?.id]);
 
   function handleVeiculoChange(e) {
     const id = e.target.value;
@@ -49,6 +61,10 @@ export default function NovoNegocio() {
       setErro("Selecione o veículo e o cliente.");
       return;
     }
+    if (!vendedorId) {
+      setErro("Selecione o vendedor responsável.");
+      return;
+    }
 
     setSalvando(true);
 
@@ -56,7 +72,7 @@ export default function NovoNegocio() {
       empresa_id: perfil.empresa_id,
       veiculo_id: veiculoId,
       cliente_id: clienteId,
-      vendedor_id: perfil.id,
+      vendedor_id: vendedorId,
       tipo,
       valor: valor ? Number(valor) : null,
       status: "em_andamento",
@@ -103,6 +119,23 @@ export default function NovoNegocio() {
           </div>
 
           <div>
+            <label htmlFor="vendedor">Vendedor responsável *</label>
+            <select
+              id="vendedor"
+              value={vendedorId}
+              onChange={(e) => setVendedorId(e.target.value)}
+              required
+            >
+              <option value="">Selecione</option>
+              {usuarios.map((u) => (
+                <option key={u.id} value={u.id}>
+                  {u.nome}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div>
             <label htmlFor="tipo">Tipo</label>
             <select id="tipo" value={tipo} onChange={(e) => setTipo(e.target.value)}>
               <option value="venda">Venda</option>
@@ -132,6 +165,9 @@ export default function NovoNegocio() {
         )}
         {clientes.length === 0 && (
           <p className="auth-nota">Nenhum cliente cadastrado ainda. Cadastre um cliente primeiro.</p>
+        )}
+        {usuarios.length === 0 && (
+          <p className="auth-nota">Nenhum vendedor ativo cadastrado. Cadastre um vendedor primeiro.</p>
         )}
 
         <button type="submit" disabled={salvando}>
