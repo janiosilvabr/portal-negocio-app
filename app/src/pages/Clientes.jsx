@@ -63,6 +63,7 @@ export default function Clientes() {
                 <th>Telefone</th>
                 <th>E-mail</th>
                 <th>Endereço</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -73,6 +74,9 @@ export default function Clientes() {
                   <td>{c.telefone ?? "-"}</td>
                   <td>{c.email ?? "-"}</td>
                   <td>{c.endereco ?? "-"}</td>
+                  <td>
+                    <Link to={`/clientes/${c.id}/editar`}>Editar</Link>
+                  </td>
                 </tr>
               ))}
             </tbody>

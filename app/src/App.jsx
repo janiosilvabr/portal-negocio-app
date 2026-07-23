@@ -14,6 +14,7 @@ import DetalheVeiculo from "./pages/DetalheVeiculo";
 import Inicio from "./pages/Inicio";
 import Clientes from "./pages/Clientes";
 import NovoCliente from "./pages/NovoCliente";
+import EditarCliente from "./pages/EditarCliente";
 import Negocios from "./pages/Negocios";
 import NovoNegocio from "./pages/NovoNegocio";
 import GerarDocumento from "./pages/GerarDocumento";
@@ -65,6 +66,7 @@ export default function App() {
           <Route path="/veiculos/:id/editar" element={<EditarVeiculo />} />
           <Route path="/clientes" element={<Clientes />} />
           <Route path="/clientes/novo" element={<NovoCliente />} />
+          <Route path="/clientes/:id/editar" element={<EditarCliente />} />
           <Route path="/negocios" element={<Negocios />} />
           <Route path="/negocios/novo" element={<NovoNegocio />} />
           <Route path="/documentos" element={<DocumentosGerados />} />

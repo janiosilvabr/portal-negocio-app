@@ -446,6 +446,28 @@ body {
   cursor: default;
 }
 
+.form-acoes {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.form-acoes button {
+  margin-top: 0;
+}
+
+.botao-perigo {
+  background: transparent !important;
+  color: #c0392b !important;
+  border: 1px solid #c0392b !important;
+}
+
+.botao-perigo:hover:not(:disabled) {
+  background: #f5e0dc !important;
+}
+
 .checkbox-linha {
   display: flex;
   align-items: center;

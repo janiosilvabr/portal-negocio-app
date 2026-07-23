@@ -31,6 +31,7 @@ export default function EditarVeiculo() {
   const [naoEncontrado, setNaoEncontrado] = useState(false);
   const [erro, setErro] = useState("");
   const [salvando, setSalvando] = useState(false);
+  const [excluindo, setExcluindo] = useState(false);
 
   useEffect(() => {
     async function carregar() {
@@ -239,6 +240,31 @@ export default function EditarVeiculo() {
     navigate("/veiculos");
   }
 
+  async function handleExcluir() {
+    const confirmado = window.confirm(
+      `Excluir o veículo ${campos.marca} ${campos.modelo}? Essa ação não pode ser desfeita.`
+    );
+    if (!confirmado) return;
+
+    setErro("");
+    setExcluindo(true);
+
+    const { error } = await supabase.from("veiculos").delete().eq("id", id);
+
+    setExcluindo(false);
+
+    if (error) {
+      setErro(
+        error.message.includes("foreign key")
+          ? "Não é possível excluir: este veículo está vinculado a um negócio, consignação ou anúncio. Cancele ou remova esses vínculos primeiro."
+          : error.message
+      );
+      return;
+    }
+
+    navigate("/veiculos");
+  }
+
   if (carregando) {
     return (
       <div className="page">
@@ -292,9 +318,19 @@ export default function EditarVeiculo() {
 
         {erro && <p className="auth-erro">{erro}</p>}
 
-        <button type="submit" disabled={salvando}>
-          {salvando ? "Salvando..." : "Salvar alterações"}
-        </button>
+        <div className="form-acoes">
+          <button type="submit" disabled={salvando}>
+            {salvando ? "Salvando..." : "Salvar alterações"}
+          </button>
+          <button
+            type="button"
+            className="botao-perigo"
+            onClick={handleExcluir}
+            disabled={excluindo}
+          >
+            {excluindo ? "Excluindo..." : "Excluir veículo"}
+          </button>
+        </div>
       </form>
 
       <TermometroMargem preco={campos.preco} custos={custos} comissaoPercentual={perfil?.comissao_percentual} />
