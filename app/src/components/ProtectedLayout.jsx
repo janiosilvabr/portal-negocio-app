@@ -1,4 +1,19 @@
 import { Navigate, Outlet, Link } from "react-router-dom";
+import {
+  LayoutDashboard,
+  Car,
+  Users,
+  UserPlus,
+  Handshake,
+  FileText,
+  Calculator,
+  Briefcase,
+  Wallet,
+  Receipt,
+  TrendingUp,
+  Building2,
+  LogOut,
+} from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 
 export function ProtectedLayout() {
@@ -16,21 +31,51 @@ export function ProtectedLayout() {
           Portal Negócio
         </Link>
         <nav className="app-nav">
-          <Link to="/painel">Painel</Link>
-          <Link to="/veiculos">Veículos</Link>
-          <Link to="/clientes">Clientes</Link>
-          <Link to="/leads">Leads</Link>
-          <Link to="/negocios">Negócios</Link>
-          <Link to="/documentos">Documentos</Link>
-          <Link to="/calc-pmc">Calc. PMC</Link>
-          {ehAdmin && <Link to="/vendedores">Vendedores</Link>}
-          {ehAdmin && <Link to="/financeiro">Financeiro</Link>}
-          <Link to="/extrato">Extrato</Link>
-          {ehAdmin && <Link to="/indice-conversao">Índice de Conversão</Link>}
-          <Link to="/empresa">Empresa</Link>
+          <Link to="/painel">
+            <LayoutDashboard size={16} /> Painel
+          </Link>
+          <Link to="/veiculos">
+            <Car size={16} /> Veículos
+          </Link>
+          <Link to="/clientes">
+            <Users size={16} /> Clientes
+          </Link>
+          <Link to="/leads">
+            <UserPlus size={16} /> Leads
+          </Link>
+          <Link to="/negocios">
+            <Handshake size={16} /> Negócios
+          </Link>
+          <Link to="/documentos">
+            <FileText size={16} /> Documentos
+          </Link>
+          <Link to="/calc-pmc">
+            <Calculator size={16} /> Calc. PMC
+          </Link>
+          {ehAdmin && (
+            <Link to="/vendedores">
+              <Briefcase size={16} /> Vendedores
+            </Link>
+          )}
+          {ehAdmin && (
+            <Link to="/financeiro">
+              <Wallet size={16} /> Financeiro
+            </Link>
+          )}
+          <Link to="/extrato">
+            <Receipt size={16} /> Extrato
+          </Link>
+          {ehAdmin && (
+            <Link to="/indice-conversao">
+              <TrendingUp size={16} /> Índice de Conversão
+            </Link>
+          )}
+          <Link to="/empresa">
+            <Building2 size={16} /> Empresa
+          </Link>
         </nav>
         <button type="button" onClick={logout}>
-          Sair
+          <LogOut size={16} /> Sair
         </button>
       </header>
       <main className="app-content">

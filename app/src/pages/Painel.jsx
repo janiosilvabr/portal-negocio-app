@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { UserPlus, Handshake, FileText, Wallet } from "lucide-react";
 import { supabase } from "../lib/supabaseClient";
 import { useAuth } from "../context/AuthContext";
 
@@ -194,22 +195,42 @@ export default function Painel() {
 
       <div className="kpi-grid">
         <div className="kpi-card">
-          <p className="kpi-label">Novos Leads Hoje</p>
-          <p className="kpi-valor">{novosLeadsHoje}</p>
+          <span className="kpi-icone kpi-icone-azul">
+            <UserPlus size={18} />
+          </span>
+          <div>
+            <p className="kpi-label">Novos Leads Hoje</p>
+            <p className="kpi-valor">{novosLeadsHoje}</p>
+          </div>
         </div>
         <div className="kpi-card">
-          <p className="kpi-label">Negócios em Andamento</p>
-          <p className="kpi-valor">{negociosEmAndamento.length}</p>
+          <span className="kpi-icone kpi-icone-laranja">
+            <Handshake size={18} />
+          </span>
+          <div>
+            <p className="kpi-label">Negócios em Andamento</p>
+            <p className="kpi-valor">{negociosEmAndamento.length}</p>
+          </div>
         </div>
         <div className="kpi-card">
-          <p className="kpi-label">Documentos Pendentes</p>
-          <p className={`kpi-valor ${documentosPendentes > 0 ? "kpi-negativo" : ""}`}>
-            {documentosPendentes}
-          </p>
+          <span className="kpi-icone kpi-icone-roxo">
+            <FileText size={18} />
+          </span>
+          <div>
+            <p className="kpi-label">Documentos Pendentes</p>
+            <p className={`kpi-valor ${documentosPendentes > 0 ? "kpi-negativo" : ""}`}>
+              {documentosPendentes}
+            </p>
+          </div>
         </div>
         <div className="kpi-card">
-          <p className="kpi-label">Valor em Negociações</p>
-          <p className="kpi-valor kpi-positivo">{formatMoeda(valorEmNegociacoes)}</p>
+          <span className="kpi-icone kpi-icone-verde">
+            <Wallet size={18} />
+          </span>
+          <div>
+            <p className="kpi-label">Valor em Negociações</p>
+            <p className="kpi-valor kpi-positivo">{formatMoeda(valorEmNegociacoes)}</p>
+          </div>
         </div>
       </div>
 

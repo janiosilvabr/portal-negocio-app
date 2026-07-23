@@ -154,6 +154,9 @@ body {
 }
 
 .app-nav a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   color: var(--white);
   opacity: 0.85;
   font-size: 0.9rem;
@@ -164,6 +167,9 @@ body {
 }
 
 .app-header button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   padding: 8px 16px;
   border: none;
   border-radius: 8px;
@@ -1254,10 +1260,43 @@ body {
   border-radius: 12px;
   box-shadow: 0 4px 16px rgba(26, 39, 68, 0.1);
   padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.kpi-icone {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+}
+
+.kpi-icone-azul {
+  background: #ddebff;
+  color: #1a5fb4;
+}
+
+.kpi-icone-laranja {
+  background: #ffe8d1;
+  color: var(--orange);
+}
+
+.kpi-icone-roxo {
+  background: #ece3fb;
+  color: #6c3ce0;
+}
+
+.kpi-icone-verde {
+  background: #e3f6ea;
+  color: #1e824c;
 }
 
 .kpi-label {
-  margin: 0 0 8px;
+  margin: 0 0 4px;
   font-size: 0.8rem;
   color: var(--text-muted);
   text-transform: uppercase;
