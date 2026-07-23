@@ -1,4 +1,5 @@
 import { Link, Outlet } from "react-router-dom";
+import { Car } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 
 export function PublicLayout() {
@@ -7,7 +8,10 @@ export function PublicLayout() {
   return (
     <div className="vitrine">
       <header className="vitrine-header">
-        <Link to="/" className="app-logo">
+        <Link to="/" className="vitrine-logo">
+          <span className="vitrine-logo-icone">
+            <Car size={18} />
+          </span>
           Portal Negócio
         </Link>
         <nav className="vitrine-nav">

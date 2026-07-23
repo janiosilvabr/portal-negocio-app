@@ -1,11 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { ShieldCheck } from "lucide-react";
 import { supabase } from "../lib/supabaseClient";
-
-function formatPreco(preco) {
-  if (preco == null) return "Consulte";
-  return Number(preco).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
-}
+import { VeiculoCard } from "../components/VeiculoCard";
 
 export default function Inicio() {
   const [veiculos, setVeiculos] = useState([]);
@@ -23,7 +20,12 @@ export default function Inicio() {
   return (
     <>
       <section className="inicio-hero">
+        <div className="inicio-hero-glow" aria-hidden="true" />
         <div className="inicio-hero-inner">
+          <span className="inicio-hero-selo">
+            <ShieldCheck size={14} />
+            VEÍCULOS COM PREÇO JUSTO
+          </span>
           <h1>
             O carro ideal <span>para você</span> está aqui.
           </h1>
@@ -50,30 +52,7 @@ export default function Inicio() {
 
         <div className="vitrine-grid">
           {veiculos.map((v) => (
-            <div className="vitrine-card" key={v.id}>
-              <div className="vitrine-card-foto">
-                {v.foto_url ? <img src={v.foto_url} alt="" /> : "Sem foto"}
-              </div>
-              <div className="vitrine-card-body">
-                <h3>
-                  {v.marca} {v.modelo}
-                </h3>
-                {v.versao && <p className="vitrine-card-versao">{v.versao}</p>}
-                <p className="vitrine-card-preco">{formatPreco(v.preco)}</p>
-                <ul className="vitrine-card-specs">
-                  <li>
-                    {v.ano_fabricacao ?? "-"}/{v.ano_modelo ?? "-"}
-                  </li>
-                  <li>{v.km != null ? `${v.km.toLocaleString("pt-BR")} km` : "-"}</li>
-                  <li>{v.combustivel ?? "-"}</li>
-                  <li>{v.cambio ?? "-"}</li>
-                </ul>
-                {v.empresa_nome && <p className="vitrine-card-garagem">{v.empresa_nome}</p>}
-                <Link to={`/vitrine/${v.id}`} className="botao-link vitrine-card-detalhes">
-                  Ver Detalhes
-                </Link>
-              </div>
-            </div>
+            <VeiculoCard veiculo={v} key={v.id} />
           ))}
         </div>
       </div>

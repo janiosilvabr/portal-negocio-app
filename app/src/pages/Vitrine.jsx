@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
+import { SlidersHorizontal } from "lucide-react";
 import { supabase } from "../lib/supabaseClient";
+import { VeiculoCard } from "../components/VeiculoCard";
 
 const FILTROS_INICIAIS = {
   marca: "",
@@ -23,11 +25,6 @@ const TIPO_CARROCERIA_LABEL = {
   moto: "Moto",
   outro: "Outro",
 };
-
-function formatPreco(preco) {
-  if (preco == null) return "Consulte";
-  return Number(preco).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
-}
 
 function uniqueSorted(valores) {
   return [...new Set(valores.filter(Boolean))].sort();
@@ -85,6 +82,11 @@ export default function Vitrine() {
   return (
     <div className="vitrine-content">
       <h1>{nomeGaragemFiltrada ? `Veículos de ${nomeGaragemFiltrada}` : "Veículos disponíveis"}</h1>
+
+        <div className="vitrine-filtros-header">
+          <SlidersHorizontal size={15} />
+          Filtrar veículos
+        </div>
 
         <div className="vitrine-filtros">
           <select name="marca" value={filtros.marca} onChange={handleFiltro}>
@@ -161,30 +163,7 @@ export default function Vitrine() {
 
         <div className="vitrine-grid">
           {filtrados.map((v) => (
-            <div className="vitrine-card" key={v.id}>
-              <div className="vitrine-card-foto">
-                {v.foto_url ? <img src={v.foto_url} alt="" /> : "Sem foto"}
-              </div>
-              <div className="vitrine-card-body">
-                <h3>
-                  {v.marca} {v.modelo}
-                </h3>
-                {v.versao && <p className="vitrine-card-versao">{v.versao}</p>}
-                <p className="vitrine-card-preco">{formatPreco(v.preco)}</p>
-                <ul className="vitrine-card-specs">
-                  <li>
-                    {v.ano_fabricacao ?? "-"}/{v.ano_modelo ?? "-"}
-                  </li>
-                  <li>{v.km != null ? `${v.km.toLocaleString("pt-BR")} km` : "-"}</li>
-                  <li>{v.combustivel ?? "-"}</li>
-                  <li>{v.cambio ?? "-"}</li>
-                </ul>
-                {v.empresa_nome && <p className="vitrine-card-garagem">{v.empresa_nome}</p>}
-                <Link to={`/vitrine/${v.id}`} className="botao-link vitrine-card-detalhes">
-                  Ver Detalhes
-                </Link>
-              </div>
-            </div>
+            <VeiculoCard veiculo={v} key={v.id} />
           ))}
         </div>
     </div>

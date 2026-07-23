@@ -557,6 +557,28 @@ body {
   flex-wrap: wrap;
 }
 
+.vitrine-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--white);
+  font-weight: 700;
+  font-size: 1.05rem;
+  text-decoration: none;
+}
+
+.vitrine-logo-icone {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: var(--orange);
+  color: var(--white);
+  flex-shrink: 0;
+}
+
 .vitrine-nav {
   display: flex;
   align-items: center;
@@ -627,14 +649,41 @@ body {
 /* Início (home pública) */
 
 .inicio-hero {
+  position: relative;
   background: linear-gradient(135deg, var(--navy) 0%, #0f1c38 100%);
-  padding: 72px 32px;
+  padding: 88px 32px;
   text-align: center;
+  overflow: hidden;
+}
+
+.inicio-hero-glow {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(480px circle at 15% 20%, rgba(245, 130, 13, 0.18), transparent 60%),
+    radial-gradient(560px circle at 85% 80%, rgba(245, 130, 13, 0.12), transparent 60%);
+  pointer-events: none;
 }
 
 .inicio-hero-inner {
+  position: relative;
   max-width: 640px;
   margin: 0 auto;
+}
+
+.inicio-hero-selo {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(245, 130, 13, 0.15);
+  border: 1px solid rgba(245, 130, 13, 0.4);
+  color: #ffb066;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  margin-bottom: 20px;
 }
 
 .inicio-hero h1 {
@@ -657,6 +706,7 @@ body {
 .inicio-hero-cta {
   font-size: 1rem;
   padding: 14px 32px;
+  box-shadow: 0 8px 24px rgba(245, 130, 13, 0.35);
 }
 
 .inicio-secao-header {
@@ -680,6 +730,18 @@ body {
 .vitrine-content h1 {
   color: var(--navy);
   margin-top: 0;
+}
+
+.vitrine-filtros-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 10px;
 }
 
 .vitrine-filtros {
@@ -716,9 +778,15 @@ body {
 
 .vitrine-card {
   background: var(--white);
-  border-radius: 12px;
+  border-radius: 16px;
   box-shadow: 0 4px 16px rgba(26, 39, 68, 0.1);
   overflow: hidden;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.vitrine-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(26, 39, 68, 0.16);
 }
 
 .vitrine-card-foto {
@@ -736,6 +804,11 @@ body {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 0.25s ease;
+}
+
+.vitrine-card:hover .vitrine-card-foto img {
+  transform: scale(1.05);
 }
 
 .vitrine-card-body {
@@ -772,12 +845,23 @@ body {
 }
 
 .vitrine-card-specs li {
+  display: flex;
+  align-items: center;
+  gap: 4px;
   background: var(--gray-bg);
   padding: 4px 8px;
   border-radius: 6px;
 }
 
+.vitrine-card-specs li svg {
+  color: var(--orange);
+  flex-shrink: 0;
+}
+
 .vitrine-card-garagem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   margin: 0;
   font-size: 0.8rem;
   color: var(--text-muted);
@@ -785,10 +869,20 @@ body {
   padding-top: 8px;
 }
 
+.vitrine-card-garagem svg {
+  flex-shrink: 0;
+  color: var(--text-muted);
+}
+
 .vitrine-card-detalhes {
   display: block;
   text-align: center;
   margin-top: 12px;
+  transition: background 0.15s ease;
+}
+
+.vitrine-card-detalhes:hover {
+  background: #d96f00;
 }
 
 /* Detalhe do veículo */
@@ -1458,6 +1552,25 @@ body {
 .painel-estoque-preco {
   font-size: 0.85rem;
   color: var(--text-muted);
+}
+
+.painel-estoque-foto {
+  flex: 0 0 40px;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--gray-bg);
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.painel-estoque-foto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .kpi-valor {

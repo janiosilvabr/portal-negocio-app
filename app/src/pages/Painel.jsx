@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { UserPlus, Handshake, FileText, Wallet } from "lucide-react";
+import { UserPlus, Handshake, FileText, Wallet, Car } from "lucide-react";
 import { supabase } from "../lib/supabaseClient";
 import { useAuth } from "../context/AuthContext";
 
@@ -90,8 +90,9 @@ export default function Painel() {
       supabase.from("negocios").select("id, status, valor"),
       supabase
         .from("veiculos")
-        .select("id, marca, modelo, versao, preco, status, created_at")
-        .order("created_at", { ascending: false }),
+        .select("id, marca, modelo, versao, preco, status, created_at, fotos_veiculos(url, ordem)")
+        .order("created_at", { ascending: false })
+        .order("ordem", { foreignTable: "fotos_veiculos", ascending: true }),
       supabase.from("documentos_gerados").select("id, status, negocio_id"),
       supabase.rpc("listar_equipe_empresa"),
     ];
@@ -284,7 +285,14 @@ export default function Painel() {
             <ul className="painel-estoque">
               {estoqueRecente.map((v) => (
                 <li key={v.id}>
-                  <Link to={`/veiculos/${v.id}/editar`}>
+                  <span className="painel-estoque-foto">
+                    {v.fotos_veiculos?.[0]?.url ? (
+                      <img src={v.fotos_veiculos[0].url} alt="" />
+                    ) : (
+                      <Car size={16} />
+                    )}
+                  </span>
+                  <Link to={`/veiculos/${v.id}/editar`} className="painel-estoque-nome">
                     {v.marca} {v.modelo}
                     {v.versao ? ` ${v.versao}` : ""}
                   </Link>
