@@ -12,7 +12,9 @@ export default function VerDocumento() {
   useEffect(() => {
     supabase
       .from("documentos_gerados")
-      .select("*")
+      .select(
+        "*, negocios(clientes(nome, email)), consignacoes(proprietario:clientes(nome, email))"
+      )
       .eq("id", id)
       .maybeSingle()
       .then(({ data, error }) => {
@@ -41,7 +43,10 @@ export default function VerDocumento() {
 
   return (
     <div className="page">
-      <DocumentoResultado documento={documento} />
+      <DocumentoResultado
+        documento={documento}
+        onDocumentoAtualizado={(atualizado) => setDocumento((d) => ({ ...d, ...atualizado }))}
+      />
     </div>
   );
 }
