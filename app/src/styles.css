@@ -1507,6 +1507,117 @@ body {
   line-height: 1.4;
 }
 
+.lista-subtitulo {
+  margin: 0 0 16px;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.veiculos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 20px;
+}
+
+.veiculo-card {
+  background: var(--white);
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(26, 39, 68, 0.1);
+  overflow: hidden;
+}
+
+.veiculo-card-foto {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  background: var(--gray-bg);
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.veiculo-card-foto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.veiculo-card-badge-status {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+}
+
+.veiculo-card-badge-fotos {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: rgba(26, 39, 68, 0.65);
+  color: var(--white);
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+.veiculo-card-body {
+  padding: 16px;
+}
+
+.veiculo-card-preco {
+  margin: 0 0 4px;
+  color: var(--orange);
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.veiculo-card-body h3 {
+  margin: 0 0 4px;
+  color: var(--navy);
+}
+
+.veiculo-card-acoes {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.veiculo-card-editar {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin: 0;
+}
+
+.veiculo-card-excluir {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  border: 1px solid #dcdfe4;
+  border-radius: 8px;
+  background: var(--white);
+  color: #c0392b;
+  cursor: pointer;
+}
+
+.veiculo-card-excluir:hover:not(:disabled) {
+  background: #f5e0dc;
+  border-color: #c0392b;
+}
+
+.veiculo-card-excluir:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
 /* Listas (Negócios/Leads) — busca, abas, linhas */
 
 .lista-toolbar {
@@ -1692,6 +1803,123 @@ body {
 
   .negocio-linha-vendedor {
     flex: 1 1 auto;
+  }
+}
+
+/* Clientes */
+
+.cliente-linha {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  background: var(--white);
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(26, 39, 68, 0.08);
+  padding: 14px 16px;
+}
+
+.cliente-linha-principal {
+  flex: 1 1 220px;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.cliente-linha-nome {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-weight: 600;
+  color: var(--navy);
+}
+
+.cliente-linha-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  flex-shrink: 0;
+}
+
+.cliente-linha-dot.ativo {
+  background: #1e824c;
+}
+
+.cliente-linha-dot.negociacao {
+  background: #b35900;
+}
+
+.cliente-linha-cpf {
+  flex: 0 0 120px;
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.cliente-linha-contato {
+  flex: 0 0 220px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.cliente-linha-contato span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.cliente-linha-contato svg {
+  flex-shrink: 0;
+  color: var(--text-muted);
+}
+
+.cliente-linha-acoes {
+  flex: 0 0 auto;
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.cliente-linha-acoes a,
+.cliente-linha-acoes button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid #dcdfe4;
+  border-radius: 8px;
+  background: var(--white);
+  color: var(--navy);
+  cursor: pointer;
+}
+
+.cliente-linha-acoes button {
+  color: #c0392b;
+}
+
+.cliente-linha-acoes a:hover {
+  background: var(--gray-bg);
+}
+
+.cliente-linha-acoes button:hover:not(:disabled) {
+  background: #f5e0dc;
+  border-color: #c0392b;
+}
+
+.cliente-linha-acoes button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+@media (max-width: 800px) {
+  .cliente-linha-acoes {
+    margin-left: 0;
   }
 }
 
