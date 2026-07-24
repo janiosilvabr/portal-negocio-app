@@ -2120,3 +2120,279 @@ body {
   color: var(--orange);
   font-weight: 600;
 }
+
+/* Como Funciona (página de vendas) */
+
+.cf-hero {
+  position: relative;
+  background: linear-gradient(135deg, var(--navy) 0%, #0f1c38 100%);
+  padding: 88px 32px;
+  text-align: center;
+  overflow: hidden;
+}
+
+.cf-hero-inner {
+  position: relative;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.cf-hero-inner h1 {
+  color: var(--white);
+  font-size: clamp(28px, 4.5vw, 42px);
+  line-height: 1.25;
+  margin: 0 0 16px;
+}
+
+.cf-hero-inner h1 span {
+  color: var(--orange);
+}
+
+.cf-hero-inner p {
+  color: #c6d3e8;
+  font-size: 1.05rem;
+  margin: 0 0 28px;
+}
+
+.cf-hero-cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.cf-hero-cta-secundario {
+  color: var(--white);
+  font-weight: 600;
+  font-size: 0.9rem;
+  opacity: 0.85;
+}
+
+.cf-hero-cta-secundario:hover {
+  opacity: 1;
+}
+
+.cf-secao {
+  padding: 64px 32px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.cf-secao-titulo {
+  text-align: center;
+  color: var(--navy);
+  font-size: clamp(22px, 3vw, 30px);
+  margin: 0 0 12px;
+}
+
+.cf-secao-subtitulo {
+  text-align: center;
+  color: var(--text-muted);
+  margin: 0 0 40px;
+}
+
+.cf-funcionalidades-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+  margin-top: 40px;
+}
+
+.cf-funcionalidade-card {
+  background: var(--white);
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(26, 39, 68, 0.1);
+  padding: 24px;
+}
+
+.cf-funcionalidade-icone {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: rgba(245, 130, 13, 0.12);
+  color: var(--orange);
+  margin-bottom: 14px;
+}
+
+.cf-funcionalidade-card h3 {
+  color: var(--navy);
+  margin: 0 0 8px;
+}
+
+.cf-funcionalidade-card p {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.cf-secao-passos {
+  background: var(--gray-bg);
+}
+
+.cf-passos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 24px;
+  margin-top: 40px;
+}
+
+.cf-passo {
+  text-align: center;
+}
+
+.cf-passo-numero {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  background: var(--navy);
+  color: var(--white);
+  font-weight: 700;
+  font-size: 0.85rem;
+  margin-bottom: 12px;
+}
+
+.cf-passo h3 {
+  color: var(--navy);
+  margin: 0 0 6px;
+  font-size: 1rem;
+}
+
+.cf-passo p {
+  color: var(--text-muted);
+  font-size: 0.88rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.cf-planos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+  margin-top: 40px;
+  align-items: stretch;
+}
+
+.cf-plano-card {
+  position: relative;
+  background: var(--white);
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(26, 39, 68, 0.1);
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+  border: 2px solid transparent;
+}
+
+.cf-plano-destaque {
+  border-color: var(--orange);
+}
+
+.cf-plano-selo {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--orange);
+  color: var(--white);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 4px 12px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.cf-plano-card h3 {
+  color: var(--navy);
+  margin: 0 0 8px;
+}
+
+.cf-plano-preco {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--navy);
+  margin: 0 0 20px;
+}
+
+.cf-plano-preco span {
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: var(--text-muted);
+}
+
+.cf-plano-lista {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 24px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.cf-plano-lista li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 0.88rem;
+  color: var(--text);
+}
+
+.cf-plano-lista li svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: #1e824c;
+}
+
+.cf-plano-cta {
+  text-align: center;
+  margin-top: auto;
+}
+
+.cf-plano-avulso {
+  background: var(--gray-bg);
+  box-shadow: none;
+  border: 1px dashed #dcdfe4;
+}
+
+.cf-plano-avulso-texto {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.cf-cta-final {
+  background: linear-gradient(135deg, var(--navy) 0%, #0f1c38 100%);
+  padding: 64px 32px;
+  text-align: center;
+}
+
+.cf-cta-final h2 {
+  color: var(--white);
+  margin: 0 0 12px;
+  font-size: clamp(22px, 3vw, 28px);
+}
+
+.cf-cta-final p {
+  color: #c6d3e8;
+  margin: 0 0 24px;
+}
+
+@media (max-width: 700px) {
+  .cf-hero {
+    padding: 56px 20px;
+  }
+
+  .cf-secao {
+    padding: 44px 20px;
+  }
+}

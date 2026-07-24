@@ -34,6 +34,7 @@ import CalcPMC from "./pages/CalcPMC";
 import NovaAvaliacaoPMC from "./pages/NovaAvaliacaoPMC";
 import VerAvaliacaoPMC from "./pages/VerAvaliacaoPMC";
 import Garagens from "./pages/Garagens";
+import ComoFunciona from "./pages/ComoFunciona";
 import Sobre from "./pages/Sobre";
 import Contato from "./pages/Contato";
 import PoliticaPrivacidade from "./pages/PoliticaPrivacidade";
@@ -53,6 +54,7 @@ export default function App() {
           <Route path="/vitrine" element={<Vitrine />} />
           <Route path="/vitrine/:id" element={<DetalheVeiculo />} />
           <Route path="/garagens" element={<Garagens />} />
+          <Route path="/como-funciona" element={<ComoFunciona />} />
           <Route path="/sobre" element={<Sobre />} />
           <Route path="/contato" element={<Contato />} />
           <Route path="/politica-privacidade" element={<PoliticaPrivacidade />} />

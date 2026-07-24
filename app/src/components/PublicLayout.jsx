@@ -17,6 +17,7 @@ export function PublicLayout() {
         <nav className="vitrine-nav">
           <Link to="/">Início</Link>
           <Link to="/vitrine">Veículos</Link>
+          <Link to="/como-funciona">Como Funciona</Link>
           <Link to="/garagens">Garagens</Link>
           <Link to="/sobre">Sobre</Link>
           <Link to="/contato">Contato</Link>
