@@ -2,6 +2,11 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabaseClient";
 
+function formatMinutos(bloqueadoAte) {
+  const ms = new Date(bloqueadoAte).getTime() - Date.now();
+  return Math.max(1, Math.ceil(ms / 60000));
+}
+
 export default function Login() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -14,12 +19,39 @@ export default function Login() {
     setErro("");
     setCarregando(true);
 
+    const emailNormalizado = email.trim().toLowerCase();
+
+    const { data: statusAntes } = await supabase
+      .rpc("verificar_bloqueio_login", { p_email: emailNormalizado })
+      .maybeSingle();
+
+    if (statusAntes?.bloqueado) {
+      setErro(
+        `Muitas tentativas incorretas. Tente novamente em ${formatMinutos(statusAntes.bloqueado_ate)} minuto(s).`
+      );
+      setCarregando(false);
+      return;
+    }
+
     const { error } = await supabase.auth.signInWithPassword({ email, password: senha });
+
+    await supabase.rpc("registrar_tentativa_login", {
+      p_email: emailNormalizado,
+      p_sucesso: !error,
+    });
 
     setCarregando(false);
 
     if (error) {
-      setErro("E-mail ou senha inválidos.");
+      const { data: statusDepois } = await supabase
+        .rpc("verificar_bloqueio_login", { p_email: emailNormalizado })
+        .maybeSingle();
+
+      setErro(
+        statusDepois?.bloqueado
+          ? `Muitas tentativas incorretas. Sua conta foi bloqueada por ${formatMinutos(statusDepois.bloqueado_ate)} minutos por segurança.`
+          : "E-mail ou senha inválidos."
+      );
       return;
     }
 

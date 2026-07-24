@@ -124,7 +124,10 @@ Só CRM Concessionária/Garagista + Vitrine de veículos. **Sem módulo de imóv
 - **TEMPLATE_CONTRATO_CONSIGNACAO.md** — template do contrato de entrada (loja recebe veículo)
 - **TEMPLATE_CONTRATO_COMPRA_VENDA.md** — template do contrato de saída (loja vende ao cliente)
 
-## Ordem de construção recomendada
+## ✅ Ordem de construção recomendada — v1 completo (24/07)
+
+Os 9 itens abaixo estão construídos, testados e publicados em portalnegocio.com.br. O v1 como
+planejado originalmente está pronto — próximos passos ficam em "Próxima fase" logo abaixo.
 
 1. Autenticação (login/cadastro) — testar isolado antes de seguir
 2. Cadastro de Veículos + fotos
@@ -136,7 +139,36 @@ Só CRM Concessionária/Garagista + Vitrine de veículos. **Sem módulo de imóv
 8. Vendedores + Financeiro (menor prioridade, pode ficar para o fim do MVP)
 9. Calc. PMC — função ainda não explorada (ver pendências)
 
+## Próxima fase (decisão de 24/07)
+
+Com o v1 completo, as frentes ativas agora são, nesta ordem de prioridade combinada com o
+usuário:
+
+1. **Polimento do produto** — escopo ainda a definir por sessão (o quê especificamente).
+2. **Brevo — envio de documento por e-mail** (ver item já detalhado em "Roadmap futuro" abaixo).
+3. **Segurança no login** — escopo ainda a definir (quais medidas especificamente).
+4. **Mercado Pago — cobrança da própria assinatura do Portal Negócio** (ver "Lacuna crítica"
+   abaixo — é diferente da cobrança avulsa da Calc. PMC, que é sobre isso mais adiante).
+5. **Estratégia de divulgação no modelo GEO** (Generative Engine Optimization — otimizar para
+   ser citado por IAs generativas como ChatGPT/Perplexity/Claude, não só SEO tradicional).
+   Deliverable de conteúdo/estratégia, não é código.
+
+## ⚠️ Lacuna crítica: cobrança da própria assinatura não está implementada
+
+A tabela `assinaturas`/`planos` existe no schema (CONTEXTO.md), e Mercado Pago está na stack
+(ver tabela abaixo), mas **nenhum fluxo de cobrança da assinatura do garagista está
+implementado** — nem checkout, nem webhook de confirmação de pagamento, nem gating de feature
+por plano. Mercado Pago só é mencionado no texto legal da Política de Privacidade, não está
+integrado de verdade em lugar nenhum do código. Sem isso, não há como cobrar de uma garagem
+real pelo uso do sistema — é o maior bloqueador para monetizar, maior prioridade que qualquer
+item do roadmap de features abaixo.
+
 ## Roadmap futuro (fase 2+, não construir agora)
+
+> ✅ **Já implementado** (estava aqui listado como "não construir agora", mas foi construído):
+> Match Ideal (`orcamento_maximo`/`tipo_carroceria_desejado`/`cambio_desejado` em `leads`,
+> `tipo_carroceria` em `veiculos`, card de sugestão na tela do lead), Índice de Conversão
+> (renomeado na UI), Limite de desconto no Termômetro de Margem.
 
 - **Agenda automática de test-drives (decisão de 19/07, desmembrada da Ideia "Extrato do
   Vendedor"):** exige tabela nova (`agendamentos`: veiculo_id, cliente_id, vendedor_id, tipo,
@@ -145,20 +177,6 @@ Só CRM Concessionária/Garagista + Vitrine de veículos. **Sem módulo de imóv
   (ver CONTEXTO.md, `custos_veiculo`) usa só valor pago (custo de aquisição) na v1; alerta
   comparando contra a Tabela FIPE precisa de integração externa nova, fica para quando a
   Calc. PMC também for revisitada.
-- **"Match Ideal" + polish de nomenclatura (decisão de 20/07, inspirado no conceito do programa
-  "Car Matchmaker" — usar nomes próprios do produto, nunca o nome da série/apresentador, por
-  serem marca/pessoa real):**
-  - **Match Ideal (novo, modesto):** adicionar a `leads` os campos `orcamento_maximo`,
-    `tipo_carroceria_desejado`, `cambio_desejado`; adicionar a `veiculos` o campo
-    `tipo_carroceria` (sedan/suv/hatch/pickup/utilitario/moto/outro — também reforça os
-    filtros da Vitrine). Exibir na tela do lead um card com os 3 veículos do estoque mais
-    aderentes ao perfil — é filtro/consulta direta no banco, **não precisa de Claude API**.
-  - **Ranking do mês por vendedor** (já no roadmap): renomear na UI como algo como "Índice de
-    Conversão" — zero custo adicional, mesma query já prevista.
-  - **Limite de desconto** no Termômetro de Margem (já construído): adicionar um número
-    derivado ("até R$ Z de desconto sem perder a margem mínima") — pequeno acréscimo ao que já
-    existe, não é tela nova.
-  Sessão curta, cabe antes da Calc. PMC.
 - **PMC estimado vs. margem real (decisão de 19/07):** ligar o resultado salvo da Calc. PMC
   (margem estimada na compra) ao lucro líquido real apurado no Financeiro após a venda do
   mesmo veículo — permite comparar "estimei X, ganhei Y". Requer que o resultado da Calc. PMC
