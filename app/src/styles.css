@@ -299,90 +299,14 @@ body {
   color: #1a2744;
 }
 
-/* Kanban de negócios */
-
-.kanban {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(240px, 1fr));
-  gap: 16px;
-  align-items: start;
+.badge-negociando {
+  background: #ffe5cc;
+  color: #b35900;
 }
 
-@media (max-width: 800px) {
-  .kanban,
-  .kanban-leads {
-    grid-auto-flow: column;
-    grid-auto-columns: 82vw;
-    grid-template-columns: none;
-    overflow-x: auto;
-    padding-bottom: 8px;
-    -webkit-overflow-scrolling: touch;
-    scroll-snap-type: x proximity;
-  }
-
-  .kanban-coluna {
-    scroll-snap-align: start;
-  }
-}
-
-.kanban-coluna {
-  background: var(--white);
-  border-radius: 12px;
-  box-shadow: 0 4px 16px rgba(26, 39, 68, 0.1);
-  padding: 16px;
-}
-
-.kanban-coluna-titulo {
-  font-weight: 600;
-  color: var(--navy);
-  margin-bottom: 12px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.kanban-contador {
-  background: var(--gray-bg);
-  color: var(--text-muted);
-  border-radius: 999px;
-  padding: 2px 8px;
-  font-size: 0.75rem;
-}
-
-.kanban-card {
-  background: var(--gray-bg);
-  border-radius: 8px;
-  padding: 12px;
-  margin-bottom: 12px;
-}
-
-.kanban-card-cliente {
-  margin: 0;
-  font-weight: 600;
-  color: var(--navy);
-}
-
-.kanban-card-veiculo {
-  margin: 2px 0 6px;
-  font-size: 0.85rem;
-  color: var(--text-muted);
-}
-
-.kanban-card-valor {
-  margin: 0 0 8px;
-  font-weight: 600;
-  color: var(--orange);
-}
-
-.kanban-select {
-  display: block;
-  width: 100%;
-  margin-top: 8px;
-  padding: 6px 8px;
-  border: 1px solid #dcdfe4;
-  border-radius: 6px;
-  font-size: 0.8rem;
-  font-family: inherit;
+.badge-perdido {
+  background: #f5e0dc;
+  color: #c0392b;
 }
 
 /* Formulário */
@@ -1033,14 +957,6 @@ body {
 
 /* Documentos */
 
-.kanban-card-link {
-  display: block;
-  margin-top: 8px;
-  font-size: 0.8rem;
-  color: var(--navy);
-  text-decoration: underline;
-}
-
 .badge-rascunho {
   background: #fff3cd;
   color: #8a6300;
@@ -1140,64 +1056,50 @@ body {
 
 /* Leads */
 
-@media (min-width: 801px) {
-  .kanban-leads {
-    grid-template-columns: repeat(5, minmax(180px, 1fr));
-  }
+.lead-linha {
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 16px;
+  background: var(--white);
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(26, 39, 68, 0.08);
+  padding: 14px 16px;
 }
 
-.lead-observacoes {
-  margin: 8px 0 0;
+.lead-linha-foto {
+  flex: 0 0 40px;
+  width: 40px;
+  height: 40px;
+  margin-top: 2px;
+  border-radius: 999px;
+  background: var(--gray-bg);
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lead-linha-observacoes {
+  margin: 6px 0 0;
   font-size: 0.8rem;
   color: var(--text-muted);
 }
 
-.veiculos-ideais {
-  margin: 10px 0;
-  padding: 8px 10px;
+.lead-linha-ideais {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.lead-linha-ideal-chip {
+  font-size: 0.75rem;
+  padding: 4px 10px;
+  border-radius: 999px;
   background: #fff7ec;
   border: 1px solid #f5d9a8;
-  border-radius: 8px;
-}
-
-.veiculos-ideais-titulo {
-  margin: 0 0 6px;
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: var(--orange);
-  text-transform: uppercase;
-}
-
-.veiculos-ideais ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.veiculos-ideais li {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  font-size: 0.8rem;
-  padding-bottom: 4px;
-  border-bottom: 1px solid rgba(26, 39, 68, 0.08);
-}
-
-.veiculos-ideais li:last-child {
-  padding-bottom: 0;
-  border-bottom: none;
-}
-
-.veiculos-ideais li span {
-  color: var(--text);
-}
-
-.veiculos-ideais li strong {
-  color: var(--orange);
-  font-size: 0.85rem;
+  color: var(--navy);
 }
 
 /* Custos do veículo */
@@ -1588,31 +1490,8 @@ body {
   color: #c0392b;
 }
 
-/* Leads: reatribuir vendedor */
-
-.lead-vendedor-label {
-  display: block;
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  margin-top: 8px;
-}
-
-.lead-vendedor-label select {
-  margin-top: 4px;
-}
 
 /* Negócios: vendedor responsável */
-
-.negocio-vendedor-label {
-  display: block;
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  margin-top: 8px;
-}
-
-.negocio-vendedor-label select {
-  margin-top: 4px;
-}
 
 .negocio-vendedor-vazio {
   border-style: dashed !important;
@@ -1626,6 +1505,194 @@ body {
   font-size: 0.72rem;
   color: #8a6300;
   line-height: 1.4;
+}
+
+/* Listas (Negócios/Leads) — busca, abas, linhas */
+
+.lista-toolbar {
+  margin-bottom: 12px;
+}
+
+.lista-busca {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 360px;
+  padding: 10px 14px;
+  background: var(--white);
+  border: 1px solid #dcdfe4;
+  border-radius: 10px;
+  color: var(--text-muted);
+}
+
+.lista-busca input {
+  border: none;
+  outline: none;
+  flex: 1;
+  font-size: 0.9rem;
+  font-family: inherit;
+  color: var(--text);
+}
+
+.lista-abas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.lista-aba {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border: 1px solid #dcdfe4;
+  border-radius: 999px;
+  background: var(--white);
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.lista-aba.ativa {
+  background: var(--navy);
+  border-color: var(--navy);
+  color: var(--white);
+}
+
+.lista-aba-contador {
+  background: rgba(0, 0, 0, 0.08);
+  border-radius: 999px;
+  padding: 1px 7px;
+  font-size: 0.75rem;
+}
+
+.lista-aba.ativa .lista-aba-contador {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.lista-linhas {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.negocio-linha {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  background: var(--white);
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(26, 39, 68, 0.08);
+  padding: 14px 16px;
+}
+
+.negocio-linha-foto {
+  flex: 0 0 48px;
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--gray-bg);
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.negocio-linha-foto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.negocio-linha-principal {
+  flex: 1 1 200px;
+  min-width: 0;
+}
+
+.negocio-linha-titulo {
+  margin: 0 0 2px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  color: var(--navy);
+}
+
+.negocio-linha-veiculo {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.negocio-linha-valor {
+  flex: 0 0 auto;
+  font-weight: 700;
+  color: var(--orange);
+  white-space: nowrap;
+}
+
+.negocio-linha-vendedor {
+  flex: 0 0 180px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.negocio-linha-vendedor label {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.negocio-linha-vendedor select {
+  padding: 6px 8px;
+  border: 1px solid #dcdfe4;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-family: inherit;
+}
+
+.negocio-linha-status {
+  flex: 0 0 auto;
+  appearance: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  padding: 6px 28px 6px 14px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%23212529' stroke-width='3'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+}
+
+.negocio-linha-doc {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--orange);
+}
+
+@media (max-width: 800px) {
+  .negocio-linha {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .negocio-linha-valor,
+  .negocio-linha-status,
+  .negocio-linha-doc {
+    align-self: flex-start;
+  }
+
+  .negocio-linha-vendedor {
+    flex: 1 1 auto;
+  }
 }
 
 /* Calc. PMC */

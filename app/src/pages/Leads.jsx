@@ -1,14 +1,17 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
+import { Search, UserRound } from "lucide-react";
 import { supabase } from "../lib/supabaseClient";
 
 const COLUNAS = [
-  { status: "novo", titulo: "Novo" },
-  { status: "em_contato", titulo: "Em contato" },
-  { status: "negociando", titulo: "Negociando" },
-  { status: "convertido", titulo: "Convertido" },
-  { status: "perdido", titulo: "Perdido" },
+  { status: "novo", titulo: "Novo", badge: "badge-consignado" },
+  { status: "em_contato", titulo: "Em contato", badge: "badge-reservado" },
+  { status: "negociando", titulo: "Negociando", badge: "badge-negociando" },
+  { status: "convertido", titulo: "Convertido", badge: "badge-disponivel" },
+  { status: "perdido", titulo: "Perdido", badge: "badge-perdido" },
 ];
+
+const BADGE_POR_STATUS = Object.fromEntries(COLUNAS.map((c) => [c.status, c.badge]));
 
 const ORIGEM_LABEL = {
   site: "Site",
@@ -54,6 +57,8 @@ export default function Leads() {
   const [estoque, setEstoque] = useState([]);
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState("");
+  const [busca, setBusca] = useState("");
+  const [abaAtiva, setAbaAtiva] = useState("todos");
 
   useEffect(() => {
     carregar();
@@ -131,6 +136,24 @@ export default function Leads() {
     setLeads((atual) => atual.map((l) => (l.id === lead.id ? data : l)));
   }
 
+  const termo = busca.trim().toLowerCase();
+
+  const filtrados = leads.filter((l) => {
+    if (abaAtiva !== "todos" && l.status !== abaAtiva) return false;
+    if (!termo) return true;
+    const cliente = l.clientes?.nome?.toLowerCase() ?? "";
+    const veiculo = l.veiculos ? `${l.veiculos.marca} ${l.veiculos.modelo}`.toLowerCase() : "";
+    return cliente.includes(termo) || veiculo.includes(termo);
+  });
+
+  const contagemPorStatus = useMemo(() => {
+    const contagem = Object.fromEntries(COLUNAS.map((c) => [c.status, 0]));
+    for (const l of leads) {
+      if (contagem[l.status] != null) contagem[l.status] += 1;
+    }
+    return contagem;
+  }, [leads]);
+
   return (
     <div className="page">
       <div className="page-header">
@@ -140,81 +163,104 @@ export default function Leads() {
         </Link>
       </div>
 
+      <div className="lista-toolbar">
+        <div className="lista-busca">
+          <Search size={16} />
+          <input
+            placeholder="Buscar por cliente ou veículo..."
+            value={busca}
+            onChange={(e) => setBusca(e.target.value)}
+          />
+        </div>
+      </div>
+
+      <div className="lista-abas">
+        <button
+          type="button"
+          className={`lista-aba ${abaAtiva === "todos" ? "ativa" : ""}`}
+          onClick={() => setAbaAtiva("todos")}
+        >
+          Todos <span className="lista-aba-contador">{leads.length}</span>
+        </button>
+        {COLUNAS.map((c) => (
+          <button
+            type="button"
+            key={c.status}
+            className={`lista-aba ${abaAtiva === c.status ? "ativa" : ""}`}
+            onClick={() => setAbaAtiva(c.status)}
+          >
+            {c.titulo} <span className="lista-aba-contador">{contagemPorStatus[c.status]}</span>
+          </button>
+        ))}
+      </div>
+
       {carregando && <p>Carregando...</p>}
       {erro && <p className="auth-erro">{erro}</p>}
 
-      {!carregando && (
-        <div className="kanban kanban-leads">
-          {COLUNAS.map((coluna) => {
-            const itens = leads.filter((l) => l.status === coluna.status);
+      {!carregando && filtrados.length === 0 && <p className="auth-nota">Nenhum lead encontrado.</p>}
+
+      {!carregando && filtrados.length > 0 && (
+        <div className="lista-linhas">
+          {filtrados.map((l) => {
+            const ideais = veiculosIdeaisPara(l, estoque);
             return (
-              <div className="kanban-coluna" key={coluna.status}>
-                <div className="kanban-coluna-titulo">
-                  {coluna.titulo} <span className="kanban-contador">{itens.length}</span>
+              <div className="lead-linha" key={l.id}>
+                <div className="lead-linha-foto">
+                  <UserRound size={18} />
                 </div>
 
-                {itens.length === 0 && <p className="auth-nota">Nenhum lead aqui.</p>}
-
-                {itens.map((l) => {
-                  const ideais = veiculosIdeaisPara(l, estoque);
-                  return (
-                  <div className="kanban-card" key={l.id}>
-                    <p className="kanban-card-cliente">{l.clientes?.nome ?? "Contato não identificado"}</p>
-                    {l.veiculos && (
-                      <p className="kanban-card-veiculo">
-                        {l.veiculos.marca} {l.veiculos.modelo}
-                      </p>
-                    )}
+                <div className="negocio-linha-principal">
+                  <p className="negocio-linha-titulo">
+                    {l.clientes?.nome ?? "Contato não identificado"}
                     <span className="badge">{ORIGEM_LABEL[l.origem] ?? l.origem}</span>
-                    {l.observacoes && <p className="lead-observacoes">{l.observacoes}</p>}
+                  </p>
+                  {l.veiculos && (
+                    <p className="negocio-linha-veiculo">
+                      {l.veiculos.marca} {l.veiculos.modelo}
+                    </p>
+                  )}
+                  {l.observacoes && <p className="lead-linha-observacoes">{l.observacoes}</p>}
 
-                    {ideais.length > 0 && (
-                      <div className="veiculos-ideais">
-                        <p className="veiculos-ideais-titulo">Veículos Ideais para este Cliente</p>
-                        <ul>
-                          {ideais.map((v) => (
-                            <li key={v.id}>
-                              <span>
-                                {v.marca} {v.modelo}
-                                {v.tipo_carroceria && ` · ${TIPO_CARROCERIA_LABEL[v.tipo_carroceria] ?? v.tipo_carroceria}`}
-                              </span>
-                              <strong>{formatMoeda(v.preco)}</strong>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-
-                    <label className="lead-vendedor-label">
-                      Vendedor
-                      <select
-                        className="kanban-select"
-                        value={l.vendedor_id ?? ""}
-                        onChange={(e) => handleVendedorChange(l, e.target.value)}
-                      >
-                        <option value="">Sem vendedor</option>
-                        {usuarios.map((u) => (
-                          <option key={u.id} value={u.id}>
-                            {u.nome}
-                          </option>
-                        ))}
-                      </select>
-                    </label>
-
-                    <select
-                      className="kanban-select"
-                      value={l.status}
-                      onChange={(e) => handleStatusChange(l, e.target.value)}
-                    >
-                      {COLUNAS.map((c) => (
-                        <option key={c.status} value={c.status}>
-                          {c.titulo}
-                        </option>
+                  {ideais.length > 0 && (
+                    <div className="lead-linha-ideais">
+                      {ideais.map((v) => (
+                        <span className="lead-linha-ideal-chip" key={v.id}>
+                          {v.marca} {v.modelo}
+                          {v.tipo_carroceria && ` · ${TIPO_CARROCERIA_LABEL[v.tipo_carroceria] ?? v.tipo_carroceria}`}
+                          {" — "}
+                          {formatMoeda(v.preco)}
+                        </span>
                       ))}
-                    </select>
-                  </div>
-                  );
-                })}
+                    </div>
+                  )}
+                </div>
+
+                <div className="negocio-linha-vendedor">
+                  <label>Vendedor</label>
+                  <select
+                    value={l.vendedor_id ?? ""}
+                    onChange={(e) => handleVendedorChange(l, e.target.value)}
+                  >
+                    <option value="">Sem vendedor</option>
+                    {usuarios.map((u) => (
+                      <option key={u.id} value={u.id}>
+                        {u.nome}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <select
+                  className={`negocio-linha-status badge ${BADGE_POR_STATUS[l.status]}`}
+                  value={l.status}
+                  onChange={(e) => handleStatusChange(l, e.target.value)}
+                >
+                  {COLUNAS.map((c) => (
+                    <option key={c.status} value={c.status}>
+                      {c.titulo}
+                    </option>
+                  ))}
+                </select>
               </div>
             );
           })}
