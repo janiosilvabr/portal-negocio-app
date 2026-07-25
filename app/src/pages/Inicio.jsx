@@ -4,6 +4,12 @@ import { ShieldCheck } from "lucide-react";
 import { supabase } from "../lib/supabaseClient";
 import { VeiculoCard } from "../components/VeiculoCard";
 
+const PLANOS_VITRINE = [
+  { chave: "pro", titulo: "Garagens PRO", classe: "carrossel-selo-pro" },
+  { chave: "basico", titulo: "Garagens Básica", classe: "carrossel-selo-basico" },
+  { chave: "gratis", titulo: "Garagens Grátis", classe: "carrossel-selo-gratis" },
+];
+
 export default function Inicio() {
   const [veiculos, setVeiculos] = useState([]);
   const [carregando, setCarregando] = useState(true);
@@ -12,14 +18,25 @@ export default function Inicio() {
     supabase
       .rpc("listar_vitrine_veiculos")
       .then(({ data }) => {
-        setVeiculos((data ?? []).slice(0, 6));
+        setVeiculos((data ?? []).slice(0, 18));
         setCarregando(false);
       });
   }, []);
 
+  // Divisão por plano ainda é um placeholder visual: o schema não tem vínculo
+  // real garagem→plano (empresas não tem plano_atual, e a tabela assinaturas
+  // nem existe ainda — ver "Lacuna crítica" no CLAUDE.md). Até essa lacuna ser
+  // resolvida, distribuímos os veículos existentes em round-robin só para
+  // mostrar o layout dos 3 carrosséis.
+  const grupos = { pro: [], basico: [], gratis: [] };
+  veiculos.forEach((v, i) => {
+    const chave = PLANOS_VITRINE[i % 3].chave;
+    grupos[chave].push(v);
+  });
+
   return (
     <>
-      <section className="inicio-hero">
+      <section className="inicio-hero inicio-hero-compacta">
         <div className="inicio-hero-glow" aria-hidden="true" />
         <div className="inicio-hero-inner">
           <span className="inicio-hero-selo">
@@ -29,32 +46,39 @@ export default function Inicio() {
           <h1>
             O carro ideal <span>para você</span> está aqui.
           </h1>
-          <p>
-            Encontre veículos usados com preço justo, direto com garagens e concessionárias
-            de confiança — sem intermediários.
-          </p>
-          <Link to="/vitrine" className="botao-link inicio-hero-cta">
-            Ver Veículos
-          </Link>
         </div>
       </section>
 
       <div className="vitrine-content">
-        <div className="inicio-secao-header">
-          <h2>Veículos disponíveis</h2>
-          <Link to="/vitrine">Ver todos →</Link>
-        </div>
-
         {carregando && <p>Carregando...</p>}
         {!carregando && veiculos.length === 0 && (
           <p className="auth-nota">Nenhum veículo disponível no momento.</p>
         )}
 
-        <div className="vitrine-grid">
-          {veiculos.map((v) => (
-            <VeiculoCard veiculo={v} key={v.id} />
+        {!carregando &&
+          PLANOS_VITRINE.map(({ chave, titulo, classe }) => (
+            <div className="inicio-carrossel-secao" key={chave}>
+              <div className="inicio-secao-header">
+                <h2>
+                  <span className={`carrossel-selo ${classe}`} aria-hidden="true" />
+                  {titulo}
+                </h2>
+                <Link to="/vitrine">Ver todos →</Link>
+              </div>
+
+              {grupos[chave].length === 0 ? (
+                <p className="auth-nota">Nenhum veículo neste plano ainda.</p>
+              ) : (
+                <div className="inicio-carrossel">
+                  {grupos[chave].map((v) => (
+                    <div className="inicio-carrossel-item" key={v.id}>
+                      <VeiculoCard veiculo={v} />
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           ))}
-        </div>
       </div>
     </>
   );

@@ -522,6 +522,20 @@ body {
   opacity: 1;
 }
 
+.vitrine-menu-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--white);
+  cursor: pointer;
+  margin-left: auto;
+}
+
 .vitrine-login-link {
   color: var(--white);
   font-weight: 600;
@@ -530,6 +544,55 @@ body {
   background: var(--orange);
   text-decoration: none;
   white-space: nowrap;
+}
+
+.vitrine-login-link-mobile {
+  display: none;
+}
+
+@media (max-width: 800px) {
+  .vitrine-header {
+    position: relative;
+    gap: 12px;
+  }
+
+  .vitrine-menu-toggle {
+    display: flex;
+  }
+
+  .vitrine-login-link-desktop {
+    display: none;
+  }
+
+  .vitrine-nav {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 4px;
+    background: var(--navy);
+    padding: 8px 20px 20px;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.25);
+    z-index: 20;
+  }
+
+  .vitrine-nav-aberto {
+    display: flex;
+  }
+
+  .vitrine-nav a {
+    padding: 10px 4px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .vitrine-login-link-mobile {
+    display: inline-flex;
+    justify-content: center;
+    margin-top: 8px;
+  }
 }
 
 .vitrine-footer {
@@ -595,6 +658,18 @@ body {
   margin: 0 auto;
 }
 
+.inicio-hero-compacta {
+  padding: 48px 32px;
+}
+
+.inicio-hero-compacta .inicio-hero-inner {
+  max-width: 480px;
+}
+
+.inicio-hero-compacta h1 {
+  margin-bottom: 0;
+}
+
 .inicio-hero-selo {
   display: inline-flex;
   align-items: center;
@@ -643,12 +718,56 @@ body {
 .inicio-secao-header h2 {
   color: var(--navy);
   margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .inicio-secao-header a {
   color: var(--orange);
   font-weight: 600;
   font-size: 0.9rem;
+}
+
+.inicio-carrossel-secao {
+  margin-bottom: 40px;
+}
+
+.carrossel-selo {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.carrossel-selo-pro {
+  background: var(--orange);
+}
+
+.carrossel-selo-basico {
+  background: #3b6fd6;
+}
+
+.carrossel-selo-gratis {
+  background: #9aa5b8;
+}
+
+.inicio-carrossel {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  padding-bottom: 12px;
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
+}
+
+.inicio-carrossel-item {
+  flex: 0 0 260px;
+  scroll-snap-align: start;
+}
+
+.inicio-carrossel-item .vitrine-card {
+  height: 100%;
 }
 
 .vitrine-content h1 {
