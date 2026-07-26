@@ -22,6 +22,10 @@ import VerDocumento from "./pages/VerDocumento";
 import DocumentosGerados from "./pages/DocumentosGerados";
 import EditarEmpresa from "./pages/EditarEmpresa";
 import Planos from "./pages/Planos";
+import AdminDashboard from "./pages/AdminDashboard";
+import AdminGaragens from "./pages/AdminGaragens";
+import AdminDetalheGaragem from "./pages/AdminDetalheGaragem";
+import { RotaSuperAdmin } from "./components/RotaSuperAdmin";
 import Leads from "./pages/Leads";
 import NovoLead from "./pages/NovoLead";
 import Crm from "./pages/Crm";
@@ -84,6 +88,30 @@ export default function App() {
               <RotaAdmin>
                 <Planos />
               </RotaAdmin>
+            }
+          />
+          <Route
+            path="/admin"
+            element={
+              <RotaSuperAdmin>
+                <AdminDashboard />
+              </RotaSuperAdmin>
+            }
+          />
+          <Route
+            path="/admin/garagens"
+            element={
+              <RotaSuperAdmin>
+                <AdminGaragens />
+              </RotaSuperAdmin>
+            }
+          />
+          <Route
+            path="/admin/garagens/:id"
+            element={
+              <RotaSuperAdmin>
+                <AdminDetalheGaragem />
+              </RotaSuperAdmin>
             }
           />
           <Route path="/leads" element={<Leads />} />

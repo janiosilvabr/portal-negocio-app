@@ -15,6 +15,7 @@ import {
   LogOut,
   CreditCard,
   ClipboardCheck,
+  ShieldCheck,
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 
@@ -81,6 +82,11 @@ export function ProtectedLayout() {
           {ehAdmin && (
             <Link to="/planos">
               <CreditCard size={16} /> Planos
+            </Link>
+          )}
+          {perfil?.is_superadmin && (
+            <Link to="/admin">
+              <ShieldCheck size={16} /> Admin
             </Link>
           )}
         </nav>
