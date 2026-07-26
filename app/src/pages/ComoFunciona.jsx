@@ -151,13 +151,15 @@ export default function ComoFunciona() {
               <span className="cf-funcionalidade-icone">
                 <ClipboardList size={20} />
               </span>
-              <h3>Documento Avulso</h3>
+              <h3>Créditos avulsos</h3>
               <p className="cf-plano-preco">
-                R$ 9,90<span>/documento</span>
+                R$ 10,00<span>/crédito</span>
               </p>
               <p className="cf-plano-avulso-texto">
-                Precisou gerar só um contrato a mais este mês? Sem trocar de plano — pague só
-                pelo documento extra.
+                Precisou de mais um anúncio ou um documento além do limite do seu plano? Cada
+                crédito dá direito a +1 anúncio ativo e +1 geração de documento, sem precisar
+                trocar de plano — disponível em qualquer plano, inclusive o Grátis. Escolha
+                quantos créditos quiser; eles não expiram.
               </p>
             </div>
           </div>

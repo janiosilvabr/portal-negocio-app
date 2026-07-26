@@ -54,6 +54,12 @@ Cada assinante do SaaS (o garagista/concessionária).
   "Garagens"; não deriva de endereco, é campo próprio)**, logo_url,
   **visivel_publicamente (boolean, default true — controla se a garagem aparece na página
   pública "Garagens")**
+- **plano (text: gratis/basico/pro, default 'gratis' — migração 0038, 25/07)**,
+  **creditos_anuncios_disponiveis (int, default 0), creditos_documentos_disponiveis (int,
+  default 0)** — saldo de créditos avulsos (ver `compras_creditos` e CLAUDE.md, "Decisão de
+  25/07 — Créditos avulsos"). Esses 3 campos só podem ser alterados por uma conexão
+  `service_role` (trigger `protege_campos_billing_empresa` reverte qualquer tentativa vinda do
+  próprio usuário da empresa).
 
 ### usuarios
 Perfil ligado ao `auth.users` do Supabase (autenticação já vem pronta no Supabase).
@@ -198,13 +204,23 @@ Planos de assinatura do seu SaaS (o que o garagista paga a você).
 - nome, preco_mensal, limite_veiculos, recursos (jsonb)
 
 ### assinaturas
+**Migrada de verdade em 0038 (25/07)** — deixou de ser só rascunho.
 - empresa_id (fk), plano_id (fk), status (enum: trial/ativa/cancelada),
   mercadopago_subscription_id, data_inicio, proxima_cobranca
 
 ### pagamentos_saas
+**Migrada de verdade em 0038 (25/07)** — deixou de ser só rascunho.
 (Renomeada de `pagamentos_documentos`, que tinha nome ambíguo — cobre o pagamento da
 assinatura do garagista, não documentos do veículo.)
 - assinatura_id (fk), valor, status (enum: pago/pendente/falhou), mercadopago_payment_id, data_pagamento
+
+### compras_creditos (novo — migração 0038, 25/07)
+Log de auditoria de cada compra de crédito avulso (ver `empresas.creditos_*_disponiveis` acima
+e CLAUDE.md, "Decisão de 25/07 — Créditos avulsos"). O saldo "vivo" fica em `empresas`; esta
+tabela é só histórico, pra suporte/conferência — não é de onde se lê o saldo disponível.
+- empresa_id (fk), quantidade (int, > 0 — quantidade de créditos comprados nesta transação),
+  valor_pago (numeric — sempre quantidade × R$10), status (enum: pago/pendente/falhou),
+  mercadopago_payment_id, data_pagamento
 
 ---
 
@@ -405,7 +421,10 @@ create table pagamentos_saas (
 
 1. `ordens_servico` vs `orders_service` (schema antigo) — qual é a versão oficial? Não migrado ainda.
 2. `despesas_base` / `despesas_saas` (schema antigo) — financeiro completo, adiado para fase 2.
-3. `creditos` (schema antigo) — crédito de financiamento do veículo ou crédito de uso do sistema? Não migrado.
+3. ~~`creditos` (schema antigo) — crédito de financiamento do veículo ou crédito de uso do sistema? Não migrado.~~
+   **Resolvido em 25/07:** era crédito de uso do sistema, não de financiamento. Migrado como
+   `empresas.creditos_anuncios_disponiveis`/`creditos_documentos_disponiveis` + tabela
+   `compras_creditos` (migração 0038). Ver CLAUDE.md, "Decisão de 25/07 — Créditos avulsos".
 4. Confirmar se `documentos_gerados` deve conter também o **link do PDF** ou só metadados (o PDF fica armazenado no Supabase Storage, não na tabela).
 
 ---

@@ -155,13 +155,38 @@ usuário:
 
 ## ⚠️ Lacuna crítica: cobrança da própria assinatura não está implementada
 
-A tabela `assinaturas`/`planos` existe no schema (CONTEXTO.md), e Mercado Pago está na stack
-(ver tabela abaixo), mas **nenhum fluxo de cobrança da assinatura do garagista está
-implementado** — nem checkout, nem webhook de confirmação de pagamento, nem gating de feature
-por plano. Mercado Pago só é mencionado no texto legal da Política de Privacidade, não está
-integrado de verdade em lugar nenhum do código. Sem isso, não há como cobrar de uma garagem
-real pelo uso do sistema — é o maior bloqueador para monetizar, maior prioridade que qualquer
-item do roadmap de features abaixo.
+**Atualização 25/07 — Parte 1 (schema) feita, Parte 2 (checkout + webhook) ainda não.**
+A migração `0038_assinaturas_e_creditos_avulsos.sql` já criou `empresas.plano`
+(gratis/basico/pro), as tabelas `assinaturas`/`pagamentos_saas` e os saldos de crédito avulso
+(`empresas.creditos_anuncios_disponiveis`/`creditos_documentos_disponiveis`) + tabela de
+auditoria `compras_creditos`. Um trigger (`protege_campos_billing_empresa`) garante que só uma
+conexão com o role `service_role` pode alterar esses campos — o próprio usuário da empresa
+nunca consegue, mesmo tendo permissão de UPDATE em `empresas` para os demais campos.
+
+**Ainda falta (Parte 2):** nenhum checkout de verdade existe, nem webhook do Mercado Pago —
+Mercado Pago só é mencionado no texto legal da Política de Privacidade, não está integrado em
+nenhuma Edge Function ainda. Depende de confirmar as credenciais (`MERCADOPAGO_ACCESS_TOKEN` e
+uma chave de service role) nas secrets do Supabase antes de codar. Sem isso, não há como cobrar
+de uma garagem real pelo uso do sistema — é o maior bloqueador para monetizar, maior prioridade
+que qualquer item do roadmap de features abaixo.
+
+### Decisão de 25/07 — Créditos avulsos (resolve a ambiguidade antiga do CONTEXTO.md)
+
+O antigo "Documento Avulso" (R$ 9,90/documento, citado no `/como-funciona`) foi substituído por
+um modelo de **créditos avulsos**, disponível para **qualquer plano, inclusive Grátis**,
+independente da assinatura mensal:
+
+- **R$ 10,00 = 1 crédito.** Cada crédito dá direito a **+1 anúncio ativo** e **+1 geração de
+  documento** — os dois são consumidos **separadamente**, cada um na hora em que a garagem
+  realmente ultrapassa o limite do próprio plano (não é um bônus permanente de limite; o
+  crédito "some" quando usado).
+- Cliente escolhe a **quantidade de créditos** (não um valor livre em R$), evitando
+  arredondamento — ex.: 5 créditos = R$ 50 = +5 anúncios extras + 5 documentos extras,
+  consumidos conforme forem sendo necessários.
+- Créditos **não expiram** — ficam parados no saldo até serem usados.
+- A aplicação do consumo (bloquear/permitir criar o Nº+1 anúncio ou gerar o Nº+1 documento do
+  mês, decrementando o saldo) ainda não foi implementada — é parte do trabalho pendente da
+  Parte 2, junto com o checkout e o webhook.
 
 ## Roadmap futuro (fase 2+, não construir agora)
 

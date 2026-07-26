@@ -13,6 +13,7 @@ import {
   TrendingUp,
   Building2,
   LogOut,
+  CreditCard,
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 
@@ -73,6 +74,11 @@ export function ProtectedLayout() {
           <Link to="/empresa">
             <Building2 size={16} /> Empresa
           </Link>
+          {ehAdmin && (
+            <Link to="/planos">
+              <CreditCard size={16} /> Planos
+            </Link>
+          )}
         </nav>
         <button type="button" onClick={logout}>
           <LogOut size={16} /> Sair
