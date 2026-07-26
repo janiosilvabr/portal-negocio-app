@@ -1,5 +1,6 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { ProtectedLayout } from "./components/ProtectedLayout";
+import { AdminLayout } from "./components/AdminLayout";
 import { PublicLayout } from "./components/PublicLayout";
 import Login from "./pages/Login";
 import Cadastro from "./pages/Cadastro";
@@ -25,12 +26,12 @@ import Planos from "./pages/Planos";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminGaragens from "./pages/AdminGaragens";
 import AdminDetalheGaragem from "./pages/AdminDetalheGaragem";
-import { RotaSuperAdmin } from "./components/RotaSuperAdmin";
 import Leads from "./pages/Leads";
 import NovoLead from "./pages/NovoLead";
 import Crm from "./pages/Crm";
 import Vendedores from "./pages/Vendedores";
 import NovoVendedor from "./pages/NovoVendedor";
+import EditarVendedor from "./pages/EditarVendedor";
 import { RotaAdmin } from "./components/RotaAdmin";
 import Financeiro from "./pages/Financeiro";
 import NovaTransacao from "./pages/NovaTransacao";
@@ -90,30 +91,6 @@ export default function App() {
               </RotaAdmin>
             }
           />
-          <Route
-            path="/admin"
-            element={
-              <RotaSuperAdmin>
-                <AdminDashboard />
-              </RotaSuperAdmin>
-            }
-          />
-          <Route
-            path="/admin/garagens"
-            element={
-              <RotaSuperAdmin>
-                <AdminGaragens />
-              </RotaSuperAdmin>
-            }
-          />
-          <Route
-            path="/admin/garagens/:id"
-            element={
-              <RotaSuperAdmin>
-                <AdminDetalheGaragem />
-              </RotaSuperAdmin>
-            }
-          />
           <Route path="/leads" element={<Leads />} />
           <Route path="/leads/novo" element={<NovoLead />} />
           <Route path="/crm" element={<Crm />} />
@@ -130,6 +107,14 @@ export default function App() {
             element={
               <RotaAdmin>
                 <NovoVendedor />
+              </RotaAdmin>
+            }
+          />
+          <Route
+            path="/vendedores/:id"
+            element={
+              <RotaAdmin>
+                <EditarVendedor />
               </RotaAdmin>
             }
           />
@@ -169,6 +154,12 @@ export default function App() {
           <Route path="/calc-pmc" element={<CalcPMC />} />
           <Route path="/calc-pmc/nova" element={<NovaAvaliacaoPMC />} />
           <Route path="/calc-pmc/:id" element={<VerAvaliacaoPMC />} />
+        </Route>
+
+        <Route element={<AdminLayout />}>
+          <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/admin/garagens" element={<AdminGaragens />} />
+          <Route path="/admin/garagens/:id" element={<AdminDetalheGaragem />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/" replace />} />

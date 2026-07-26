@@ -1,4 +1,4 @@
-import { Navigate, Outlet, Link } from "react-router-dom";
+import { Navigate, Outlet, Link, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard,
   Car,
@@ -21,11 +21,17 @@ import { useAuth } from "../context/AuthContext";
 
 export function ProtectedLayout() {
   const { session, perfil, loading, logout } = useAuth();
+  const navigate = useNavigate();
 
   if (loading) return null;
   if (!session) return <Navigate to="/login" replace />;
 
   const ehAdmin = perfil?.papel === "admin";
+
+  async function handleSair() {
+    await logout();
+    navigate("/");
+  }
 
   return (
     <div className="app-shell">
@@ -84,15 +90,17 @@ export function ProtectedLayout() {
               <CreditCard size={16} /> Planos
             </Link>
           )}
+        </nav>
+        <div className="app-header-acoes">
           {perfil?.is_superadmin && (
-            <Link to="/admin">
-              <ShieldCheck size={16} /> Admin
+            <Link to="/admin" className="app-admin-link">
+              <ShieldCheck size={16} /> Painel Admin
             </Link>
           )}
-        </nav>
-        <button type="button" onClick={logout}>
-          <LogOut size={16} /> Sair
-        </button>
+          <button type="button" onClick={handleSair}>
+            <LogOut size={16} /> Sair
+          </button>
+        </div>
       </header>
       <main className="app-content">
         <Outlet />

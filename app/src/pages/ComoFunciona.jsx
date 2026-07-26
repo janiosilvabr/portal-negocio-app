@@ -147,7 +147,7 @@ export default function ComoFunciona() {
               );
             })}
 
-            <div className="cf-plano-card cf-plano-avulso">
+            <div className="cf-plano-card">
               <span className="cf-funcionalidade-icone">
                 <ClipboardList size={20} />
               </span>
@@ -161,6 +161,9 @@ export default function ComoFunciona() {
                 trocar de plano — disponível em qualquer plano, inclusive o Grátis. Escolha
                 quantos créditos quiser; eles não expiram.
               </p>
+              <Link to="/planos" className="botao-link cf-plano-cta">
+                Comprar Créditos
+              </Link>
             </div>
           </div>
         )}

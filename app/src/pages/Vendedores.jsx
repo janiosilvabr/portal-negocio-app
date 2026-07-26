@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "../lib/supabaseClient";
+import { useAuth } from "../context/AuthContext";
 
 const PAPEL_LABEL = {
   admin: "Admin",
@@ -8,10 +9,12 @@ const PAPEL_LABEL = {
 };
 
 export default function Vendedores() {
+  const { perfil, session } = useAuth();
   const [usuarios, setUsuarios] = useState([]);
   const [convites, setConvites] = useState([]);
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState("");
+  const [excluindoId, setExcluindoId] = useState(null);
 
   useEffect(() => {
     carregar();
@@ -51,6 +54,30 @@ export default function Vendedores() {
     );
   }
 
+  async function handleExcluir(usuario) {
+    const confirmado = window.confirm(
+      `Excluir o login de ${usuario.nome}? Essa ação não pode ser desfeita — a pessoa não vai mais conseguir entrar no sistema. As vendas/leads/atividades já registradas continuam intactas, só deixam de mostrar o nome dele(a).`
+    );
+    if (!confirmado) return;
+
+    setErro("");
+    setExcluindoId(usuario.id);
+
+    const { data, error } = await supabase.functions.invoke("excluir-vendedor", {
+      body: { usuario_id: usuario.id },
+      headers: { Authorization: `Bearer ${session?.access_token}` },
+    });
+
+    setExcluindoId(null);
+
+    if (error || data?.error) {
+      setErro(data?.error ?? error.message ?? "Falha ao excluir.");
+      return;
+    }
+
+    setUsuarios((atual) => atual.filter((u) => u.id !== usuario.id));
+  }
+
   async function handleToggleAtivo(usuario) {
     const { error } = await supabase
       .from("usuarios")
@@ -73,6 +100,10 @@ export default function Vendedores() {
           + Convidar Vendedor
         </Link>
       </div>
+      <p className="auth-nota">
+        Cadastro é por convite: gere um link e envie pra pessoa (WhatsApp, e-mail etc.) — ela
+        cria a própria senha ao aceitar. Não é possível criar login com senha por outra pessoa.
+      </p>
 
       {carregando && <p>Carregando...</p>}
       {erro && <p className="auth-erro">{erro}</p>}
@@ -110,9 +141,22 @@ export default function Vendedores() {
                   </label>
                 )}
 
-                <button type="button" onClick={() => handleToggleAtivo(u)}>
-                  {u.ativo ? "Desativar" : "Ativar"}
-                </button>
+                <div className="vendedor-acoes">
+                  <button type="button" onClick={() => handleToggleAtivo(u)}>
+                    {u.ativo ? "Desativar" : "Ativar"}
+                  </button>
+                  <Link to={`/vendedores/${u.id}`}>Editar</Link>
+                  {u.id !== perfil?.id && (
+                    <button
+                      type="button"
+                      className="link-perigo"
+                      onClick={() => handleExcluir(u)}
+                      disabled={excluindoId === u.id}
+                    >
+                      {excluindoId === u.id ? "Excluindo..." : "Excluir"}
+                    </button>
+                  )}
+                </div>
               </div>
             ))}
           </div>

@@ -185,6 +185,37 @@ body {
   cursor: pointer;
 }
 
+.app-header-acoes {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.app-admin-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  color: var(--white);
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.app-admin-link:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.admin-header {
+  background: #3a1f4d;
+}
+
+.admin-header .app-logo {
+  font-size: 0.95rem;
+}
+
 .app-content {
   padding: 32px;
   max-width: 1000px;
@@ -1197,6 +1228,23 @@ body {
   cursor: pointer;
 }
 
+.empresa-logo-linha {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 8px 0 16px;
+}
+
+.empresa-logo-preview {
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+  border-radius: 8px;
+  border: 1px solid #eef0f2;
+  background: var(--gray-bg);
+  padding: 4px;
+}
+
 .fotos-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
@@ -1408,16 +1456,34 @@ body {
   line-height: 1.4;
 }
 
-.vendedor-card button {
+.vendedor-acoes {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   margin-top: 12px;
-  width: 100%;
-  padding: 8px;
+  flex-wrap: wrap;
+}
+
+.vendedor-acoes button {
+  padding: 8px 12px;
   border: none;
   border-radius: 8px;
   background: var(--orange);
   color: var(--white);
   font-weight: 600;
+  font-size: 0.85rem;
   cursor: pointer;
+}
+
+.vendedor-acoes a {
+  color: var(--navy);
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.vendedor-acoes .link-perigo {
+  background: none;
+  padding: 0;
 }
 
 /* Financeiro */
@@ -2515,17 +2581,12 @@ body {
   margin-top: auto;
 }
 
-.cf-plano-avulso {
-  background: var(--gray-bg);
-  box-shadow: none;
-  border: 1px dashed #dcdfe4;
-}
-
 .cf-plano-avulso-texto {
   color: var(--text-muted);
   font-size: 0.85rem;
   line-height: 1.5;
-  margin: 0;
+  margin: 0 0 24px;
+  flex: 1;
 }
 
 .cf-cta-final {
