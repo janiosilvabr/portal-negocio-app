@@ -2554,3 +2554,182 @@ body {
     padding: 44px 20px;
   }
 }
+
+/* Financeiro: filtros, ações da tabela e gráficos */
+
+.financeiro-filtros {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: flex-end;
+  margin-bottom: 20px;
+}
+
+.financeiro-filtros label {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.financeiro-filtros select,
+.financeiro-filtros input {
+  padding: 8px 10px;
+  border: 1px solid #dcdfe4;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-family: inherit;
+}
+
+.tabela-acoes {
+  display: flex;
+  gap: 12px;
+  white-space: nowrap;
+}
+
+.tabela-acoes a {
+  color: var(--navy);
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.link-perigo {
+  background: none;
+  border: none;
+  padding: 0;
+  color: #c0392b;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.link-perigo:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.financeiro-graficos {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 800px) {
+  .financeiro-graficos {
+    grid-template-columns: 1fr;
+  }
+}
+
+.grafico-financeiro {
+  position: relative;
+}
+
+.grafico-financeiro-legenda {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
+.grafico-legenda-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.grafico-legenda-swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+.grafico-financeiro-svg {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.grafico-eixo-texto {
+  font-size: 9px;
+  fill: var(--text-muted);
+}
+
+.grafico-tooltip {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: var(--navy);
+  color: var(--white);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 0.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  pointer-events: none;
+  box-shadow: 0 4px 16px rgba(26, 39, 68, 0.25);
+}
+
+.grafico-financeiro-rosca {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.grafico-rosca-svg {
+  width: 160px;
+  height: 160px;
+  flex-shrink: 0;
+}
+
+.grafico-rosca-total-label {
+  font-size: 9px;
+  fill: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.grafico-rosca-total-valor {
+  font-size: 15px;
+  font-weight: 700;
+  fill: var(--navy);
+}
+
+.grafico-rosca-legenda {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  flex: 1;
+  min-width: 180px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.grafico-rosca-legenda li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  padding: 4px;
+  border-radius: 6px;
+}
+
+.grafico-rosca-legenda li.ativo {
+  background: var(--gray-bg);
+}
+
+.grafico-rosca-legenda-nome {
+  color: var(--text);
+  font-weight: 600;
+  flex: 1;
+}
+
+.grafico-rosca-legenda-valor {
+  color: var(--text-muted);
+  white-space: nowrap;
+}

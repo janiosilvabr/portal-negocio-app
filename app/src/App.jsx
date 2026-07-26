@@ -24,11 +24,13 @@ import EditarEmpresa from "./pages/EditarEmpresa";
 import Planos from "./pages/Planos";
 import Leads from "./pages/Leads";
 import NovoLead from "./pages/NovoLead";
+import Crm from "./pages/Crm";
 import Vendedores from "./pages/Vendedores";
 import NovoVendedor from "./pages/NovoVendedor";
 import { RotaAdmin } from "./components/RotaAdmin";
 import Financeiro from "./pages/Financeiro";
 import NovaTransacao from "./pages/NovaTransacao";
+import EditarTransacao from "./pages/EditarTransacao";
 import ExtratoVendedor from "./pages/ExtratoVendedor";
 import IndiceConversao from "./pages/IndiceConversao";
 import CalcPMC from "./pages/CalcPMC";
@@ -86,6 +88,7 @@ export default function App() {
           />
           <Route path="/leads" element={<Leads />} />
           <Route path="/leads/novo" element={<NovoLead />} />
+          <Route path="/crm" element={<Crm />} />
           <Route
             path="/vendedores"
             element={
@@ -115,6 +118,14 @@ export default function App() {
             element={
               <RotaAdmin>
                 <NovaTransacao />
+              </RotaAdmin>
+            }
+          />
+          <Route
+            path="/financeiro/:id"
+            element={
+              <RotaAdmin>
+                <EditarTransacao />
               </RotaAdmin>
             }
           />

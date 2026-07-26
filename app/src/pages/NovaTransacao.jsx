@@ -12,6 +12,7 @@ export default function NovaTransacao() {
   const [valor, setValor] = useState("");
   const [data, setData] = useState(new Date().toISOString().slice(0, 10));
   const [status, setStatus] = useState("pago");
+  const [formaPagamento, setFormaPagamento] = useState("");
   const [erro, setErro] = useState("");
   const [salvando, setSalvando] = useState(false);
 
@@ -38,6 +39,7 @@ export default function NovaTransacao() {
       valor: Number(valor),
       data,
       status,
+      forma_pagamento: formaPagamento || null,
     });
 
     setSalvando(false);
@@ -97,6 +99,24 @@ export default function NovaTransacao() {
             <select id="status" value={status} onChange={(e) => setStatus(e.target.value)}>
               <option value="pago">Pago</option>
               <option value="pendente">Pendente</option>
+            </select>
+          </div>
+
+          <div>
+            <label htmlFor="formaPagamento">Forma de pagamento</label>
+            <select
+              id="formaPagamento"
+              value={formaPagamento}
+              onChange={(e) => setFormaPagamento(e.target.value)}
+            >
+              <option value="">Não informado</option>
+              <option value="dinheiro">Dinheiro</option>
+              <option value="pix">Pix</option>
+              <option value="cartao_credito">Cartão de crédito</option>
+              <option value="cartao_debito">Cartão de débito</option>
+              <option value="transferencia">Transferência</option>
+              <option value="boleto">Boleto</option>
+              <option value="outro">Outro</option>
             </select>
           </div>
         </div>

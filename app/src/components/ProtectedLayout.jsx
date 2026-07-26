@@ -14,6 +14,7 @@ import {
   Building2,
   LogOut,
   CreditCard,
+  ClipboardCheck,
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 
@@ -46,6 +47,9 @@ export function ProtectedLayout() {
           </Link>
           <Link to="/negocios">
             <Handshake size={16} /> Negócios
+          </Link>
+          <Link to="/crm">
+            <ClipboardCheck size={16} /> CRM
           </Link>
           <Link to="/documentos">
             <FileText size={16} /> Documentos
