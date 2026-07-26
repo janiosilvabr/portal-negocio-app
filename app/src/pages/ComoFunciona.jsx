@@ -31,8 +31,8 @@ const PASSOS = [
 
 const RECURSOS_POR_PLANO = {
   "Grátis": ["Vitrine pública", "CRM básico de leads", "Cadastro de clientes"],
-  "Básico": ["CRM completo de leads", "Pipeline de negócios", "Financeiro básico", "Painel da empresa"],
-  "Pro": ["CRM completo de leads", "Pipeline de negócios", "Financeiro completo", "Painel com indicadores", "Envio de contrato por e-mail"],
+  "Básico": ["CRM completo de leads", "Pipeline de negócios", "Financeiro básico", "Painel da empresa", "Veículos em destaque na Home, à frente do plano Grátis"],
+  "Pro": ["CRM completo de leads", "Pipeline de negócios", "Financeiro completo", "Painel com indicadores", "Envio de contrato por e-mail", "Veículos na primeira fileira da Home, à frente dos demais planos"],
 };
 
 function formatPreco(valor) {

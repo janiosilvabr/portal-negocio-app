@@ -4,11 +4,7 @@ import { ShieldCheck } from "lucide-react";
 import { supabase } from "../lib/supabaseClient";
 import { VeiculoCard } from "../components/VeiculoCard";
 
-const PLANOS_VITRINE = [
-  { chave: "pro", titulo: "Garagens PRO", classe: "carrossel-selo-pro" },
-  { chave: "basico", titulo: "Garagens Básica", classe: "carrossel-selo-basico" },
-  { chave: "gratis", titulo: "Garagens Grátis", classe: "carrossel-selo-gratis" },
-];
+const ORDEM_PLANOS = ["pro", "basico", "gratis"];
 
 export default function Inicio() {
   const [veiculos, setVeiculos] = useState([]);
@@ -27,10 +23,11 @@ export default function Inicio() {
   // real garagem→plano (empresas não tem plano_atual, e a tabela assinaturas
   // nem existe ainda — ver "Lacuna crítica" no CLAUDE.md). Até essa lacuna ser
   // resolvida, distribuímos os veículos existentes em round-robin só para
-  // mostrar o layout dos 3 carrosséis.
+  // ordenar as fileiras (Pro primeiro, depois Básico, depois Grátis) — o
+  // plano de cada garagem nunca é mostrado ao público, só define a ordem.
   const grupos = { pro: [], basico: [], gratis: [] };
   veiculos.forEach((v, i) => {
-    const chave = PLANOS_VITRINE[i % 3].chave;
+    const chave = ORDEM_PLANOS[i % 3];
     grupos[chave].push(v);
   });
 
@@ -55,28 +52,23 @@ export default function Inicio() {
           <p className="auth-nota">Nenhum veículo disponível no momento.</p>
         )}
 
-        {!carregando &&
-          PLANOS_VITRINE.map(({ chave, titulo, classe }) => (
-            <div className="inicio-carrossel-secao" key={chave}>
-              <div className="inicio-secao-header">
-                <h2>
-                  <span className={`carrossel-selo ${classe}`} aria-hidden="true" />
-                  {titulo}
-                </h2>
-                <Link to="/vitrine">Ver todos →</Link>
-              </div>
+        {!carregando && veiculos.length > 0 && (
+          <div className="inicio-secao-header">
+            <h2>Veículos em destaque</h2>
+            <Link to="/vitrine">Ver todos →</Link>
+          </div>
+        )}
 
-              {grupos[chave].length === 0 ? (
-                <p className="auth-nota">Nenhum veículo neste plano ainda.</p>
-              ) : (
-                <div className="inicio-carrossel">
-                  {grupos[chave].map((v) => (
-                    <div className="inicio-carrossel-item" key={v.id}>
-                      <VeiculoCard veiculo={v} />
-                    </div>
-                  ))}
-                </div>
-              )}
+        {!carregando &&
+          ORDEM_PLANOS.filter((chave) => grupos[chave].length > 0).map((chave) => (
+            <div className="inicio-carrossel-secao" key={chave}>
+              <div className="inicio-carrossel">
+                {grupos[chave].map((v) => (
+                  <div className="inicio-carrossel-item" key={v.id}>
+                    <VeiculoCard veiculo={v} />
+                  </div>
+                ))}
+              </div>
             </div>
           ))}
       </div>

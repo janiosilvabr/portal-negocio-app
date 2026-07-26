@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { MessageCircle } from "lucide-react";
 import { supabase } from "../lib/supabaseClient";
 
 function formatPreco(preco) {
@@ -7,10 +8,18 @@ function formatPreco(preco) {
   return Number(preco).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 }
 
+function linkWhatsapp(telefone) {
+  const digitos = (telefone ?? "").replace(/\D/g, "");
+  if (!digitos) return null;
+  const comCodigoPais = digitos.length <= 11 ? `55${digitos}` : digitos;
+  return `https://wa.me/${comCodigoPais}`;
+}
+
 export default function DetalheVeiculo() {
   const { id } = useParams();
   const [veiculo, setVeiculo] = useState(null);
   const [fotos, setFotos] = useState([]);
+  const [checklist, setChecklist] = useState([]);
   const [fotoAtiva, setFotoAtiva] = useState(0);
   const [carregando, setCarregando] = useState(true);
   const [naoEncontrado, setNaoEncontrado] = useState(false);
@@ -28,12 +37,14 @@ export default function DetalheVeiculo() {
     Promise.all([
       supabase.rpc("obter_veiculo_publico", { p_veiculo_id: id }).maybeSingle(),
       supabase.from("fotos_veiculos").select("*").eq("veiculo_id", id).order("ordem").order("created_at"),
-    ]).then(([{ data: dataVeiculo, error: erroVeiculo }, { data: dataFotos }]) => {
+      supabase.rpc("obter_checklist_veiculo_publico", { p_veiculo_id: id }),
+    ]).then(([{ data: dataVeiculo, error: erroVeiculo }, { data: dataFotos }, { data: dataChecklist }]) => {
       if (erroVeiculo || !dataVeiculo) {
         setNaoEncontrado(true);
       } else {
         setVeiculo(dataVeiculo);
         setFotos(dataFotos ?? []);
+        setChecklist(dataChecklist ?? []);
       }
       setCarregando(false);
     });
@@ -128,7 +139,6 @@ export default function DetalheVeiculo() {
             </h1>
             {veiculo.versao && <p className="vitrine-card-versao">{veiculo.versao}</p>}
             <p className="detalhe-preco">{formatPreco(veiculo.preco)}</p>
-            {veiculo.empresa_nome && <p className="vitrine-card-garagem">{veiculo.empresa_nome}</p>}
 
             <ul className="detalhe-specs">
               <li>
@@ -152,6 +162,54 @@ export default function DetalheVeiculo() {
                 {veiculo.cor ?? "-"}
               </li>
             </ul>
+
+            {veiculo.descricao && (
+              <div className="detalhe-secao">
+                <h2>Descrição</h2>
+                <p className="detalhe-descricao">{veiculo.descricao}</p>
+              </div>
+            )}
+
+            {checklist.length > 0 && (
+              <div className="detalhe-secao">
+                <h2>Checklist de vistoria</h2>
+                <table className="tabela detalhe-checklist">
+                  <thead>
+                    <tr>
+                      <th>Item</th>
+                      <th>Observação</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {checklist.map((c, index) => (
+                      <tr key={index}>
+                        <td>{c.item}</td>
+                        <td>{c.observacao ?? "-"}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+
+            {veiculo.empresa_nome && (
+              <div className="detalhe-garagem-card">
+                <div>
+                  <h3>{veiculo.empresa_nome}</h3>
+                  <p>{veiculo.empresa_cidade ?? "Cidade não informada"}</p>
+                </div>
+                {linkWhatsapp(veiculo.empresa_telefone) && (
+                  <a
+                    href={linkWhatsapp(veiculo.empresa_telefone)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="botao-link contato-botao-whatsapp"
+                  >
+                    <MessageCircle size={16} /> Falar com a garagem
+                  </a>
+                )}
+              </div>
+            )}
 
             {!mostrarForm && !enviado && (
               <button type="button" className="botao-link detalhe-cta" onClick={() => setMostrarForm(true)}>
