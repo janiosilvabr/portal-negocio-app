@@ -104,6 +104,12 @@ body {
   font-size: 0.8rem;
 }
 
+.auth-aviso {
+  color: #b7791f;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
 /* Layout autenticado */
 
 .app-shell {

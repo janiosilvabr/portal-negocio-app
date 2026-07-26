@@ -2,6 +2,13 @@ import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabaseClient";
 import { useAuth } from "../context/AuthContext";
 
+const CNPJ_PROVISORIO = "60.920.435/001-39";
+
+function cnpjEhProvisorio(cnpj) {
+  if (!cnpj) return false;
+  return cnpj.toLowerCase().includes("provisório") || cnpj.toLowerCase().includes("provisorio") || cnpj === CNPJ_PROVISORIO;
+}
+
 const CAMPOS_INICIAIS = {
   nome: "",
   cnpj: "",
@@ -126,6 +133,11 @@ export default function EditarEmpresa() {
           <div>
             <label htmlFor="cnpj">CNPJ</label>
             <input id="cnpj" name="cnpj" value={campos.cnpj} onChange={handleChange} />
+            {cnpjEhProvisorio(campos.cnpj) && (
+              <p className="auth-aviso">
+                ⚠ CNPJ provisório — atualizar antes de emitir contratos com validade.
+              </p>
+            )}
           </div>
 
           <div>

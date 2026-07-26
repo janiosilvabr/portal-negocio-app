@@ -89,6 +89,13 @@ export default function Negocios() {
     );
 
     if (novoStatus === "fechado") {
+      await supabase
+        .from("leads")
+        .update({ status: "convertido" })
+        .eq("cliente_id", negocio.cliente_id)
+        .or(`veiculo_id.eq.${negocio.veiculo_id},veiculo_id.is.null`)
+        .not("status", "in", "(convertido,perdido)");
+
       const consolidar = window.confirm(
         "Negócio fechado! A receita e a comissão do vendedor já foram lançadas automaticamente.\n\n" +
           "Quer também consolidar os custos lançados neste veículo (compra, mecânica, estética...) como uma despesa no Financeiro?"

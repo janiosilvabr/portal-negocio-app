@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import { supabase } from "../lib/supabaseClient";
 
 const TIPO_LABEL = {
@@ -85,7 +84,9 @@ export default function DocumentosGerados() {
                   </td>
                   <td>{formatData(doc.gerado_em)}</td>
                   <td>
-                    <Link to={`/documentos/${doc.id}`}>Abrir</Link>
+                    <a href={`/documentos/${doc.id}`} target="_blank" rel="noopener noreferrer">
+                      Abrir
+                    </a>
                   </td>
                 </tr>
               ))}
