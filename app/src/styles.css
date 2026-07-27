@@ -216,6 +216,55 @@ body {
   font-size: 0.95rem;
 }
 
+.admin-trial-form {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #eef0f2;
+}
+
+.admin-trial-form label {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+
+.admin-trial-form-linha {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.admin-trial-form-linha select,
+.admin-trial-form-linha input {
+  padding: 8px 10px;
+  border: 1px solid #dcdfe4;
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+
+.admin-trial-form-linha input {
+  width: 70px;
+}
+
+.admin-trial-aviso {
+  margin: 4px 0 0;
+  font-size: 0.72rem;
+  color: #b7791f;
+  white-space: nowrap;
+}
+
+.admin-trial-form-linha button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  background: var(--orange);
+  color: var(--white);
+  font-weight: 600;
+  cursor: pointer;
+}
+
 .app-content {
   padding: 32px;
   max-width: 1000px;

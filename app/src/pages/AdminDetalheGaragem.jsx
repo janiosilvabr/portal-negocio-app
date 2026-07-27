@@ -24,6 +24,9 @@ export default function AdminDetalheGaragem() {
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState("");
   const [alterandoStatus, setAlterandoStatus] = useState(false);
+  const [planoTrial, setPlanoTrial] = useState("basico");
+  const [diasTrial, setDiasTrial] = useState(30);
+  const [concedendoTrial, setConcedendoTrial] = useState(false);
 
   useEffect(() => {
     carregar();
@@ -65,6 +68,27 @@ export default function AdminDetalheGaragem() {
 
     setErro("");
     setEmpresa((atual) => ({ ...atual, ativo: !atual.ativo }));
+  }
+
+  async function handleConcederTrial(e) {
+    e.preventDefault();
+    setErro("");
+    setConcedendoTrial(true);
+
+    const { error } = await supabase.rpc("admin_conceder_trial", {
+      p_empresa_id: id,
+      p_novo_plano: planoTrial,
+      p_dias: Number(diasTrial),
+    });
+
+    setConcedendoTrial(false);
+
+    if (error) {
+      setErro(error.message);
+      return;
+    }
+
+    carregar();
   }
 
   if (carregando) {
@@ -125,6 +149,34 @@ export default function AdminDetalheGaragem() {
             Responsável legal: {empresa.responsavel_legal_nome} ({empresa.responsavel_legal_cargo ?? "-"})
           </p>
         )}
+
+        {empresa.trial_expira_em && (
+          <p className="auth-aviso">
+            ⚠ Teste grátis concedido — expira em {formatData(empresa.trial_expira_em)}. Não some
+            sozinho: troque o plano manualmente quando terminar.
+          </p>
+        )}
+
+        <form className="admin-trial-form" onSubmit={handleConcederTrial}>
+          <label htmlFor="plano-trial">Conceder teste grátis</label>
+          <div className="admin-trial-form-linha">
+            <select id="plano-trial" value={planoTrial} onChange={(e) => setPlanoTrial(e.target.value)}>
+              <option value="basico">Básico</option>
+              <option value="pro">Pro</option>
+            </select>
+            <input
+              type="number"
+              min="1"
+              value={diasTrial}
+              onChange={(e) => setDiasTrial(e.target.value)}
+              aria-label="Dias de teste"
+            />
+            <span className="auth-nota">dias</span>
+            <button type="submit" disabled={concedendoTrial}>
+              {concedendoTrial ? "Aplicando..." : "Conceder"}
+            </button>
+          </div>
+        </form>
       </div>
 
       <div className="painel-secao">

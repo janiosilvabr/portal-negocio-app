@@ -92,6 +92,9 @@ export default function AdminGaragens() {
                       <option value="basico">Básico</option>
                       <option value="pro">Pro</option>
                     </select>
+                    {g.trial_expira_em && (
+                      <p className="admin-trial-aviso">Teste até {formatData(g.trial_expira_em)}</p>
+                    )}
                   </td>
                   <td>{formatData(g.created_at)}</td>
                   <td>{g.qtd_veiculos}</td>
