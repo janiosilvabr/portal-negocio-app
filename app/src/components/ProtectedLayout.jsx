@@ -55,15 +55,19 @@ export function ProtectedLayout() {
           <Link to="/negocios">
             <Handshake size={16} /> Negócios
           </Link>
-          <Link to="/crm">
-            <ClipboardCheck size={16} /> CRM
-          </Link>
+          {ehAdmin && (
+            <Link to="/crm">
+              <ClipboardCheck size={16} /> CRM
+            </Link>
+          )}
           <Link to="/documentos">
             <FileText size={16} /> Documentos
           </Link>
-          <Link to="/calc-pmc">
-            <Calculator size={16} /> Calc. PMC
-          </Link>
+          {ehAdmin && (
+            <Link to="/calc-pmc">
+              <Calculator size={16} /> Calc. PMC
+            </Link>
+          )}
           {ehAdmin && (
             <Link to="/vendedores">
               <Briefcase size={16} /> Vendedores

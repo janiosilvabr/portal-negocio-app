@@ -93,7 +93,14 @@ export default function App() {
           />
           <Route path="/leads" element={<Leads />} />
           <Route path="/leads/novo" element={<NovoLead />} />
-          <Route path="/crm" element={<Crm />} />
+          <Route
+            path="/crm"
+            element={
+              <RotaAdmin>
+                <Crm />
+              </RotaAdmin>
+            }
+          />
           <Route
             path="/vendedores"
             element={
@@ -151,9 +158,30 @@ export default function App() {
               </RotaAdmin>
             }
           />
-          <Route path="/calc-pmc" element={<CalcPMC />} />
-          <Route path="/calc-pmc/nova" element={<NovaAvaliacaoPMC />} />
-          <Route path="/calc-pmc/:id" element={<VerAvaliacaoPMC />} />
+          <Route
+            path="/calc-pmc"
+            element={
+              <RotaAdmin>
+                <CalcPMC />
+              </RotaAdmin>
+            }
+          />
+          <Route
+            path="/calc-pmc/nova"
+            element={
+              <RotaAdmin>
+                <NovaAvaliacaoPMC />
+              </RotaAdmin>
+            }
+          />
+          <Route
+            path="/calc-pmc/:id"
+            element={
+              <RotaAdmin>
+                <VerAvaliacaoPMC />
+              </RotaAdmin>
+            }
+          />
         </Route>
 
         <Route element={<AdminLayout />}>

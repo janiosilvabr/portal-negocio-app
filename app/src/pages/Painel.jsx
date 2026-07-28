@@ -236,7 +236,7 @@ export default function Painel() {
       </div>
 
       <div className="painel-secao">
-        <h2>Resumo do pipeline de negócios</h2>
+        <h2>{ehAdmin ? "Resumo do pipeline de negócios" : "Meus negócios"}</h2>
         <div className="painel-pipeline">
           {pipelineNegocios.map((p) => (
             <div className="painel-pipeline-item" key={p.status}>

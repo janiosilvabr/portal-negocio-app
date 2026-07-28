@@ -65,7 +65,7 @@ export default function DetalheVeiculo() {
 
     setEnviando(true);
 
-    const { error } = await supabase.rpc("criar_lead_publico", {
+    const { data: leadId, error } = await supabase.rpc("criar_lead_publico", {
       p_veiculo_id: id,
       p_nome: nome,
       p_telefone: telefone,
@@ -78,6 +78,15 @@ export default function DetalheVeiculo() {
     if (error) {
       setErroForm(error.message);
       return;
+    }
+
+    // Notificação por e-mail é um "bônus" -- se falhar, o lead já foi
+    // salvo mesmo assim, então não bloqueia nem afeta a confirmação pro
+    // visitante.
+    if (leadId) {
+      supabase.functions
+        .invoke("notificar-novo-lead", { body: { lead_id: leadId } })
+        .catch(() => {});
     }
 
     setEnviado(true);
