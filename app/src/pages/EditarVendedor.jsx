@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { supabase } from "../lib/supabaseClient";
+import { useAuth } from "../context/AuthContext";
 
 export default function EditarVendedor() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { perfil } = useAuth();
+  const ehProprioUsuario = perfil?.id === id;
   const [nome, setNome] = useState("");
   const [papel, setPapel] = useState("vendedor");
   const [comissaoPercentual, setComissaoPercentual] = useState("");
@@ -75,6 +78,17 @@ export default function EditarVendedor() {
     return (
       <div className="page">
         <p className="auth-erro">Vendedor não encontrado.</p>
+      </div>
+    );
+  }
+
+  if (ehProprioUsuario) {
+    return (
+      <div className="page">
+        <p className="auth-erro">
+          Não é possível editar papel/comissão da própria conta por aqui — evita você se
+          rebaixar ou desativar sem querer. Peça pra outro admin, se precisar mudar algo.
+        </p>
       </div>
     );
   }

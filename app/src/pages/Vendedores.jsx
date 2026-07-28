@@ -141,12 +141,14 @@ export default function Vendedores() {
                   </label>
                 )}
 
-                <div className="vendedor-acoes">
-                  <button type="button" onClick={() => handleToggleAtivo(u)}>
-                    {u.ativo ? "Desativar" : "Ativar"}
-                  </button>
-                  <Link to={`/vendedores/${u.id}`}>Editar</Link>
-                  {u.id !== perfil?.id && (
+                {u.id === perfil?.id ? (
+                  <p className="auth-nota">Essa é a sua própria conta — edite papel/status em Empresa ou peça pra outro admin.</p>
+                ) : (
+                  <div className="vendedor-acoes">
+                    <button type="button" onClick={() => handleToggleAtivo(u)}>
+                      {u.ativo ? "Desativar" : "Ativar"}
+                    </button>
+                    <Link to={`/vendedores/${u.id}`}>Editar</Link>
                     <button
                       type="button"
                       className="link-perigo"
@@ -155,8 +157,8 @@ export default function Vendedores() {
                     >
                       {excluindoId === u.id ? "Excluindo..." : "Excluir"}
                     </button>
-                  )}
-                </div>
+                  </div>
+                )}
               </div>
             ))}
           </div>
