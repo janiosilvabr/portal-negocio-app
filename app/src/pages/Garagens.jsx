@@ -36,10 +36,8 @@ export default function Garagens() {
               <div className="garagem-card-logo">
                 {g.logo_url ? <img src={g.logo_url} alt="" /> : g.nome.slice(0, 1).toUpperCase()}
               </div>
-              <div>
-                <h3>{g.nome}</h3>
-                <p>{g.cidade ?? "Cidade não informada"}</p>
-              </div>
+              <h3>{g.nome}</h3>
+              <p>{g.cidade ?? "Cidade não informada"}</p>
             </Link>
           ))}
         </div>

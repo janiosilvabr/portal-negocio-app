@@ -2318,19 +2318,21 @@ body {
 
 .garagens-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
   gap: 20px;
   margin-top: 24px;
 }
 
 .garagem-card {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 16px;
+  text-align: center;
+  gap: 4px;
   background: var(--white);
   border-radius: 12px;
   box-shadow: 0 4px 16px rgba(26, 39, 68, 0.1);
-  padding: 20px;
+  padding: 24px 16px;
   text-decoration: none;
   color: inherit;
   transition: box-shadow 0.15s, transform 0.15s;
@@ -2342,29 +2344,33 @@ body {
 }
 
 .garagem-card-logo {
-  width: 56px;
-  height: 56px;
+  width: 100%;
+  max-width: 160px;
+  aspect-ratio: 1;
   flex-shrink: 0;
-  border-radius: 50%;
+  border-radius: 14px;
   background: var(--gray-bg);
   color: var(--navy);
   font-weight: 700;
-  font-size: 1.2rem;
+  font-size: 2.6rem;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  padding: 14px;
+  margin-bottom: 8px;
 }
 
 .garagem-card-logo img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
 }
 
 .garagem-card h3 {
-  margin: 0 0 2px;
+  margin: 0;
   color: var(--navy);
+  font-size: 1rem;
 }
 
 .garagem-card p {

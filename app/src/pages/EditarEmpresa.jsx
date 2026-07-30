@@ -222,7 +222,7 @@ export default function EditarEmpresa() {
 
         <label htmlFor="logo_upload">Logo da empresa (opcional)</label>
         <p className="auth-nota">
-          Recomendado: imagem quadrada, mínimo 200×200px (PNG ou JPG, fundo transparente se possível).
+          Recomendado: imagem quadrada, mínimo 512×512px (PNG ou JPG, fundo transparente se possível).
         </p>
 
         <div className="empresa-logo-linha">
