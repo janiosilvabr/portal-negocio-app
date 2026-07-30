@@ -81,6 +81,7 @@ export default function Painel() {
   const [documentos, setDocumentos] = useState([]);
   const [equipe, setEquipe] = useState([]);
   const [comissoesFaltando, setComissoesFaltando] = useState([]);
+  const [empresaNome, setEmpresaNome] = useState("");
 
   useEffect(() => {
     if (!perfil?.empresa_id) return;
@@ -95,9 +96,10 @@ export default function Painel() {
         .order("ordem", { foreignTable: "fotos_veiculos", ascending: true }),
       supabase.from("documentos_gerados").select("id, status, negocio_id"),
       supabase.rpc("listar_equipe_empresa"),
+      supabase.from("empresas").select("nome").eq("id", perfil.empresa_id).single(),
     ];
 
-    Promise.all(consultas).then(([resLeads, resNegocios, resVeiculos, resDocumentos, resEquipe]) => {
+    Promise.all(consultas).then(([resLeads, resNegocios, resVeiculos, resDocumentos, resEquipe, resEmpresa]) => {
       const primeiroErro = [resLeads, resNegocios, resVeiculos, resDocumentos].find((r) => r.error);
       if (primeiroErro) {
         setErro(primeiroErro.error.message);
@@ -110,6 +112,7 @@ export default function Painel() {
       setVeiculos(resVeiculos.data ?? []);
       setDocumentos(resDocumentos.data ?? []);
       setEquipe((resEquipe.data ?? []).filter((u) => u.ativo));
+      setEmpresaNome(resEmpresa.data?.nome ?? "");
       setCarregando(false);
     });
 
@@ -191,7 +194,7 @@ export default function Painel() {
 
   return (
     <div className="page">
-      <h1>Bem-vindo{perfil?.nome ? `, ${perfil.nome}` : ""}</h1>
+      <h1>Bem-vindo{empresaNome ? `, ${empresaNome}` : ""}</h1>
       <p className="auth-nota">Logado como {user?.email}</p>
 
       <div className="kpi-grid">

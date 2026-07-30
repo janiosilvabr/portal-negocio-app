@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, Outlet } from "react-router-dom";
-import { Car, Menu, X } from "lucide-react";
+import { Handshake, Menu, X } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 
 export function PublicLayout() {
@@ -12,7 +12,7 @@ export function PublicLayout() {
       <header className="vitrine-header">
         <Link to="/" className="vitrine-logo" onClick={() => setMenuAberto(false)}>
           <span className="vitrine-logo-icone">
-            <Car size={18} />
+            <Handshake size={18} />
           </span>
           Portal Negócio
         </Link>

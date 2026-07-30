@@ -37,6 +37,9 @@ export function ProtectedLayout() {
     <div className="app-shell">
       <header className="app-header">
         <Link to="/" className="app-logo">
+          <span className="vitrine-logo-icone">
+            <Handshake size={18} />
+          </span>
           Portal Negócio
         </Link>
         <nav className="app-nav">
