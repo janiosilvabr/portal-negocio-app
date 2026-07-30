@@ -16,6 +16,7 @@ import {
   CreditCard,
   ClipboardCheck,
   ShieldCheck,
+  HelpCircle,
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 
@@ -97,6 +98,9 @@ export function ProtectedLayout() {
               <CreditCard size={16} /> Planos
             </Link>
           )}
+          <Link to="/tutorial">
+            <HelpCircle size={16} /> Central de ajuda
+          </Link>
         </nav>
         <div className="app-header-acoes">
           {perfil?.is_superadmin && (

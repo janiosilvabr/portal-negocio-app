@@ -31,6 +31,7 @@ export function PublicLayout() {
           <Link to="/" onClick={() => setMenuAberto(false)}>Início</Link>
           <Link to="/vitrine" onClick={() => setMenuAberto(false)}>Veículos</Link>
           <Link to="/como-funciona" onClick={() => setMenuAberto(false)}>Como Funciona</Link>
+          <Link to="/tutorial" onClick={() => setMenuAberto(false)}>Tutorial</Link>
           <Link to="/garagens" onClick={() => setMenuAberto(false)}>Garagens</Link>
           <Link to="/sobre" onClick={() => setMenuAberto(false)}>Sobre</Link>
           <Link to="/contato" onClick={() => setMenuAberto(false)}>Contato</Link>

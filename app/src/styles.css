@@ -1597,6 +1597,11 @@ body {
   color: #1e824c;
 }
 
+.kpi-icone-vermelho {
+  background: #f5e0dc;
+  color: #c0392b;
+}
+
 .kpi-label {
   margin: 0 0 4px;
   font-size: 0.8rem;
@@ -2851,4 +2856,164 @@ body {
 .grafico-rosca-legenda-valor {
   color: var(--text-muted);
   white-space: nowrap;
+}
+
+/* Tutorial / Central de ajuda */
+
+.tutorial-page {
+  max-width: 800px;
+}
+
+.tutorial-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.tutorial-header h1 {
+  color: var(--navy);
+  margin: 0 0 6px;
+}
+
+.tutorial-header > p {
+  color: var(--text-muted);
+  margin: 0 0 20px;
+}
+
+.tutorial-busca {
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+.tutorial-busca-limpar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 2px;
+}
+
+.tutorial-busca-limpar:hover {
+  color: var(--text);
+}
+
+.tutorial-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.tutorial-card {
+  background: var(--white);
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(26, 39, 68, 0.1);
+  overflow: hidden;
+}
+
+.tutorial-card-cabecalho {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 18px 20px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+}
+
+.tutorial-icone {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+}
+
+.tutorial-card-cabecalho h2 {
+  flex: 1;
+  margin: 0;
+  color: var(--navy);
+  font-size: 1rem;
+}
+
+.tutorial-chevron {
+  flex-shrink: 0;
+  color: var(--text-muted);
+  transition: transform 0.15s ease;
+}
+
+.tutorial-chevron-aberto {
+  transform: rotate(180deg);
+}
+
+.tutorial-card-corpo {
+  padding: 0 20px 20px 74px;
+}
+
+.tutorial-card-corpo ol {
+  margin: 0;
+  padding-left: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  color: var(--text);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.tutorial-alerta {
+  display: flex;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: 8px;
+  margin-top: 16px;
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.tutorial-alerta p {
+  margin: 0;
+}
+
+.tutorial-alerta svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.tutorial-alerta-aviso {
+  background: #fff3cd;
+  color: #8a6300;
+}
+
+.tutorial-alerta-aviso svg {
+  color: #8a6300;
+}
+
+.tutorial-alerta-dica {
+  background: #e3f6ea;
+  color: #1e824c;
+}
+
+.tutorial-alerta-dica svg {
+  color: #1e824c;
+}
+
+@media (max-width: 700px) {
+  .tutorial-card-corpo {
+    padding: 0 16px 16px 16px;
+  }
+
+  .tutorial-card-cabecalho {
+    padding: 14px 16px;
+  }
+
+  .tutorial-card-cabecalho h2 {
+    font-size: 0.9rem;
+  }
 }
