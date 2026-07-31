@@ -93,11 +93,9 @@ export function ProtectedLayout() {
           <Link to="/empresa">
             <Building2 size={16} /> Empresa
           </Link>
-          {ehAdmin && (
-            <Link to="/planos">
-              <CreditCard size={16} /> Planos
-            </Link>
-          )}
+          <Link to="/planos">
+            <CreditCard size={16} /> Planos
+          </Link>
           <Link to="/tutorial">
             <HelpCircle size={16} /> Central de ajuda
           </Link>

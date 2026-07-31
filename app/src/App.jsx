@@ -95,14 +95,7 @@ export default function App() {
           <Route path="/documentos/gerar" element={<GerarDocumento />} />
           <Route path="/documentos/:id" element={<VerDocumento />} />
           <Route path="/empresa" element={<EditarEmpresa />} />
-          <Route
-            path="/planos"
-            element={
-              <RotaAdmin>
-                <Planos />
-              </RotaAdmin>
-            }
-          />
+          <Route path="/planos" element={<Planos />} />
           <Route path="/leads" element={<Leads />} />
           <Route path="/leads/novo" element={<NovoLead />} />
           <Route
