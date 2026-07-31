@@ -3032,3 +3032,13 @@ body {
     font-size: 0.9rem;
   }
 }
+
+.faq-categoria {
+  margin-top: 32px;
+}
+
+.faq-categoria-titulo {
+  color: var(--navy);
+  font-size: 1.1rem;
+  margin: 0 0 12px;
+}

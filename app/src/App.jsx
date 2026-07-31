@@ -47,6 +47,7 @@ import ParaGaragens from "./pages/ParaGaragens";
 import CalculadoraPmcPublica from "./pages/CalculadoraPmcPublica";
 import ContratoCompraVenda from "./pages/ContratoCompraVenda";
 import ContratoConsignacao from "./pages/ContratoConsignacao";
+import Faq from "./pages/Faq";
 import Tutorial from "./pages/Tutorial";
 import Sobre from "./pages/Sobre";
 import Contato from "./pages/Contato";
@@ -72,6 +73,7 @@ export default function App() {
           <Route path="/calculadora-pmc" element={<CalculadoraPmcPublica />} />
           <Route path="/contrato-compra-e-venda-veiculo-usado" element={<ContratoCompraVenda />} />
           <Route path="/contrato-de-consignacao-veiculo" element={<ContratoConsignacao />} />
+          <Route path="/faq" element={<Faq />} />
           <Route path="/tutorial" element={<Tutorial />} />
           <Route path="/sobre" element={<Sobre />} />
           <Route path="/contato" element={<Contato />} />
