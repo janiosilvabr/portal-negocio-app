@@ -197,10 +197,15 @@ Deno.serve(async (req) => {
 
     const mpData = await mpResp.json();
 
-    return jsonResponse({
-      ok: true,
-      init_point: mpData.sandbox_init_point || mpData.init_point,
-    });
+    // O token de produção (APP_USR-...) precisa sempre ir para o
+    // init_point real — nunca para o sandbox_init_point, mesmo que a API
+    // do MP ainda devolva esse campo preenchido na resposta.
+    const ehTokenProducao = MERCADOPAGO_ACCESS_TOKEN.startsWith("APP_USR-");
+    const initPoint = ehTokenProducao
+      ? mpData.init_point
+      : mpData.sandbox_init_point || mpData.init_point;
+
+    return jsonResponse({ ok: true, init_point: initPoint });
   } catch (e) {
     console.error("[criar-checkout-mp] excecao nao tratada:", e);
     return jsonResponse({ error: e instanceof Error ? e.message : "Erro inesperado." }, 500);

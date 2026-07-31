@@ -147,15 +147,17 @@ usuário:
 1. **Polimento do produto** — escopo ainda a definir por sessão (o quê especificamente).
 2. **Brevo — envio de documento por e-mail** (ver item já detalhado em "Roadmap futuro" abaixo).
 3. **Segurança no login** — escopo ainda a definir (quais medidas especificamente).
-4. **Mercado Pago — cobrança da própria assinatura do Portal Negócio** (ver "Lacuna crítica"
-   abaixo — é diferente da cobrança avulsa da Calc. PMC, que é sobre isso mais adiante).
+4. **Mercado Pago — cobrança da própria assinatura do Portal Negócio** (ver "Cobrança da
+   própria assinatura" abaixo — é diferente da cobrança avulsa da Calc. PMC, que é sobre isso
+   mais adiante).
 5. **Estratégia de divulgação no modelo GEO** (Generative Engine Optimization — otimizar para
    ser citado por IAs generativas como ChatGPT/Perplexity/Claude, não só SEO tradicional).
    Deliverable de conteúdo/estratégia, não é código.
 
-## ⚠️ Lacuna crítica: cobrança da própria assinatura não está implementada
+## Cobrança da própria assinatura (Mercado Pago)
 
-**Atualização 25/07 — Parte 1 (schema) feita, Parte 2 (checkout + webhook) ainda não.**
+**Atualização 31/07 — Parte 1 (schema) e Parte 2 (checkout + webhook) feitas e testadas em
+sandbox; migrando para produção agora.**
 A migração `0038_assinaturas_e_creditos_avulsos.sql` já criou `empresas.plano`
 (gratis/basico/pro), as tabelas `assinaturas`/`pagamentos_saas` e os saldos de crédito avulso
 (`empresas.creditos_anuncios_disponiveis`/`creditos_documentos_disponiveis`) + tabela de
@@ -163,12 +165,18 @@ auditoria `compras_creditos`. Um trigger (`protege_campos_billing_empresa`) gara
 conexão com o role `service_role` pode alterar esses campos — o próprio usuário da empresa
 nunca consegue, mesmo tendo permissão de UPDATE em `empresas` para os demais campos.
 
-**Ainda falta (Parte 2):** nenhum checkout de verdade existe, nem webhook do Mercado Pago —
-Mercado Pago só é mencionado no texto legal da Política de Privacidade, não está integrado em
-nenhuma Edge Function ainda. Depende de confirmar as credenciais (`MERCADOPAGO_ACCESS_TOKEN` e
-uma chave de service role) nas secrets do Supabase antes de codar. Sem isso, não há como cobrar
-de uma garagem real pelo uso do sistema — é o maior bloqueador para monetizar, maior prioridade
-que qualquer item do roadmap de features abaixo.
+**Checkout + webhook:** as Edge Functions `criar-checkout-mp` (cria a preferência de pagamento,
+tanto para assinatura de plano quanto para créditos avulsos) e `mp-webhook` (recebe a
+notificação do Mercado Pago, reconsulta o pagamento na API antes de confiar em qualquer dado,
+credita/ativa de forma idempotente) já estão deployadas no Supabase e já foram testadas em modo
+sandbox. `Planos.jsx` já chama `criar-checkout-mp` nos botões de assinar plano e comprar
+créditos. Não é mais uma lacuna — se este arquivo (ou uma sessão futura) disser o contrário,
+confirmar a lista de Edge Functions no Supabase Dashboard antes de acreditar.
+
+**Ainda falta:** a aplicação do CONSUMO dos créditos avulsos (bloquear/permitir criar o Nº+1
+anúncio ou gerar o Nº+1 documento do mês, decrementando `creditos_*_disponiveis`) ainda não foi
+implementada em `NovoVeiculo.jsx`/`GerarDocumento.jsx` — hoje o saldo só é exibido em
+`/planos`, nada o consome ainda.
 
 ### Decisão de 25/07 — Créditos avulsos (resolve a ambiguidade antiga do CONTEXTO.md)
 
