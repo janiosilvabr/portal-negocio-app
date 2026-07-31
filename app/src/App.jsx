@@ -45,6 +45,7 @@ import Garagens from "./pages/Garagens";
 import ComoFunciona from "./pages/ComoFunciona";
 import ParaGaragens from "./pages/ParaGaragens";
 import CalculadoraPmcPublica from "./pages/CalculadoraPmcPublica";
+import ContratoCompraVenda from "./pages/ContratoCompraVenda";
 import Tutorial from "./pages/Tutorial";
 import Sobre from "./pages/Sobre";
 import Contato from "./pages/Contato";
@@ -68,6 +69,7 @@ export default function App() {
           <Route path="/como-funciona" element={<ComoFunciona />} />
           <Route path="/para-garagens" element={<ParaGaragens />} />
           <Route path="/calculadora-pmc" element={<CalculadoraPmcPublica />} />
+          <Route path="/contrato-compra-e-venda-veiculo-usado" element={<ContratoCompraVenda />} />
           <Route path="/tutorial" element={<Tutorial />} />
           <Route path="/sobre" element={<Sobre />} />
           <Route path="/contato" element={<Contato />} />
