@@ -43,6 +43,7 @@ import NovaAvaliacaoPMC from "./pages/NovaAvaliacaoPMC";
 import VerAvaliacaoPMC from "./pages/VerAvaliacaoPMC";
 import Garagens from "./pages/Garagens";
 import ComoFunciona from "./pages/ComoFunciona";
+import ParaGaragens from "./pages/ParaGaragens";
 import Tutorial from "./pages/Tutorial";
 import Sobre from "./pages/Sobre";
 import Contato from "./pages/Contato";
@@ -64,6 +65,7 @@ export default function App() {
           <Route path="/vitrine/:id" element={<DetalheVeiculo />} />
           <Route path="/garagens" element={<Garagens />} />
           <Route path="/como-funciona" element={<ComoFunciona />} />
+          <Route path="/para-garagens" element={<ParaGaragens />} />
           <Route path="/tutorial" element={<Tutorial />} />
           <Route path="/sobre" element={<Sobre />} />
           <Route path="/contato" element={<Contato />} />
