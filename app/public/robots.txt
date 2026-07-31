@@ -1,0 +1,19 @@
+User-agent: *
+Allow: /
+Disallow: /painel
+Disallow: /veiculos
+Disallow: /clientes
+Disallow: /leads
+Disallow: /negocios
+Disallow: /crm
+Disallow: /documentos
+Disallow: /empresa
+Disallow: /planos
+Disallow: /vendedores
+Disallow: /financeiro
+Disallow: /extrato
+Disallow: /indice-conversao
+Disallow: /calc-pmc
+Disallow: /admin
+
+Sitemap: https://portalnegocio.com.br/sitemap.xml
