@@ -1,6 +1,12 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { AlertTriangle } from "lucide-react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "../lib/supabaseClient";
+
+const TIPO_LABEL = {
+  contrato_compra_venda: "Contrato de Compra e Venda",
+  contrato_consignacao: "Contrato de Consignação",
+};
 
 export default function GerarDocumento() {
   const [searchParams] = useSearchParams();
@@ -9,49 +15,41 @@ export default function GerarDocumento() {
   const consignacaoId = searchParams.get("consignacao_id");
   const tipo = negocioId ? "contrato_compra_venda" : "contrato_consignacao";
 
-  const [carregando, setCarregando] = useState(true);
+  const [gerando, setGerando] = useState(false);
   const [erro, setErro] = useState("");
   const [faltando, setFaltando] = useState(null);
 
-  useEffect(() => {
-    let cancelado = false;
+  async function handleGerar() {
+    setGerando(true);
+    setErro("");
+    setFaltando(null);
 
-    async function gerar() {
-      const { data, error } = await supabase.functions.invoke("gerar-documento", {
-        body: { tipo, negocio_id: negocioId, consignacao_id: consignacaoId },
-      });
+    const { data, error } = await supabase.functions.invoke("gerar-documento", {
+      body: { tipo, negocio_id: negocioId, consignacao_id: consignacaoId },
+    });
 
-      if (cancelado) return;
-
-      if (error) {
-        setErro(error.message ?? "Falha ao gerar o documento.");
-        setCarregando(false);
-        return;
-      }
-
-      if (data.error) {
-        setErro(data.error);
-        setCarregando(false);
-        return;
-      }
-
-      if (data.bloqueado) {
-        setFaltando(data.faltando);
-        setCarregando(false);
-        return;
-      }
-
-      navigate(`/documentos/${data.documento.id}`, { replace: true });
+    if (error) {
+      setErro(error.message ?? "Falha ao gerar o documento.");
+      setGerando(false);
+      return;
     }
 
-    gerar();
+    if (data.error) {
+      setErro(data.error);
+      setGerando(false);
+      return;
+    }
 
-    return () => {
-      cancelado = true;
-    };
-  }, [tipo, negocioId, consignacaoId, navigate]);
+    if (data.bloqueado) {
+      setFaltando(data.faltando);
+      setGerando(false);
+      return;
+    }
 
-  if (carregando) {
+    navigate(`/documentos/${data.documento.id}`, { replace: true });
+  }
+
+  if (gerando) {
     return (
       <div className="page">
         <p>Gerando documento com a Claude API...</p>
@@ -83,5 +81,25 @@ export default function GerarDocumento() {
     );
   }
 
-  return null;
+  return (
+    <div className="page">
+      <h1>Gerar {TIPO_LABEL[tipo]}</h1>
+      <p className="auth-nota">
+        O sistema vai preencher um modelo de minuta padrão com os dados já cadastrados deste
+        negócio.
+      </p>
+
+      <div className="tutorial-alerta tutorial-alerta-aviso" style={{ marginTop: 16, maxWidth: 640 }}>
+        <AlertTriangle size={16} />
+        <p>
+          Aviso: este documento é um rascunho automatizado gerado por inteligência artificial com
+          base em dados fornecidos por você. Ele não substitui a revisão de um advogado.
+        </p>
+      </div>
+
+      <button type="button" onClick={handleGerar} style={{ marginTop: 20 }}>
+        Gerar Documento
+      </button>
+    </div>
+  );
 }

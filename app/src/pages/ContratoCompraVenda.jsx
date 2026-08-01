@@ -12,7 +12,7 @@ const BENEFICIOS = [
     icone: ShieldCheck,
     titulo: "IA preenche, não decide",
     texto:
-      "A IA preenche um template jurídico fixo, validado por advogado, e escolhe entre blocos de cláusula condicional pré-aprovados (consignação, financiamento em aberto, garantia). Ela nunca redige cláusula nova.",
+      "A IA preenche um modelo de minuta padrão, estruturado com base na legislação vigente, e escolhe entre blocos de cláusula condicional pré-definidos (consignação, financiamento em aberto, garantia). Ela nunca redige cláusula nova — é uma ferramenta de apoio à digitação, não um serviço de consultoria jurídica.",
   },
   {
     icone: Download,
@@ -36,12 +36,12 @@ const FAQS = [
   {
     pergunta: "Esse contrato tem validade jurídica?",
     resposta:
-      "Sim. O texto segue um template jurídico fixo, com base no Código Civil e no Código de Trânsito Brasileiro, revisado por advogado. A IA só preenche os dados — não cria cláusula nova — e o documento nasce como rascunho, editável antes de ser considerado final.",
+      "O texto é um modelo de minuta padrão, elaborado com base no Código Civil e no Código de Trânsito Brasileiro, disponibilizado como ferramenta de apoio à digitação. A IA só preenche os dados — não cria cláusula nova —, mas o documento gerado é um rascunho: a leitura completa, a conferência dos dados e a decisão de uso são sempre de responsabilidade das partes envolvidas na negociação.",
   },
   {
     pergunta: "Preciso de advogado além do sistema?",
     resposta:
-      "O template já foi validado por advogado antes de entrar no sistema, mas cada garagem pode ter uma situação específica que mereça revisão própria — o Portal Negócio acelera a redação, não substitui aconselhamento jurídico individual quando necessário.",
+      "Sim, recomendamos — principalmente em negociações atípicas. O sistema automatiza o preenchimento de um modelo genérico de referência; ele não presta consultoria, assessoria ou auditoria jurídica, e não substitui a orientação de um advogado particular para o seu caso específico.",
   },
   {
     pergunta: "Funciona para venda direta e consignação?",

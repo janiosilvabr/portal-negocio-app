@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Mail } from "lucide-react";
+import { AlertTriangle, Mail } from "lucide-react";
 import { supabase } from "../lib/supabaseClient";
 
 const TIPO_LABEL = {
@@ -16,16 +16,39 @@ export function DocumentoResultado({ documento, onDocumentoAtualizado }) {
   const [mostrarEnvio, setMostrarEnvio] = useState(false);
   const [enviando, setEnviando] = useState(false);
   const [erroEnvio, setErroEnvio] = useState("");
+  const [aceitouRevisao, setAceitouRevisao] = useState(false);
+  const [confirmando, setConfirmando] = useState(false);
+  const [erroConfirmacao, setErroConfirmacao] = useState("");
 
   const destinatarioPadrao =
     documento.negocios?.clientes ?? documento.consignacoes?.proprietario ?? null;
   const [email, setEmail] = useState(destinatarioPadrao?.email ?? "");
   const [nome, setNome] = useState(destinatarioPadrao?.nome ?? "");
 
+  const revisado = Boolean(documento.revisao_confirmada_em);
+
   async function handleCopiar() {
     await navigator.clipboard.writeText(documento.conteudo);
     setCopiado(true);
     setTimeout(() => setCopiado(false), 2000);
+  }
+
+  async function handleConfirmarRevisao() {
+    setErroConfirmacao("");
+    setConfirmando(true);
+
+    const { data, error } = await supabase.rpc("confirmar_revisao_documento", {
+      p_documento_id: documento.id,
+    });
+
+    setConfirmando(false);
+
+    if (error) {
+      setErroConfirmacao(error.message ?? "Falha ao confirmar a revisão.");
+      return;
+    }
+
+    onDocumentoAtualizado?.(data);
   }
 
   async function handleEnviar(e) {
@@ -56,24 +79,70 @@ export function DocumentoResultado({ documento, onDocumentoAtualizado }) {
     <div>
       <div className="page-header no-print">
         <h1>{TIPO_LABEL[documento.tipo] ?? "Documento"} (rascunho)</h1>
-        <div className="documento-acoes">
-          <button type="button" onClick={handleCopiar}>
-            {copiado ? "Copiado!" : "Copiar"}
-          </button>
-          <button type="button" onClick={() => window.print()}>
-            Baixar PDF
-          </button>
-          <button type="button" onClick={() => setMostrarEnvio((v) => !v)}>
-            <Mail size={14} /> Enviar por E-mail
+        {revisado && (
+          <div className="documento-acoes">
+            <button type="button" onClick={handleCopiar}>
+              {copiado ? "Copiado!" : "Copiar"}
+            </button>
+            <button type="button" onClick={() => window.print()}>
+              Baixar PDF
+            </button>
+            <button type="button" onClick={() => setMostrarEnvio((v) => !v)}>
+              <Mail size={14} /> Enviar por E-mail
+            </button>
+          </div>
+        )}
+      </div>
+
+      <div className="tutorial-alerta tutorial-alerta-aviso no-print">
+        <AlertTriangle size={16} />
+        <p>
+          Este é um modelo de minuta padrão gerado por inteligência artificial a partir dos
+          dados que você cadastrou — não é uma peça jurídica validada nem substitui a revisão de
+          um advogado.
+        </p>
+      </div>
+
+      {!revisado && (
+        <div className="form-card no-print" style={{ marginTop: 16 }}>
+          <label className="auth-checkbox-label">
+            <input
+              type="checkbox"
+              checked={aceitouRevisao}
+              onChange={(e) => setAceitouRevisao(e.target.checked)}
+            />
+            <span>
+              Declaro que li integralmente a minuta gerada, que conferi todos os dados
+              preenchidos e que assumo total responsabilidade pela sua utilização na negociação,
+              eximindo a plataforma e seus desenvolvedores por eventuais incorreções, omissões ou
+              inadequações ao caso concreto.
+            </span>
+          </label>
+
+          {erroConfirmacao && <p className="auth-erro">{erroConfirmacao}</p>}
+
+          <button
+            type="button"
+            onClick={handleConfirmarRevisao}
+            disabled={!aceitouRevisao || confirmando}
+          >
+            {confirmando ? "Confirmando..." : "Confirmar revisão e liberar ações"}
           </button>
         </div>
-      </div>
+      )}
 
       <p className="auth-nota no-print">
         Status: {documento.status === "finalizado" ? "finalizado" : "rascunho"} — revise o
         conteúdo antes de considerar final. Trechos marcados "[PREENCHER: ...]" não têm dado
         cadastrado no sistema e precisam ser completados manualmente.
       </p>
+
+      {revisado && (
+        <p className="auth-nota no-print">
+          Revisão confirmada em {formatDataHora(documento.revisao_confirmada_em)}
+          {documento.revisao_confirmada_ip ? ` (IP ${documento.revisao_confirmada_ip})` : ""}.
+        </p>
+      )}
 
       {documento.enviado_email_em && (
         <p className="auth-nota no-print">

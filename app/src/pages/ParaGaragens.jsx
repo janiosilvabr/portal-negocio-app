@@ -20,7 +20,7 @@ const DORES = [
     icone: FileText,
     titulo: "Vender sem contrato seguro",
     texto:
-      "Contratos de compra e venda e de consignação são gerados automaticamente por IA, a partir dos dados que você já cadastrou. A IA só preenche o modelo — as cláusulas seguem um template jurídico fixo, validado por advogado, então a segurança do documento não depende de improviso na hora da venda.",
+      "Contratos de compra e venda e de consignação são gerados automaticamente por IA, a partir dos dados que você já cadastrou. A IA preenche um modelo de minuta padrão, estruturado com base na legislação vigente — um rascunho pronto pra você revisar e ajustar, em vez de sair improvisando um contrato do zero na hora da venda.",
   },
   {
     icone: Calculator,
@@ -61,7 +61,7 @@ const FAQS = [
   {
     pergunta: "O contrato gerado tem validade jurídica?",
     resposta:
-      "O texto segue um template jurídico fixo, validado por advogado, com blocos condicionais pra cada situação (consignação, financiamento em aberto etc.). A IA preenche os dados — não redige cláusula nova — e todo documento nasce como rascunho, editável antes de ser considerado final.",
+      "O texto é um modelo de minuta padrão, elaborado com base na legislação vigente, com blocos condicionais pra cada situação (consignação, financiamento em aberto etc.). A IA preenche os dados — não redige cláusula nova —, mas o documento nasce como rascunho: a leitura completa e a decisão de uso são sempre responsabilidade de quem está negociando.",
   },
   {
     pergunta: "Posso cancelar quando quiser?",

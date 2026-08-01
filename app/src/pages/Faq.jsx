@@ -8,12 +8,12 @@ const CATEGORIAS = [
       {
         pergunta: "Como fazer contrato de venda de carro usado com segurança jurídica?",
         resposta:
-          "Um contrato de venda de carro usado precisa identificar claramente vendedor e comprador (nome, CPF/CNPJ, endereço), descrever o veículo com placa, RENAVAM, chassi e quilometragem, e deixar o comprador ciente por escrito do estado de conservação do bem. Se a garagem oferece garantia, o contrato deve definir prazo, cobertura e a oficina credenciada para acionamento. Também precisa deixar claro quem responde por multas e débitos até a entrega, e lembrar o comprador do prazo legal para transferir o veículo no DETRAN. No Portal Negócio, esse contrato é gerado automaticamente com os dados já cadastrados do veículo e do comprador, a partir de um template jurídico fixo validado por advogado.",
+          "Um contrato de venda de carro usado precisa identificar claramente vendedor e comprador (nome, CPF/CNPJ, endereço), descrever o veículo com placa, RENAVAM, chassi e quilometragem, e deixar o comprador ciente por escrito do estado de conservação do bem. Se a garagem oferece garantia, o contrato deve definir prazo, cobertura e a oficina credenciada para acionamento. Também precisa deixar claro quem responde por multas e débitos até a entrega, e lembrar o comprador do prazo legal para transferir o veículo no DETRAN. No Portal Negócio, esse contrato é gerado automaticamente com os dados já cadastrados do veículo e do comprador, a partir de um modelo de minuta padrão estruturado com base na legislação vigente — um rascunho de apoio, não uma peça jurídica pronta e definitiva.",
       },
       {
         pergunta: "O contrato gerado pela IA tem validade jurídica?",
         resposta:
-          "Sim. O texto segue um template jurídico fixo, elaborado com base no Código Civil e no Código de Trânsito Brasileiro, revisado por advogado antes de entrar no sistema. A IA não redige cláusula nova — ela só preenche os dados do negócio (partes, veículo, valor, forma de pagamento) e escolhe entre blocos de cláusula condicional pré-aprovados, como consignação, financiamento em aberto ou garantia. Todo documento gerado nasce com status 'rascunho', editável antes de ser considerado final, para o usuário revisar cada campo antes de imprimir ou enviar ao cliente.",
+          "O sistema não presta serviço jurídico nem garante validade — ele automatiza o preenchimento de um modelo de minuta padrão, elaborado com base no Código Civil e no Código de Trânsito Brasileiro, disponibilizado como ferramenta de apoio à digitação. A IA não redige cláusula nova — ela só preenche os dados do negócio (partes, veículo, valor, forma de pagamento) e escolhe entre blocos de cláusula condicional pré-definidos, como consignação, financiamento em aberto ou garantia. Todo documento gerado nasce como rascunho, e a leitura completa, a conferência dos dados e a decisão de uso são sempre de responsabilidade de quem está negociando.",
       },
       {
         pergunta: "Como funciona contrato de consignação de veículo?",
@@ -23,7 +23,7 @@ const CATEGORIAS = [
       {
         pergunta: "Preciso de advogado além do sistema?",
         resposta:
-          "O template usado pelo sistema já foi validado por advogado antes de entrar em produção, mas cada garagem pode ter uma situação específica — uma negociação atípica, uma cláusula fora do padrão — que mereça revisão própria. O Portal Negócio acelera a redação e reduz erro de digitação e esquecimento de campo obrigatório, mas não substitui aconselhamento jurídico individual quando a situação foge do modelo padrão previsto nos templates.",
+          "Sim, principalmente em negociações atípicas ou fora do padrão. O uso do sistema e de seus modelos não constitui prestação de serviços advocatícios, consultoria ou auditoria jurídica — o Portal Negócio automatiza o preenchimento de um modelo genérico de referência, reduzindo erro de digitação e esquecimento de campo obrigatório, mas a adequação do conteúdo ao caso concreto é sempre responsabilidade das partes. Recomendamos a contratação de advogado particular para situações que fujam do modelo padrão.",
       },
     ],
   },

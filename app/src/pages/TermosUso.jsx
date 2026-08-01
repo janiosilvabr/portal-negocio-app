@@ -23,7 +23,11 @@ Cada garagem cadastrada é responsável por: (a) garantir a veracidade dos dados
 
 ### 6. Documentos Gerados Automaticamente
 
-A Plataforma oferece geração assistida de documentos contratuais por meio de inteligência artificial (Claude API), a partir de **templates jurídicos pré-aprovados** e dos dados cadastrados pelo próprio usuário. **A IA preenche variáveis e seleciona blocos de cláusula dentro de um conjunto pré-definido — não redige conteúdo jurídico livre.** Todo documento gerado nasce com status de rascunho, e é de responsabilidade do usuário revisá-lo e validá-lo antes de utilizá-lo como instrumento definitivo. O Portal Negócio não se responsabiliza por prejuízos decorrentes do uso de documento gerado sem a devida revisão pelo usuário.
+O Portal Negócio é uma plataforma tecnológica de automação documental (Legaltech). Os modelos de documentos (templates) disponibilizados no sistema são referências genéricas, estruturadas com base na legislação comum, elaboradas estritamente para facilitar a rotina operacional das garagens — não são peças jurídicas individualizadas nem pareceres sobre o negócio concreto de cada usuário.
+
+A geração é feita por meio de inteligência artificial (Claude API), que preenche variáveis e seleciona blocos de cláusula dentro de um conjunto pré-definido, a partir dos dados cadastrados pelo próprio usuário — **a IA não redige conteúdo jurídico livre, nem decide sobre o mérito ou a adequação das cláusulas ao caso concreto.** Todo documento gerado nasce com status de rascunho e só pode ser copiado, baixado ou enviado depois que o usuário confirmar, por meio de aceite específico registrado no sistema (com data, hora e IP), que leu integralmente a minuta, conferiu os dados preenchidos e assume total responsabilidade pela sua utilização na negociação.
+
+**Aviso de Isenção de Responsabilidade:** o uso deste sistema e de seus modelos não constitui prestação de serviços advocatícios, consultoria, assessoria ou auditoria jurídica. O advogado colaborador que estruturou os modelos atua unicamente na elaboração abstrata de textos genéricos, não possuindo qualquer vínculo de patrocínio, responsabilidade ou ingerência sobre os negócios jurídicos concretos celebrados entre os usuários. A escolha, a revisão final, a adequação do conteúdo ao caso concreto e a validação do documento gerado são de exclusiva e inteira responsabilidade das partes envolvidas (comprador e vendedor, ou consignante e consignatária), recomendando-se expressamente a contratação de advogado particular para negociações atípicas. O Portal Negócio não se responsabiliza por prejuízos decorrentes do uso de documento gerado sem a devida revisão pelo usuário.
 
 ### 7. Planos, Pagamentos e Assinaturas
 
@@ -51,5 +55,5 @@ Estes Termos podem ser atualizados periodicamente, com aviso ao usuário atravé
 `;
 
 export default function TermosUso() {
-  return <DocumentoLegal titulo="Termos de Uso" ultimaAtualizacao="20/07/2026" texto={TEXTO} />;
+  return <DocumentoLegal titulo="Termos de Uso" ultimaAtualizacao="02/08/2026" texto={TEXTO} />;
 }

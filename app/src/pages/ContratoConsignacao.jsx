@@ -12,7 +12,7 @@ const BENEFICIOS = [
     icone: ShieldCheck,
     titulo: "Regresso automático e proteção pro consignante",
     texto:
-      "O template já prevê a cláusula de regresso automático (se surgir um vício oculto depois da venda, quem responde é o consignante) e a salvaguarda conjugal, quando aplicável — tudo pré-aprovado por advogado, a IA só preenche.",
+      "O modelo de minuta já prevê a cláusula de regresso automático (se surgir um vício oculto depois da venda, quem responde é o consignante) e a salvaguarda conjugal, quando aplicável — blocos de referência que a IA só preenche com os dados do negócio, sem redigir conteúdo novo.",
   },
   {
     icone: Download,

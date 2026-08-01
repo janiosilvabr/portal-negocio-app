@@ -85,12 +85,13 @@ const MODULOS = [
       'Como acessar: abra um negócio e clique em "Gerar Documento". Escolha o tipo: Contrato de Compra e Venda ou Contrato de Consignação.',
       "A IA preenche automaticamente: nome das partes, dados do veículo, valor, forma de pagamento — tudo a partir do que já está cadastrado no sistema.",
       "Revise o rascunho: trechos marcados com [PREENCHER...] precisam ser completados por você antes de finalizar. São campos que dependem de informações específicas da negociação.",
+      'Antes de baixar, enviar ou copiar o documento, o sistema exige marcar uma caixa de confirmação declarando que você leu e conferiu o rascunho — esse aceite fica registrado com data, hora e IP.',
       'Baixar PDF: clique em "Baixar PDF" para gerar o arquivo pronto para impressão e assinatura física.',
       'Enviar por e-mail: clique em "Enviar por e-mail" para enviar o contrato diretamente para o e-mail do cliente, direto pelo sistema.',
-      "Status \"Rascunho\": o documento fica salvo como rascunho até você finalizar todos os campos. Você pode voltar e completar depois.",
+      "Status \"Rascunho\": o documento fica salvo como rascunho até você confirmar a revisão. Você pode voltar e completar depois.",
     ],
     alerta:
-      "Você é o responsável pela revisão final antes de enviar ao cliente. A IA preenche o modelo, mas a validação jurídica é sua. Sempre leia o contrato completo antes de enviar.",
+      "O documento gerado é um modelo de minuta padrão, preenchido automaticamente a partir dos dados que você cadastrou — não é uma peça jurídica validada nem substitui a revisão de um advogado. A leitura completa, a conferência dos dados e a responsabilidade pelo uso são sempre suas.",
   },
   {
     id: "pmc-financeiro",
