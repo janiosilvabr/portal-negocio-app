@@ -1,0 +1,9 @@
+Options -MultiViews
+RewriteEngine On
+
+RewriteRule ^como-funciona/?$ /para-garagens [R=301,L,QSA]
+RewriteRule ^vitrine/?$ / [R=301,L,QSA]
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.html [QSA,L]

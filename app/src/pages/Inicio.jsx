@@ -1,35 +1,83 @@
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { ShieldCheck } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "react-router-dom";
+import { ShieldCheck, SlidersHorizontal } from "lucide-react";
 import { supabase } from "../lib/supabaseClient";
 import { VeiculoCard } from "../components/VeiculoCard";
 
-const ORDEM_PLANOS = ["pro", "basico", "gratis"];
+const FILTROS_INICIAIS = {
+  marca: "",
+  modelo: "",
+  combustivel: "",
+  cambio: "",
+  tipoCarroceria: "",
+  anoMin: "",
+  kmMax: "",
+  precoMin: "",
+  precoMax: "",
+};
+
+const TIPO_CARROCERIA_LABEL = {
+  sedan: "Sedã",
+  suv: "SUV",
+  hatch: "Hatch",
+  pickup: "Picape",
+  utilitario: "Utilitário",
+  moto: "Moto",
+  outro: "Outro",
+};
+
+function uniqueSorted(valores) {
+  return [...new Set(valores.filter(Boolean))].sort();
+}
 
 export default function Inicio() {
+  const [searchParams] = useSearchParams();
+  const empresaFiltrada = searchParams.get("empresa");
   const [veiculos, setVeiculos] = useState([]);
   const [carregando, setCarregando] = useState(true);
+  const [erro, setErro] = useState("");
+  const [filtros, setFiltros] = useState(FILTROS_INICIAIS);
 
   useEffect(() => {
     supabase
       .rpc("listar_vitrine_veiculos")
-      .then(({ data }) => {
-        setVeiculos((data ?? []).slice(0, 18));
+      .then(({ data, error }) => {
+        if (error) setErro(error.message);
+        else setVeiculos(data ?? []);
         setCarregando(false);
       });
   }, []);
 
-  // Divisão por plano ainda é um placeholder visual: o schema não tem vínculo
-  // real garagem→plano (empresas não tem plano_atual, e a tabela assinaturas
-  // nem existe ainda — ver "Lacuna crítica" no CLAUDE.md). Até essa lacuna ser
-  // resolvida, distribuímos os veículos existentes em round-robin só para
-  // ordenar as fileiras (Pro primeiro, depois Básico, depois Grátis) — o
-  // plano de cada garagem nunca é mostrado ao público, só define a ordem.
-  const grupos = { pro: [], basico: [], gratis: [] };
-  veiculos.forEach((v, i) => {
-    const chave = ORDEM_PLANOS[i % 3];
-    grupos[chave].push(v);
+  const marcas = useMemo(() => uniqueSorted(veiculos.map((v) => v.marca)), [veiculos]);
+  const combustiveis = useMemo(() => uniqueSorted(veiculos.map((v) => v.combustivel)), [veiculos]);
+  const cambios = useMemo(() => uniqueSorted(veiculos.map((v) => v.cambio)), [veiculos]);
+  const tiposCarroceria = useMemo(
+    () => uniqueSorted(veiculos.map((v) => v.tipo_carroceria)),
+    [veiculos]
+  );
+
+  function handleFiltro(e) {
+    const { name, value } = e.target;
+    setFiltros((f) => ({ ...f, [name]: value }));
+  }
+
+  const filtrados = veiculos.filter((v) => {
+    if (empresaFiltrada && v.empresa_id !== empresaFiltrada) return false;
+    if (filtros.marca && v.marca !== filtros.marca) return false;
+    if (filtros.modelo && !v.modelo?.toLowerCase().includes(filtros.modelo.toLowerCase())) return false;
+    if (filtros.combustivel && v.combustivel !== filtros.combustivel) return false;
+    if (filtros.cambio && v.cambio !== filtros.cambio) return false;
+    if (filtros.tipoCarroceria && v.tipo_carroceria !== filtros.tipoCarroceria) return false;
+    if (filtros.anoMin && (v.ano_fabricacao == null || v.ano_fabricacao < Number(filtros.anoMin))) return false;
+    if (filtros.kmMax && (v.km == null || v.km > Number(filtros.kmMax))) return false;
+    if (filtros.precoMin && (v.preco == null || v.preco < Number(filtros.precoMin))) return false;
+    if (filtros.precoMax && (v.preco == null || v.preco > Number(filtros.precoMax))) return false;
+    return true;
   });
+
+  const nomeGaragemFiltrada = empresaFiltrada
+    ? veiculos.find((v) => v.empresa_id === empresaFiltrada)?.empresa_nome
+    : null;
 
   return (
     <>
@@ -47,30 +95,91 @@ export default function Inicio() {
       </section>
 
       <div className="vitrine-content">
+        <h2>{nomeGaragemFiltrada ? `Veículos de ${nomeGaragemFiltrada}` : "Veículos disponíveis"}</h2>
+
+        <div className="vitrine-filtros-header">
+          <SlidersHorizontal size={15} />
+          Filtrar veículos
+        </div>
+
+        <div className="vitrine-filtros">
+          <select name="marca" value={filtros.marca} onChange={handleFiltro}>
+            <option value="">Marca</option>
+            {marcas.map((m) => (
+              <option key={m} value={m}>
+                {m}
+              </option>
+            ))}
+          </select>
+
+          <input name="modelo" placeholder="Modelo" value={filtros.modelo} onChange={handleFiltro} />
+
+          <select name="combustivel" value={filtros.combustivel} onChange={handleFiltro}>
+            <option value="">Combustível</option>
+            {combustiveis.map((c) => (
+              <option key={c} value={c}>
+                {c}
+              </option>
+            ))}
+          </select>
+
+          <select name="cambio" value={filtros.cambio} onChange={handleFiltro}>
+            <option value="">Câmbio</option>
+            {cambios.map((c) => (
+              <option key={c} value={c}>
+                {c}
+              </option>
+            ))}
+          </select>
+
+          <select name="tipoCarroceria" value={filtros.tipoCarroceria} onChange={handleFiltro}>
+            <option value="">Tipo</option>
+            {tiposCarroceria.map((t) => (
+              <option key={t} value={t}>
+                {TIPO_CARROCERIA_LABEL[t] ?? t}
+              </option>
+            ))}
+          </select>
+
+          <input
+            name="anoMin"
+            type="number"
+            placeholder="Ano mínimo"
+            value={filtros.anoMin}
+            onChange={handleFiltro}
+          />
+
+          <input name="kmMax" type="number" placeholder="Km até" value={filtros.kmMax} onChange={handleFiltro} />
+
+          <input
+            name="precoMin"
+            type="number"
+            placeholder="Preço mínimo"
+            value={filtros.precoMin}
+            onChange={handleFiltro}
+          />
+
+          <input
+            name="precoMax"
+            type="number"
+            placeholder="Preço máximo"
+            value={filtros.precoMax}
+            onChange={handleFiltro}
+          />
+        </div>
+
         {carregando && <p>Carregando...</p>}
-        {!carregando && veiculos.length === 0 && (
-          <p className="auth-nota">Nenhum veículo disponível no momento.</p>
+        {erro && <p className="auth-erro">{erro}</p>}
+
+        {!carregando && !erro && filtrados.length === 0 && (
+          <p className="auth-nota">Nenhum veículo encontrado com esses filtros.</p>
         )}
 
-        {!carregando && veiculos.length > 0 && (
-          <div className="inicio-secao-header">
-            <h2>Veículos em destaque</h2>
-            <Link to="/vitrine">Ver todos →</Link>
-          </div>
-        )}
-
-        {!carregando &&
-          ORDEM_PLANOS.filter((chave) => grupos[chave].length > 0).map((chave) => (
-            <div className="inicio-carrossel-secao" key={chave}>
-              <div className="inicio-carrossel">
-                {grupos[chave].map((v) => (
-                  <div className="inicio-carrossel-item" key={v.id}>
-                    <VeiculoCard veiculo={v} />
-                  </div>
-                ))}
-              </div>
-            </div>
+        <div className="vitrine-grid">
+          {filtrados.map((v) => (
+            <VeiculoCard veiculo={v} key={v.id} />
           ))}
+        </div>
       </div>
     </>
   );

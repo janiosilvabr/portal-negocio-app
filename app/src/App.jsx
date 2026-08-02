@@ -10,7 +10,6 @@ import Painel from "./pages/Painel";
 import Veiculos from "./pages/Veiculos";
 import NovoVeiculo from "./pages/NovoVeiculo";
 import EditarVeiculo from "./pages/EditarVeiculo";
-import Vitrine from "./pages/Vitrine";
 import DetalheVeiculo from "./pages/DetalheVeiculo";
 import Inicio from "./pages/Inicio";
 import Clientes from "./pages/Clientes";
@@ -42,7 +41,6 @@ import CalcPMC from "./pages/CalcPMC";
 import NovaAvaliacaoPMC from "./pages/NovaAvaliacaoPMC";
 import VerAvaliacaoPMC from "./pages/VerAvaliacaoPMC";
 import Garagens from "./pages/Garagens";
-import ComoFunciona from "./pages/ComoFunciona";
 import ParaGaragens from "./pages/ParaGaragens";
 import CalculadoraPmcPublica from "./pages/CalculadoraPmcPublica";
 import ContratoCompraVenda from "./pages/ContratoCompraVenda";
@@ -65,10 +63,8 @@ export default function App() {
 
         <Route element={<PublicLayout />}>
           <Route path="/" element={<Inicio />} />
-          <Route path="/vitrine" element={<Vitrine />} />
           <Route path="/vitrine/:id" element={<DetalheVeiculo />} />
           <Route path="/garagens" element={<Garagens />} />
-          <Route path="/como-funciona" element={<ComoFunciona />} />
           <Route path="/para-garagens" element={<ParaGaragens />} />
           <Route path="/calculadora-pmc" element={<CalculadoraPmcPublica />} />
           <Route path="/contrato-compra-e-venda-veiculo-usado" element={<ContratoCompraVenda />} />
@@ -79,6 +75,7 @@ export default function App() {
           <Route path="/contato" element={<Contato />} />
           <Route path="/politica-privacidade" element={<PoliticaPrivacidade />} />
           <Route path="/termos-uso" element={<TermosUso />} />
+          <Route path="/planos" element={<Planos />} />
         </Route>
 
         <Route element={<ProtectedLayout />}>
@@ -95,7 +92,6 @@ export default function App() {
           <Route path="/documentos/gerar" element={<GerarDocumento />} />
           <Route path="/documentos/:id" element={<VerDocumento />} />
           <Route path="/empresa" element={<EditarEmpresa />} />
-          <Route path="/planos" element={<Planos />} />
           <Route path="/leads" element={<Leads />} />
           <Route path="/leads/novo" element={<NovoLead />} />
           <Route

@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "../lib/supabaseClient";
+import { lerIntencaoCheckout, limparIntencaoCheckout } from "../lib/checkoutIntent";
+import { retomarCheckoutAposLogin } from "../lib/iniciarCheckout";
 
 export default function Cadastro() {
   const navigate = useNavigate();
@@ -54,12 +56,28 @@ export default function Cadastro() {
       return;
     }
 
+    const intencao = lerIntencaoCheckout();
+
     if (data.session) {
+      if (intencao) {
+        limparIntencaoCheckout();
+        try {
+          await retomarCheckoutAposLogin(intencao, navigate);
+          return;
+        } catch {
+          navigate("/planos");
+          return;
+        }
+      }
       navigate("/painel");
       return;
     }
 
-    setMensagem("Conta criada! Verifique seu e-mail para confirmar o cadastro antes de entrar.");
+    setMensagem(
+      intencao
+        ? "Conta criada! Verifique seu e-mail para confirmar o cadastro — depois de entrar, continuamos direto no checkout."
+        : "Conta criada! Verifique seu e-mail para confirmar o cadastro antes de entrar."
+    );
   }
 
   return (

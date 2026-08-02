@@ -1,13 +1,10 @@
 import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { supabase } from "../lib/supabaseClient";
 import { useAuth } from "../context/AuthContext";
-
-const CNPJ_PROVISORIO = "60.920.435/001-39";
-
-function cnpjEhProvisorio(cnpj) {
-  if (!cnpj) return false;
-  return cnpj.toLowerCase().includes("provisório") || cnpj.toLowerCase().includes("provisorio") || cnpj === CNPJ_PROVISORIO;
-}
+import { cnpjEhProvisorio, cnpjValido } from "../lib/cnpj";
+import { lerIntencaoCheckout, limparIntencaoCheckout } from "../lib/checkoutIntent";
+import { iniciarCheckout } from "../lib/iniciarCheckout";
 
 const CAMPOS_INICIAIS = {
   nome: "",
@@ -25,12 +22,15 @@ const CAMPOS_INICIAIS = {
 
 export default function EditarEmpresa() {
   const { perfil } = useAuth();
+  const [searchParams] = useSearchParams();
+  const checkoutPendente = searchParams.get("checkout") === "pendente";
   const [campos, setCampos] = useState(CAMPOS_INICIAIS);
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState("");
   const [sucesso, setSucesso] = useState(false);
   const [salvando, setSalvando] = useState(false);
   const [enviandoLogo, setEnviandoLogo] = useState(false);
+  const [retomandoCheckout, setRetomandoCheckout] = useState(false);
 
   useEffect(() => {
     if (!perfil?.empresa_id) return;
@@ -131,6 +131,18 @@ export default function EditarEmpresa() {
     }
 
     setSucesso(true);
+
+    const intencao = lerIntencaoCheckout();
+    if (intencao && cnpjValido(campos.cnpj)) {
+      limparIntencaoCheckout();
+      setRetomandoCheckout(true);
+      try {
+        await iniciarCheckout(intencao);
+      } catch (e) {
+        setRetomandoCheckout(false);
+        setErro(e.message ?? "Falha ao retomar o checkout. Tente novamente em Planos.");
+      }
+    }
   }
 
   if (carregando) {
@@ -149,6 +161,13 @@ export default function EditarEmpresa() {
         de venda direta (sem consignação) — como pessoa jurídica não assina sozinha, o contrato
         precisa do nome, cargo e CPF de quem assina pela empresa.
       </p>
+
+      {checkoutPendente && (
+        <p className="auth-nota">
+          Falta o CNPJ da sua empresa para continuar com a assinatura/compra de créditos. Complete
+          abaixo e salve — a gente já leva você direto pro pagamento.
+        </p>
+      )}
 
       <form className="form-card" onSubmit={handleSubmit}>
         <div className="form-grid">
@@ -246,10 +265,10 @@ export default function EditarEmpresa() {
         </label>
 
         {erro && <p className="auth-erro">{erro}</p>}
-        {sucesso && <p className="auth-sucesso">Dados salvos.</p>}
+        {sucesso && !retomandoCheckout && <p className="auth-sucesso">Dados salvos.</p>}
 
-        <button type="submit" disabled={salvando}>
-          {salvando ? "Salvando..." : "Salvar"}
+        <button type="submit" disabled={salvando || retomandoCheckout}>
+          {retomandoCheckout ? "Abrindo checkout..." : salvando ? "Salvando..." : "Salvar"}
         </button>
       </form>
     </div>

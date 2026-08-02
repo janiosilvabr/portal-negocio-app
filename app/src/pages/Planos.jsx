@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { Check, Coins } from "lucide-react";
 import { supabase } from "../lib/supabaseClient";
 import { useAuth } from "../context/AuthContext";
+import { cnpjValido } from "../lib/cnpj";
+import { salvarIntencaoCheckout } from "../lib/checkoutIntent";
+import { iniciarCheckout } from "../lib/iniciarCheckout";
 
 const RECURSOS_POR_PLANO = {
   "Grátis": ["Vitrine pública", "CRM básico de leads", "Cadastro de clientes"],
@@ -22,7 +25,8 @@ function formatPreco(valor) {
 }
 
 export default function Planos() {
-  const { perfil } = useAuth();
+  const { session, perfil, loading: authLoading } = useAuth();
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [empresa, setEmpresa] = useState(null);
   const [planos, setPlanos] = useState([]);
@@ -33,82 +37,103 @@ export default function Planos() {
   const [erro, setErro] = useState("");
 
   const statusCheckout = searchParams.get("status");
+  const logado = Boolean(session);
 
   useEffect(() => {
-    if (!perfil?.empresa_id) return;
+    if (authLoading) return;
+
+    const consultaPlanos = supabase.from("planos").select("*").order("preco_mensal", { ascending: true });
+
+    if (!logado) {
+      consultaPlanos.then(({ data }) => {
+        setPlanos(data ?? []);
+        setCarregando(false);
+      });
+      return;
+    }
 
     Promise.all([
-      supabase.from("empresas").select("plano, creditos_anuncios_disponiveis, creditos_documentos_disponiveis").eq("id", perfil.empresa_id).single(),
-      supabase.from("planos").select("*").order("preco_mensal", { ascending: true }),
+      supabase
+        .from("empresas")
+        .select("plano, cnpj, creditos_anuncios_disponiveis, creditos_documentos_disponiveis")
+        .eq("id", perfil?.empresa_id)
+        .single(),
+      consultaPlanos,
     ]).then(([{ data: dataEmpresa }, { data: dataPlanos }]) => {
       setEmpresa(dataEmpresa);
       setPlanos(dataPlanos ?? []);
       setCarregando(false);
     });
-  }, [perfil?.empresa_id]);
+  }, [authLoading, logado, perfil?.empresa_id]);
 
-  async function assinarPlano(plano) {
-    setErro("");
-    setProcessandoPlanoId(plano.id);
-
-    const { data: sessionData } = await supabase.auth.getSession();
-    const { data, error } = await supabase.functions.invoke("criar-checkout-mp", {
-      body: { tipo: "assinatura", plano_id: plano.id },
-      headers: { Authorization: `Bearer ${sessionData.session?.access_token}` },
-    });
-
-    setProcessandoPlanoId(null);
-
-    if (error || data?.error) {
-      setErro(data?.error ?? error.message ?? "Falha ao iniciar checkout.");
+  function iniciarOuRedirecionar(intencao, aoProcessar) {
+    if (!logado) {
+      salvarIntencaoCheckout(intencao);
+      navigate("/cadastro");
       return;
     }
 
-    window.location.href = data.init_point;
+    if (!cnpjValido(empresa?.cnpj)) {
+      setErro("Complete o CNPJ da sua empresa antes de assinar um plano pago ou comprar créditos.");
+      return;
+    }
+
+    setErro("");
+    aoProcessar(true);
+
+    iniciarCheckout(intencao)
+      .catch((e) => {
+        aoProcessar(false);
+        setErro(e.message ?? "Falha ao iniciar checkout.");
+      });
   }
 
-  async function comprarCreditos(e) {
+  function assinarPlano(plano) {
+    iniciarOuRedirecionar(
+      { tipo: "assinatura", plano_id: plano.id },
+      (processando) => setProcessandoPlanoId(processando ? plano.id : null)
+    );
+  }
+
+  function comprarCreditos(e) {
     e.preventDefault();
-    setErro("");
-    setComprandoCreditos(true);
-
-    const { data: sessionData } = await supabase.auth.getSession();
-    const { data, error } = await supabase.functions.invoke("criar-checkout-mp", {
-      body: { tipo: "creditos", quantidade: Number(quantidadeCreditos) },
-      headers: { Authorization: `Bearer ${sessionData.session?.access_token}` },
-    });
-
-    setComprandoCreditos(false);
-
-    if (error || data?.error) {
-      setErro(data?.error ?? error.message ?? "Falha ao iniciar checkout.");
-      return;
-    }
-
-    window.location.href = data.init_point;
+    iniciarOuRedirecionar(
+      { tipo: "creditos", quantidade: Number(quantidadeCreditos) },
+      setComprandoCreditos
+    );
   }
 
-  if (carregando) {
+  if (authLoading || carregando) {
     return (
-      <div className="page">
+      <div className="vitrine-content">
         <p>Carregando...</p>
       </div>
     );
   }
 
   const mensagemStatus = statusCheckout ? STATUS_MENSAGEM[statusCheckout] : null;
+  const cnpjPendente = logado && !cnpjValido(empresa?.cnpj);
 
   return (
-    <div className="page">
+    <div className="vitrine-content">
       <h1>Planos e créditos</h1>
 
       {mensagemStatus && <p className={mensagemStatus.classe}>{mensagemStatus.texto}</p>}
+      {cnpjPendente && (
+        <p className="auth-nota">
+          Sua empresa ainda não tem CNPJ cadastrado — necessário para assinar um plano pago ou
+          comprar créditos. <Link to="/empresa">Complete o cadastro da empresa</Link>.
+        </p>
+      )}
       {erro && <p className="auth-erro">{erro}</p>}
 
       <div className="cf-planos-grid">
         {planos.map((plano) => {
           const limiteDocumentos = plano.recursos?.limite_documentos ?? 0;
-          const ehPlanoAtual = empresa?.plano === (plano.nome === "Pro" ? "pro" : plano.nome === "Básico" ? "basico" : "gratis");
+          const ehPlanoAtual =
+            logado && empresa?.plano === (plano.nome === "Pro" ? "pro" : plano.nome === "Básico" ? "basico" : "gratis");
+          const ehGratis = Number(plano.preco_mensal) === 0;
+
           return (
             <div className={`cf-plano-card ${plano.nome === "Pro" ? "cf-plano-destaque" : ""}`} key={plano.id}>
               {ehPlanoAtual && <span className="cf-plano-selo">SEU PLANO ATUAL</span>}
@@ -135,7 +160,15 @@ export default function Planos() {
                 <button type="button" className="botao-link cf-plano-cta" disabled>
                   Plano atual
                 </button>
-              ) : Number(plano.preco_mensal) > 0 ? (
+              ) : ehGratis ? (
+                logado ? (
+                  <span className="auth-nota">Plano de entrada, sem custo.</span>
+                ) : (
+                  <Link to="/cadastro" className="botao-link cf-plano-cta">
+                    Criar conta grátis
+                  </Link>
+                )
+              ) : (
                 <button
                   type="button"
                   className="botao-link cf-plano-cta"
@@ -144,8 +177,6 @@ export default function Planos() {
                 >
                   {processandoPlanoId === plano.id ? "Abrindo checkout..." : `Assinar ${plano.nome}`}
                 </button>
-              ) : (
-                <span className="auth-nota">Plano de entrada, sem custo.</span>
               )}
             </div>
           );
@@ -161,16 +192,18 @@ export default function Planos() {
           e +1 geração de documento, consumidos separadamente conforme forem usados. Não expiram.
         </p>
 
-        <div className="kpi-grid">
-          <div className="kpi-card">
-            <p className="kpi-label">Créditos de anúncio disponíveis</p>
-            <p className="kpi-valor">{empresa?.creditos_anuncios_disponiveis ?? 0}</p>
+        {logado && (
+          <div className="kpi-grid">
+            <div className="kpi-card">
+              <p className="kpi-label">Créditos de anúncio disponíveis</p>
+              <p className="kpi-valor">{empresa?.creditos_anuncios_disponiveis ?? 0}</p>
+            </div>
+            <div className="kpi-card">
+              <p className="kpi-label">Créditos de documento disponíveis</p>
+              <p className="kpi-valor">{empresa?.creditos_documentos_disponiveis ?? 0}</p>
+            </div>
           </div>
-          <div className="kpi-card">
-            <p className="kpi-label">Créditos de documento disponíveis</p>
-            <p className="kpi-valor">{empresa?.creditos_documentos_disponiveis ?? 0}</p>
-          </div>
-        </div>
+        )}
 
         <form className="form-card" onSubmit={comprarCreditos}>
           <label htmlFor="quantidade-creditos">Quantos créditos você quer comprar?</label>

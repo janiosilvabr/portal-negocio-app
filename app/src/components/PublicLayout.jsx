@@ -29,9 +29,8 @@ export function PublicLayout() {
 
         <nav className={`vitrine-nav ${menuAberto ? "vitrine-nav-aberto" : ""}`}>
           <Link to="/" onClick={() => setMenuAberto(false)}>Início</Link>
-          <Link to="/vitrine" onClick={() => setMenuAberto(false)}>Veículos</Link>
+          <Link to="/" onClick={() => setMenuAberto(false)}>Veículos</Link>
           <Link to="/para-garagens" onClick={() => setMenuAberto(false)}>Para Garagens</Link>
-          <Link to="/como-funciona" onClick={() => setMenuAberto(false)}>Como Funciona</Link>
           <Link to="/tutorial" onClick={() => setMenuAberto(false)}>Tutorial</Link>
           <Link to="/faq" onClick={() => setMenuAberto(false)}>FAQ</Link>
           <Link to="/garagens" onClick={() => setMenuAberto(false)}>Garagens</Link>

@@ -104,7 +104,7 @@ export default function DetalheVeiculo() {
     return (
       <div className="vitrine-content">
         <p className="auth-erro">Veículo não encontrado ou não está mais disponível.</p>
-        <Link to="/vitrine" className="botao-link">
+        <Link to="/" className="botao-link">
           Voltar para a vitrine
         </Link>
       </div>
@@ -113,7 +113,7 @@ export default function DetalheVeiculo() {
 
   return (
     <div className="vitrine-content">
-        <Link to="/vitrine" className="detalhe-voltar">
+        <Link to="/" className="detalhe-voltar">
           ← Voltar para a vitrine
         </Link>
 

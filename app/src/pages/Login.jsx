@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabaseClient";
+import { lerIntencaoCheckout, limparIntencaoCheckout } from "../lib/checkoutIntent";
+import { retomarCheckoutAposLogin } from "../lib/iniciarCheckout";
 
 function formatMinutos(bloqueadoAte) {
   const ms = new Date(bloqueadoAte).getTime() - Date.now();
@@ -53,6 +55,18 @@ export default function Login() {
           : "E-mail ou senha inválidos."
       );
       return;
+    }
+
+    const intencao = lerIntencaoCheckout();
+    if (intencao) {
+      limparIntencaoCheckout();
+      try {
+        await retomarCheckoutAposLogin(intencao, navigate);
+        return;
+      } catch {
+        navigate("/planos");
+        return;
+      }
     }
 
     navigate("/painel");

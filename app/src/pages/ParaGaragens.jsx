@@ -8,7 +8,6 @@ import {
   UserPlus,
   Handshake,
   Wallet,
-  CheckCircle2,
   Check,
   ClipboardList,
   ChevronDown,
@@ -37,13 +36,21 @@ const DORES = [
   },
 ];
 
-const FLUXO = [
-  { icone: Car, texto: "Veículo cadastrado" },
-  { icone: UserPlus, texto: "Lead" },
-  { icone: Handshake, texto: "Negócio" },
-  { icone: CheckCircle2, texto: "Venda fechada" },
-  { icone: Wallet, texto: "Financeiro atualizado" },
-  { icone: FileText, texto: "Contrato gerado" },
+const PASSOS = [
+  { numero: "01", titulo: "Cadastre sua garagem", texto: "Crie sua conta em minutos." },
+  { numero: "02", titulo: "Publique seus veículos", texto: "Adicione fotos, preço e detalhes de cada veículo." },
+  { numero: "03", titulo: "Receba interessados", texto: "Leads da vitrine pública chegam direto no seu CRM." },
+  { numero: "04", titulo: "Acompanhe o funil", texto: "Veja cada negociação por etapa e tome decisões com dados." },
+  { numero: "05", titulo: "Gere e envie o contrato", texto: "Documento pronto em poucos cliques, revisado e enviado por e-mail." },
+];
+
+const RECURSOS = [
+  { icone: Car, titulo: "Vitrine pública", texto: "Seus veículos aparecem numa página pública, com fotos e filtros, recebendo interessados sem esforço extra." },
+  { icone: UserPlus, titulo: "CRM de Leads", texto: "Acompanhe cada interessado desde o primeiro contato até a conversão, com sugestão automática de veículos ideais." },
+  { icone: Handshake, titulo: "Pipeline de Negócios", texto: "Veja em qual etapa está cada negociação — em andamento, fechado ou cancelado — e saiba onde focar." },
+  { icone: Wallet, titulo: "Financeiro", texto: "Receitas, despesas e comissões lançadas automaticamente quando um negócio fecha, sem planilha separada." },
+  { icone: FileText, titulo: "Documentos automáticos", texto: "Contratos de compra e venda e de consignação gerados a partir dos dados já cadastrados, prontos pra revisão e envio por e-mail." },
+  { icone: LayoutDashboard, titulo: "Painel com indicadores", texto: "KPIs do dia, resumo do pipeline e estoque recente num único painel, sem precisar somar nada na mão." },
 ];
 
 const RESUMO_POR_PLANO = {
@@ -163,14 +170,28 @@ export default function ParaGaragens() {
       </section>
 
       <section className="cf-secao cf-secao-passos" id="como-funciona">
-        <h2 className="cf-secao-titulo">Como funciona</h2>
+        <h2 className="cf-secao-titulo">Como funciona na prática</h2>
         <div className="cf-passos">
-          {FLUXO.map((f) => (
-            <div className="cf-passo" key={f.texto}>
-              <span className="cf-passo-numero">
-                <f.icone size={18} />
+          {PASSOS.map((p) => (
+            <div className="cf-passo" key={p.numero}>
+              <span className="cf-passo-numero">{p.numero}</span>
+              <h3>{p.titulo}</h3>
+              <p>{p.texto}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="cf-secao">
+        <h2 className="cf-secao-titulo">Tudo que você precisa pra vender com mais controle.</h2>
+        <div className="cf-funcionalidades-grid">
+          {RECURSOS.map((r) => (
+            <div className="cf-funcionalidade-card" key={r.titulo}>
+              <span className="cf-funcionalidade-icone">
+                <r.icone size={20} />
               </span>
-              <h3>{f.texto}</h3>
+              <h3>{r.titulo}</h3>
+              <p>{r.texto}</p>
             </div>
           ))}
         </div>
@@ -217,7 +238,7 @@ export default function ParaGaragens() {
         )}
 
         <p className="cf-secao-subtitulo" style={{ marginTop: 32 }}>
-          <Link to="/como-funciona#planos" className="botao-link">
+          <Link to="/planos" className="botao-link">
             Ver todos os planos
           </Link>
         </p>
