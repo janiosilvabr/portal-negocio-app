@@ -20,6 +20,7 @@ export default function AdminEditarPost() {
   const [naoEncontrado, setNaoEncontrado] = useState(false);
   const [erro, setErro] = useState("");
   const [salvando, setSalvando] = useState(false);
+  const [enviandoCapa, setEnviandoCapa] = useState(false);
 
   useEffect(() => {
     supabase
@@ -50,6 +51,31 @@ export default function AdminEditarPost() {
   function handleChange(e) {
     const { name, value } = e.target;
     setCampos((c) => ({ ...c, [name]: value }));
+  }
+
+  async function handleUploadCapa(e) {
+    const arquivo = e.target.files?.[0];
+    if (!arquivo) return;
+
+    setErro("");
+    setEnviandoCapa(true);
+
+    const extensao = arquivo.name.split(".").pop();
+    const caminho = `capa-${Date.now()}.${extensao}`;
+
+    const { error: erroUpload } = await supabase.storage.from("blog-imagens").upload(caminho, arquivo);
+
+    if (erroUpload) {
+      setEnviandoCapa(false);
+      setErro(erroUpload.message);
+      return;
+    }
+
+    const { data } = supabase.storage.from("blog-imagens").getPublicUrl(caminho);
+
+    setEnviandoCapa(false);
+    setCampos((c) => ({ ...c, imagem_capa_url: data.publicUrl }));
+    e.target.value = "";
   }
 
   async function handleSubmit(e) {
@@ -126,16 +152,30 @@ export default function AdminEditarPost() {
         <textarea id="conteudo" name="conteudo" value={campos.conteudo} onChange={handleChange} rows={16} required />
         <p className="auth-nota">
           Suporta formatação simples: linha começando com <code>## </code> vira título, <code>### </code>
-          vira subtítulo, e <code>**texto**</code> vira negrito. Linha em branco separa parágrafos.
+          vira subtítulo, <code>**texto**</code> vira negrito, e <code>[texto](url)</code> vira link
+          (use isso pra transformar uma palavra ou chamada para ação em link, ex.:{" "}
+          <code>[Teste grátis](/cadastro)</code>). Linha em branco separa parágrafos.
         </p>
 
-        <label htmlFor="imagem_capa_url">URL da imagem de capa</label>
-        <input
-          id="imagem_capa_url"
-          name="imagem_capa_url"
-          value={campos.imagem_capa_url}
-          onChange={handleChange}
-        />
+        <label htmlFor="capa_upload">Imagem de capa</label>
+        <p className="auth-nota">Recomendado: proporção 16:9 (ex.: 1200×675px), PNG ou JPG.</p>
+
+        <div className="empresa-logo-linha">
+          {campos.imagem_capa_url && (
+            <img src={campos.imagem_capa_url} alt="Capa atual" className="blog-capa-preview" />
+          )}
+          <label className="checklist-add fotos-label-upload">
+            {enviandoCapa ? "Enviando..." : campos.imagem_capa_url ? "Trocar imagem" : "Enviar imagem"}
+            <input
+              id="capa_upload"
+              type="file"
+              accept="image/*"
+              onChange={handleUploadCapa}
+              disabled={enviandoCapa}
+              hidden
+            />
+          </label>
+        </div>
 
         <label htmlFor="status">Status</label>
         <select id="status" name="status" value={campos.status} onChange={handleChange}>

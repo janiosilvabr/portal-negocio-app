@@ -1355,6 +1355,15 @@ body {
   padding: 4px;
 }
 
+.blog-capa-preview {
+  width: 160px;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #eef0f2;
+  background: var(--gray-bg);
+}
+
 .fotos-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
