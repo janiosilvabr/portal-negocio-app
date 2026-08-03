@@ -1,5 +1,5 @@
 import { Navigate, Outlet, Link, useNavigate } from "react-router-dom";
-import { LayoutDashboard, Building2, LogOut, ArrowLeftCircle } from "lucide-react";
+import { LayoutDashboard, Building2, Newspaper, LogOut, ArrowLeftCircle } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 
 // Layout próprio do Painel Admin (dono do SaaS) — separado de propósito
@@ -29,6 +29,9 @@ export function AdminLayout() {
           </Link>
           <Link to="/admin/garagens">
             <Building2 size={16} /> Garagens
+          </Link>
+          <Link to="/admin/blog">
+            <Newspaper size={16} /> Blog
           </Link>
         </nav>
         <div className="app-header-acoes">

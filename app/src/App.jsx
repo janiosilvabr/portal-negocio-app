@@ -42,6 +42,11 @@ import NovaAvaliacaoPMC from "./pages/NovaAvaliacaoPMC";
 import VerAvaliacaoPMC from "./pages/VerAvaliacaoPMC";
 import Garagens from "./pages/Garagens";
 import PerfilGaragem from "./pages/PerfilGaragem";
+import Blog from "./pages/Blog";
+import BlogPost from "./pages/BlogPost";
+import AdminBlog from "./pages/AdminBlog";
+import AdminNovoPost from "./pages/AdminNovoPost";
+import AdminEditarPost from "./pages/AdminEditarPost";
 import ParaGaragens from "./pages/ParaGaragens";
 import CalculadoraPmcPublica from "./pages/CalculadoraPmcPublica";
 import ContratoCompraVenda from "./pages/ContratoCompraVenda";
@@ -67,6 +72,8 @@ export default function App() {
           <Route path="/vitrine/:id" element={<DetalheVeiculo />} />
           <Route path="/garagens" element={<Garagens />} />
           <Route path="/garagens/:id" element={<PerfilGaragem />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/blog/:slug" element={<BlogPost />} />
           <Route path="/para-garagens" element={<ParaGaragens />} />
           <Route path="/calculadora-pmc" element={<CalculadoraPmcPublica />} />
           <Route path="/contrato-compra-e-venda-veiculo-usado" element={<ContratoCompraVenda />} />
@@ -191,6 +198,9 @@ export default function App() {
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/admin/garagens" element={<AdminGaragens />} />
           <Route path="/admin/garagens/:id" element={<AdminDetalheGaragem />} />
+          <Route path="/admin/blog" element={<AdminBlog />} />
+          <Route path="/admin/blog/novo" element={<AdminNovoPost />} />
+          <Route path="/admin/blog/:id/editar" element={<AdminEditarPost />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/" replace />} />

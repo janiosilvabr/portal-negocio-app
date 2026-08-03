@@ -33,6 +33,7 @@ export function PublicLayout() {
           <Link to="/para-garagens" onClick={() => setMenuAberto(false)}>Para Garagens</Link>
           <Link to="/tutorial" onClick={() => setMenuAberto(false)}>Tutorial</Link>
           <Link to="/faq" onClick={() => setMenuAberto(false)}>FAQ</Link>
+          <Link to="/blog" onClick={() => setMenuAberto(false)}>Blog</Link>
           <Link to="/garagens" onClick={() => setMenuAberto(false)}>Garagens</Link>
           <Link to="/sobre" onClick={() => setMenuAberto(false)}>Sobre</Link>
           <Link to="/contato" onClick={() => setMenuAberto(false)}>Contato</Link>
@@ -59,6 +60,7 @@ export function PublicLayout() {
       <footer className="vitrine-footer">
         <p>© {new Date().getFullYear()} Portal Negócio. Todos os direitos reservados.</p>
         <div className="vitrine-footer-links">
+          <Link to="/blog">Blog</Link>
           <Link to="/calculadora-pmc">Calculadora PMC</Link>
           <Link to="/contrato-compra-e-venda-veiculo-usado">Contrato de Compra e Venda</Link>
           <Link to="/contrato-de-consignacao-veiculo">Contrato de Consignação</Link>
