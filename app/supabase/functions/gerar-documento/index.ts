@@ -653,6 +653,24 @@ Deno.serve(async (req) => {
 
     if (!perfil) return jsonResponse({ error: "Perfil não encontrado." }, 403);
 
+    // Checa limite mensal de documentos do plano (e consome crédito avulso se
+    // estourado) antes de gastar uma chamada da Claude API — ver migration
+    // 0049_aplicar_limites_plano.sql.
+    const { error: erroLimite } = await supabase.rpc("verificar_e_consumir_limite_documento", {
+      p_empresa_id: perfil.empresa_id,
+    });
+
+    if (erroLimite) {
+      if (erroLimite.message?.includes("limite_documentos_excedido")) {
+        return jsonResponse({
+          limiteAtingido: true,
+          mensagem:
+            "Limite de gerações de documento do seu plano neste mês atingido, e você não tem créditos avulsos disponíveis. Compre créditos ou faça upgrade em Planos.",
+        });
+      }
+      return jsonResponse({ error: erroLimite.message }, 500);
+    }
+
     const body = await req.json();
     const { tipo, negocio_id, consignacao_id } = body;
 

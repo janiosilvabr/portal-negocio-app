@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabaseClient";
 import { useAuth } from "../context/AuthContext";
 import { VeiculoCampos, CAMPOS_INICIAIS_VEICULO } from "../components/VeiculoCampos";
@@ -10,6 +10,7 @@ import {
   buildConsignacaoPayload,
 } from "../components/ConsignacaoCampos";
 import { FotosVeiculo, salvarFotosNovas } from "../components/FotosVeiculo";
+import { mensagemLimitePlano } from "../lib/limitesPlano";
 
 export default function NovoVeiculo() {
   const navigate = useNavigate();
@@ -20,6 +21,7 @@ export default function NovoVeiculo() {
   const [consignacao, setConsignacao] = useState(CAMPOS_INICIAIS_CONSIGNACAO);
   const [clientes, setClientes] = useState([]);
   const [erro, setErro] = useState("");
+  const [erroLimite, setErroLimite] = useState(false);
   const [salvando, setSalvando] = useState(false);
 
   useEffect(() => {
@@ -33,6 +35,7 @@ export default function NovoVeiculo() {
   async function handleSubmit(e) {
     e.preventDefault();
     setErro("");
+    setErroLimite(false);
 
     if (!perfil?.empresa_id) {
       setErro("Perfil da empresa ainda não carregado. Aguarde um instante e tente de novo.");
@@ -75,7 +78,9 @@ export default function NovoVeiculo() {
 
     if (error) {
       setSalvando(false);
-      setErro(error.message);
+      const mensagemLimite = mensagemLimitePlano(error.message);
+      setErro(mensagemLimite ?? error.message);
+      setErroLimite(Boolean(mensagemLimite));
       return;
     }
 
@@ -134,7 +139,11 @@ export default function NovoVeiculo() {
           <ConsignacaoCampos campos={consignacao} onChange={setConsignacao} clientes={clientes} />
         )}
 
-        {erro && <p className="auth-erro">{erro}</p>}
+        {erro && (
+          <p className="auth-erro">
+            {erro} {erroLimite && <Link to="/planos">Ver Planos</Link>}
+          </p>
+        )}
 
         <button type="submit" disabled={salvando}>
           {salvando ? "Salvando..." : "Salvar veículo"}

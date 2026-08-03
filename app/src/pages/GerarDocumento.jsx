@@ -18,11 +18,13 @@ export default function GerarDocumento() {
   const [gerando, setGerando] = useState(false);
   const [erro, setErro] = useState("");
   const [faltando, setFaltando] = useState(null);
+  const [limiteAtingido, setLimiteAtingido] = useState(null);
 
   async function handleGerar() {
     setGerando(true);
     setErro("");
     setFaltando(null);
+    setLimiteAtingido(null);
 
     const { data, error } = await supabase.functions.invoke("gerar-documento", {
       body: { tipo, negocio_id: negocioId, consignacao_id: consignacaoId },
@@ -36,6 +38,12 @@ export default function GerarDocumento() {
 
     if (data.error) {
       setErro(data.error);
+      setGerando(false);
+      return;
+    }
+
+    if (data.limiteAtingido) {
+      setLimiteAtingido(data.mensagem);
       setGerando(false);
       return;
     }
@@ -77,6 +85,17 @@ export default function GerarDocumento() {
             <li key={f}>{f}</li>
           ))}
         </ul>
+      </div>
+    );
+  }
+
+  if (limiteAtingido) {
+    return (
+      <div className="page">
+        <h1>Limite do plano atingido</h1>
+        <p className="auth-erro">
+          {limiteAtingido} <Link to="/planos">Ver Planos</Link>
+        </p>
       </div>
     );
   }

@@ -12,6 +12,7 @@ import {
 import { FotosVeiculo, salvarFotosNovas } from "../components/FotosVeiculo";
 import { CustosVeiculo } from "../components/CustosVeiculo";
 import { TermometroMargem } from "../components/TermometroMargem";
+import { mensagemLimitePlano } from "../lib/limitesPlano";
 
 export default function EditarVeiculo() {
   const { id } = useParams();
@@ -30,6 +31,7 @@ export default function EditarVeiculo() {
   const [carregando, setCarregando] = useState(true);
   const [naoEncontrado, setNaoEncontrado] = useState(false);
   const [erro, setErro] = useState("");
+  const [erroLimite, setErroLimite] = useState(false);
   const [salvando, setSalvando] = useState(false);
   const [excluindo, setExcluindo] = useState(false);
 
@@ -110,6 +112,7 @@ export default function EditarVeiculo() {
   async function handleSubmit(e) {
     e.preventDefault();
     setErro("");
+    setErroLimite(false);
 
     if (!campos.marca || !campos.modelo) {
       setErro("Marca e modelo são obrigatórios.");
@@ -147,7 +150,9 @@ export default function EditarVeiculo() {
 
     if (erroVeiculo) {
       setSalvando(false);
-      setErro(erroVeiculo.message);
+      const mensagemLimite = mensagemLimitePlano(erroVeiculo.message);
+      setErro(mensagemLimite ?? erroVeiculo.message);
+      setErroLimite(Boolean(mensagemLimite));
       return;
     }
 
@@ -316,7 +321,11 @@ export default function EditarVeiculo() {
           }}
         />
 
-        {erro && <p className="auth-erro">{erro}</p>}
+        {erro && (
+          <p className="auth-erro">
+            {erro} {erroLimite && <Link to="/planos">Ver Planos</Link>}
+          </p>
+        )}
 
         <div className="form-acoes">
           <button type="submit" disabled={salvando}>
