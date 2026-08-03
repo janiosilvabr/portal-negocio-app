@@ -14,6 +14,7 @@ const CAMPOS_INICIAIS = {
   endereco: "",
   cidade: "",
   logo_url: "",
+  sobre: "",
   visivel_publicamente: true,
   responsavel_legal_nome: "",
   responsavel_legal_cargo: "",
@@ -52,6 +53,7 @@ export default function EditarEmpresa() {
             endereco: data.endereco ?? "",
             cidade: data.cidade ?? "",
             logo_url: data.logo_url ?? "",
+            sobre: data.sobre ?? "",
             visivel_publicamente: data.visivel_publicamente ?? true,
             responsavel_legal_nome: data.responsavel_legal_nome ?? "",
             responsavel_legal_cargo: data.responsavel_legal_cargo ?? "",
@@ -116,6 +118,7 @@ export default function EditarEmpresa() {
         endereco: campos.endereco || null,
         cidade: campos.cidade || null,
         logo_url: campos.logo_url || null,
+        sobre: campos.sobre || null,
         visivel_publicamente: campos.visivel_publicamente,
         responsavel_legal_nome: campos.responsavel_legal_nome || null,
         responsavel_legal_cargo: campos.responsavel_legal_cargo || null,
@@ -202,6 +205,10 @@ export default function EditarEmpresa() {
 
         <label htmlFor="cidade">Cidade</label>
         <input id="cidade" name="cidade" value={campos.cidade} onChange={handleChange} />
+
+        <label htmlFor="sobre">Sobre a garagem</label>
+        <p className="auth-nota">Aparece no perfil público da sua garagem (/garagens/...).</p>
+        <textarea id="sobre" name="sobre" value={campos.sobre} onChange={handleChange} rows={4} />
 
         <h2>Responsável legal</h2>
         <p className="auth-nota">Quem assina os contratos de venda direta pela empresa.</p>

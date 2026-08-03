@@ -2,17 +2,11 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { MessageCircle } from "lucide-react";
 import { supabase } from "../lib/supabaseClient";
+import { linkWhatsapp } from "../lib/whatsapp";
 
 function formatPreco(preco) {
   if (preco == null) return "Consulte";
   return Number(preco).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
-}
-
-function linkWhatsapp(telefone) {
-  const digitos = (telefone ?? "").replace(/\D/g, "");
-  if (!digitos) return null;
-  const comCodigoPais = digitos.length <= 11 ? `55${digitos}` : digitos;
-  return `https://wa.me/${comCodigoPais}`;
 }
 
 export default function DetalheVeiculo() {
@@ -206,6 +200,11 @@ export default function DetalheVeiculo() {
                 <div>
                   <h3>{veiculo.empresa_nome}</h3>
                   <p>{veiculo.empresa_cidade ?? "Cidade não informada"}</p>
+                  {veiculo.empresa_id && (
+                    <Link to={`/garagens/${veiculo.empresa_id}`} className="botao-link">
+                      Ver perfil da loja
+                    </Link>
+                  )}
                 </div>
                 {linkWhatsapp(veiculo.empresa_telefone) && (
                   <a

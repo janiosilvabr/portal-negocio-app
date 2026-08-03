@@ -41,6 +41,7 @@ import CalcPMC from "./pages/CalcPMC";
 import NovaAvaliacaoPMC from "./pages/NovaAvaliacaoPMC";
 import VerAvaliacaoPMC from "./pages/VerAvaliacaoPMC";
 import Garagens from "./pages/Garagens";
+import PerfilGaragem from "./pages/PerfilGaragem";
 import ParaGaragens from "./pages/ParaGaragens";
 import CalculadoraPmcPublica from "./pages/CalculadoraPmcPublica";
 import ContratoCompraVenda from "./pages/ContratoCompraVenda";
@@ -65,6 +66,7 @@ export default function App() {
           <Route path="/" element={<Inicio />} />
           <Route path="/vitrine/:id" element={<DetalheVeiculo />} />
           <Route path="/garagens" element={<Garagens />} />
+          <Route path="/garagens/:id" element={<PerfilGaragem />} />
           <Route path="/para-garagens" element={<ParaGaragens />} />
           <Route path="/calculadora-pmc" element={<CalculadoraPmcPublica />} />
           <Route path="/contrato-compra-e-venda-veiculo-usado" element={<ContratoCompraVenda />} />

@@ -32,7 +32,7 @@ export default function Garagens() {
       {garagens.length > 0 && (
         <div className="garagens-grid">
           {garagens.map((g) => (
-            <Link to={`/?empresa=${g.id}`} className="garagem-card" key={g.id}>
+            <Link to={`/garagens/${g.id}`} className="garagem-card" key={g.id}>
               <div className="garagem-card-logo">
                 {g.logo_url ? <img src={g.logo_url} alt="" /> : g.nome.slice(0, 1).toUpperCase()}
               </div>

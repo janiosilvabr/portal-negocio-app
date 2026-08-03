@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from "react";
-import { useSearchParams } from "react-router-dom";
 import { ShieldCheck, SlidersHorizontal } from "lucide-react";
 import { supabase } from "../lib/supabaseClient";
 import { VeiculoCard } from "../components/VeiculoCard";
@@ -31,8 +30,6 @@ function uniqueSorted(valores) {
 }
 
 export default function Inicio() {
-  const [searchParams] = useSearchParams();
-  const empresaFiltrada = searchParams.get("empresa");
   const [veiculos, setVeiculos] = useState([]);
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState("");
@@ -62,7 +59,6 @@ export default function Inicio() {
   }
 
   const filtrados = veiculos.filter((v) => {
-    if (empresaFiltrada && v.empresa_id !== empresaFiltrada) return false;
     if (filtros.marca && v.marca !== filtros.marca) return false;
     if (filtros.modelo && !v.modelo?.toLowerCase().includes(filtros.modelo.toLowerCase())) return false;
     if (filtros.combustivel && v.combustivel !== filtros.combustivel) return false;
@@ -74,10 +70,6 @@ export default function Inicio() {
     if (filtros.precoMax && (v.preco == null || v.preco > Number(filtros.precoMax))) return false;
     return true;
   });
-
-  const nomeGaragemFiltrada = empresaFiltrada
-    ? veiculos.find((v) => v.empresa_id === empresaFiltrada)?.empresa_nome
-    : null;
 
   return (
     <>
@@ -95,7 +87,7 @@ export default function Inicio() {
       </section>
 
       <div className="vitrine-content">
-        <h2>{nomeGaragemFiltrada ? `Veículos de ${nomeGaragemFiltrada}` : "Veículos disponíveis"}</h2>
+        <h2>Veículos disponíveis</h2>
 
         <div className="vitrine-filtros-header">
           <SlidersHorizontal size={15} />
