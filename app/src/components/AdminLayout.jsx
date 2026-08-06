@@ -31,7 +31,7 @@ export function AdminLayout() {
             <Building2 size={16} /> Garagens
           </Link>
           <Link to="/admin/blog">
-            <Newspaper size={16} /> Blog
+            <Newspaper size={16} /> Artigos
           </Link>
         </nav>
         <div className="app-header-acoes">

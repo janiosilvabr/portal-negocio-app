@@ -76,12 +76,13 @@ export default function Inicio() {
       <section className="inicio-hero inicio-hero-compacta">
         <div className="inicio-hero-glow" aria-hidden="true" />
         <div className="inicio-hero-inner">
+          <img src="/logo-portal-negocio.png" alt="Portal Negócio" className="inicio-hero-logo" />
           <span className="inicio-hero-selo">
             <ShieldCheck size={14} />
             VEÍCULOS COM PREÇO JUSTO
           </span>
           <h1>
-            O carro ideal <span>para você</span> está aqui.
+            O negócio ideal <span>para você</span> está aqui.
           </h1>
         </div>
       </section>

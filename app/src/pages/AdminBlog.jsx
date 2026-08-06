@@ -53,7 +53,7 @@ export default function AdminBlog() {
   return (
     <div className="page">
       <div className="page-header">
-        <h1>Blog</h1>
+        <h1>Artigos</h1>
         <Link to="/admin/blog/novo" className="botao-link">
           + Novo Post
         </Link>

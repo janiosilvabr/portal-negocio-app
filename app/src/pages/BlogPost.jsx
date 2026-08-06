@@ -60,7 +60,7 @@ export default function BlogPost() {
       <div className="vitrine-content">
         <p className="auth-erro">Post não encontrado.</p>
         <Link to="/blog" className="botao-link">
-          Voltar para o Blog
+          Voltar para Artigos
         </Link>
       </div>
     );
@@ -71,7 +71,7 @@ export default function BlogPost() {
   return (
     <div className="vitrine-content pagina-texto">
       <Link to="/blog" className="detalhe-voltar">
-        ← Voltar para o Blog
+        ← Voltar para Artigos
       </Link>
 
       <h1>{post.titulo}</h1>

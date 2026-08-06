@@ -24,7 +24,7 @@ export default function Blog() {
 
   return (
     <div className="vitrine-content">
-      <h1>Blog</h1>
+      <h1>Artigos</h1>
       <p className="auth-nota">Conteúdo sobre gestão de garagem, vendas e o mercado de veículos usados.</p>
 
       {carregando && <p>Carregando...</p>}
